@@ -132,3 +132,28 @@ Inputs read: `review` skill, `.ai/PROJECT.md`, `.ai/decisions/2026-10-26-account
 The foundation is solid: the toolchain, strict TS, extracted messages that exactly match the design, tokens, the no-flash theme, the shell, and the transition and cursor with reduced-motion handling are well done and tested. Two problems must be fixed before merge to `main`, which auto-deploys to production: the placeholder contact defaults (F-01) and the one-character proxy matcher bug (F-02). F-03 (unreliable e2e harness) and F-04 (settings contract vs FEAT-002) should be fixed in the same pass because they are cheap now and expensive later. REQ-013/AC-005 stay open until the first push.
 
 REVIEW STATUS: CHANGES_REQUIRED
+
+## Fixes after review
+
+Implementer, 2026-10-26, on `feat/FEAT-001-app-foundation`. Validation after the fixes: `npx tsc --noEmit` clean, `npm run lint` clean, `npm test` 8 files / 66 tests passed, `npm run build` ok (15 static pages), `npm run test:e2e` against `next build && next start` 62 passed.
+
+| Finding | Status | Commit |
+|---|---|---|
+| F-01 placeholder contact defaults | Fixed (all contact defaults empty; UI hides items; unit + e2e) | `7977e4b` |
+| F-02 proxy matcher | Fixed (+ segment boundaries; e2e proves redirects and exclusions) | `13ad543` |
+| F-03 e2e on dev server | Fixed (production server; `E2E_DEV=1` for dev) | `5353297` |
+| F-04 settings contract | Fixed (labeled phones/emails) | `7977e4b` |
+| F-05 Back during curtains | Fixed | `994b1a7` |
+| F-06 commit detection | Fixed (any URL change, 1.5s fallback) | `994b1a7` |
+| F-07 language switch in server HTML | Fixed | `f073e1c` |
+| F-08 404 pages | Fixed for locale paths and /api; see note | `4c36b68` |
+| F-09 CI permissions | Fixed | `5e672aa` |
+| F-10 | Skipped (per coordinator) | - |
+| F-11 focus ring | Fixed (cyan) | `9b6d4b8` |
+| F-12 footer year | Fixed (client) | `9cb30cc` |
+| F-13 | Skipped (per coordinator) | - |
+| F-14 `--gray` | Fixed | `9b6d4b8` |
+| F-15 favicon | Fixed (`src/app/icon.svg`, navy tile with the three brand stripes; the logo PNGs are wide wordmarks, no square mark exists) | `57dfa3c` |
+| F-16 / F-17 | Skipped (per coordinator) | - |
+
+Note on F-08: `src/app/global-not-found.tsx` was tried and removed. Every path with a first segment matches `[locale]`, so global-not-found is never used. Instead: `[locale]/not-found.tsx` + `[locale]/[...rest]` for `/en/*` and `/ar/*` (unprefixed unknown paths are redirected there by the proxy), and `api/[...path]` returns JSON 404. Not fixed: a 404 for an excluded non-locale path such as `/studio/x` (before FEAT-002 adds the Studio) still shows Next's default error shell without `lang`, because the root layout `[locale]/layout.tsx` calls `notFound()` for an invalid locale and Next's fallback then has no `<html lang>`. FEAT-002's own Studio layout makes that moot.
