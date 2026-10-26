@@ -157,3 +157,79 @@ Implementer, 2026-10-26, on `feat/FEAT-001-app-foundation`. Validation after the
 | F-16 / F-17 | Skipped (per coordinator) | - |
 
 Note on F-08: `src/app/global-not-found.tsx` was tried and removed. Every path with a first segment matches `[locale]`, so global-not-found is never used. Instead: `[locale]/not-found.tsx` + `[locale]/[...rest]` for `/en/*` and `/ar/*` (unprefixed unknown paths are redirected there by the proxy), and `api/[...path]` returns JSON 404. Not fixed: a 404 for an excluded non-locale path such as `/studio/x` (before FEAT-002 adds the Studio) still shows Next's default error shell without `lang`, because the root layout `[locale]/layout.tsx` calls `notFound()` for an invalid locale and Next's fallback then has no `<html lang>`. FEAT-002's own Studio layout makes that moot.
+
+## Re-review 2026-10-26
+
+Scope: commits `7977e4b`..`13f1d8c` (plus `05834a4`, the FEAT-002 spec change for F-16) on `feat/FEAT-001-app-foundation`. Each fix was checked independently: code read, tests re-run, and probes against a production build (`next build` + `next start`, curl and Playwright, including a no-JS context and a delayed RSC response).
+
+### Validation
+
+| Check | Result |
+|---|---|
+| `npm run lint` | Clean (exit 0) |
+| `npm run typecheck` | Clean (exit 0) |
+| `npm test` | 8 files / 66 tests passed |
+| `npm run build` (clean `.next`) | Success: SSG for `/en` and `/ar` × 6 routes, `_not-found`, `icon.svg`. Dynamic: `[locale]/[...rest]`, `[locale]/projects/[slug]`, `api/[...path]`. Proxy present. Compiled matcher `originalSource` = `/((?!(?:api\|studio\|_next\|_vercel)(?:/\|$)\|.*\\..*).*)` (dot correctly escaped) |
+| `npm run test:e2e` (clean `.next`; config now builds and runs `next start`) | 62 passed (24.2s), exit 0 |
+
+`.next` was removed afterwards; the tree is clean.
+
+### Per-finding verdict
+
+| Finding | Verdict | Evidence |
+|---|---|---|
+| F-01 placeholder contacts | **Fixed** | `src/lib/site-settings.ts`: all contact fields are empty; only the WhatsApp message (design `waText`) is kept. `git grep` finds no placeholder in shipped `src/` code (only in doc comments and test fixtures, `src/test/render.tsx`). Unit test `contact.test.ts` asserts the empty defaults and no `example.com\|000 000\|[Office\|[عنوان`. `layout.test.tsx` "shipped defaults" asserts no top bar, contact column, socials, WhatsApp, `tel:`, `mailto:` or `wa.me`. E2E `shell.spec.ts` asserts the same on the production build. Empty items are hidden. See N-04 for placeholder strings still in the message files. |
+| F-02 proxy matcher | **Fixed** | `src/proxy.ts:12`. Production probes: `/about` → 307 `/en/about`; `/projects?category=hq` → 307 with the query kept; `/apiary` and `/does-not-exist` → 307; `/studio`, `/studio/x`, `/api`, `/api/x`, `/favicon.ico` → no redirect. The new e2e block `e2e/i18n.spec.ts` "proxy matcher (F-02)" asserts the 307 status **and** the exact `Location` (EN and AR Accept-Language), and asserts that excluded paths get no `Location`. It would have failed on the old matcher, so it is a real regression test. |
+| F-03 e2e harness | **Fixed** | `playwright.config.ts`: `npm run build && npm run start` by default, `E2E_DEV=1` for dev, no silent reuse. 62/62 green on a clean `.next`. |
+| F-04 settings contract | **Fixed** | `src/types/site-settings.ts`: `phones`/`emails` are `LabeledValue[]` (`{ label: {en, ar}, value }`), matching FEAT-002 REQ-005b. The footer shows the label under each entry (unit-tested). |
+| F-05 Back during curtains | **Fixed** | `page-transition.tsx:115-121`: popstate cancels the timers and the overlay. Probe: Back at 300ms → stays on `/en`, no overlay. Back after the push committed (1.3s) → native back to `/en/contact`, overlay removed. Unit + e2e tests added. Minor leftover: N-03. |
+| F-06 commit detection | **Fixed, but introduced a regression** | Any URL change after the push now counts as commit (redirects are handled; unit test). The safety timeout was cut from 5000ms to 1500ms (`page-transition.tsx:20`), which breaks slow navigations: see N-01. |
+| F-07 SSR language switch | **Fixed** | Production `/en/projects/exec-hq` HTML has `<a hrefLang="ar" … data-testid="lang-switch" href="/ar/projects/exec-hq">`. The `Suspense` was removed and the query is added on click (`lang-switch.tsx:31-36`). Probe: `/en/projects?category=mosque` → `/ar/projects?category=mosque`, `dir=rtl`. A modified click (new tab) drops the query; that is acceptable. |
+| F-08 404 pages | **Partly fixed** | With JS: `/en/nope` and `/ar/a/b` → 404 status, localised content inside the shell, `lang`/`dir` correct (e2e). Unprefixed unknown paths → proxy → localised 404. Unknown `/api/*` → JSON 404. **But the server HTML is Next's error shell**, see N-02. |
+| F-09 CI permissions | **Fixed** | `.github/workflows/ci.yml`: `permissions: contents: read`. CI is still never run on GitHub (no push). |
+| F-10 Arabic shell strings | Skipped (intentional) | Still open for native review. The new `notFound.*` strings (4 keys) also need it (N-05). |
+| F-11 focus ring | **Fixed** | `globals.css` base `:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px }`. E2E asserts computed outline `2px solid rgb(76, 166, 203)`. |
+| F-12 footer year | **Fixed** | `current-year.tsx`: `useSyncExternalStore` with the build year as server snapshot and the live year on the client, so there is no hydration warning. |
+| F-13 LCP / logo preload | Skipped (intentional) | Open: NFR-002 is still unmeasured. |
+| F-14 `--gray` | **Fixed** | `globals.css` `--gray` + `--color-gray`; covered by the token test. |
+| F-15 favicon | **Fixed** | `src/app/icon.svg` is served as `image/svg+xml` and linked from every page (e2e: no 404 on load). A direct `/favicon.ico` request still returns 404 (harmless; browsers follow the `<link rel=icon>`). |
+| F-16 seed placeholders | **Fixed in spec** | `05834a4`: FEAT-002 REQ-009 / T-005 now seed an empty `siteSettings`. |
+| F-17 `/studio` feasibility | Skipped (note only) | Still valid. The F-02 fix now correctly excludes `/studio` and `/studio/*`. |
+
+### New findings
+
+#### N-01 — MEDIUM — 1.5s commit timeout opens the curtains on the old page during slow navigations (regression from the F-06 fix)
+- **Evidence:** `src/components/layout/page-transition.tsx:20` `commitTimeout: 1500` (was 5000). `page-transition.test.tsx:101` pins `expect(TRANSITION_TIMING.commitTimeout).toBeLessThan(2000)`. Probe on the production build, with the About page's RSC response delayed by 3s (Playwright `page.route`), timeline in ms after the click:
+  - 73 → `close` on `/en`
+  - 1239 → `hold` on `/en`
+  - **2872 → `open` on `/en`, with the home page still showing**
+  - 4006 → overlay removed, still on `/en`
+  - **4255 → URL becomes `/en/about` and the About page appears with no transition**
+- **Why it matters:** A navigation slower than ~2.7s (1.15s close + 1.5s timeout) plays the reveal on the *old* page, then the new page appears abruptly. That is the opposite of the design's close → swap → open. Slow navigations are realistic for this site: uncached dynamic `projects/[slug]` pages fed by Sanity, heavy FEAT-003 pages, and a mid-range phone on 4G (NFR-002). The old 5s timeout only existed to handle redirects; the new "any URL change" check already covers those, so the short timeout is no longer needed.
+- **Fix:** Restore a generous safety timeout (≥ 5–8s) and drop the `< 2000` assertion. To also handle "landed on the current URL" without a long wait, detect completion with React: call `router.push` inside `startTransition` from `useTransition()` and open when `isPending` becomes false (or the URL changed). Keep the timeout as the last resort. Add an e2e test with a delayed RSC response (as above) asserting that the overlay stays closed until the URL changes.
+
+#### N-02 — LOW — The localised 404 is rendered only by client JS; the server HTML is Next's blank error shell
+- **Evidence:** Production `GET /en/nope` → status 404, but the HTML is `<html id="__next_error__">` with no `lang`/`dir`, an empty `<body>` (scripts only), and the RSC payload carries `digest:"NEXT_HTTP_ERROR_FALLBACK;404"`. "Page not found" appears only inside the RSC payload. With JS disabled (Playwright `javaScriptEnabled: false`), the page shows no 404 content and `lang` is `null`. The e2e tests pass only because the client renders the not-found UI after hydration.
+- **Why it matters:** This is the original F-08 problem (no `lang`, no shell), now hidden behind JS. Crawlers and no-JS users see a blank page, and every 404 costs a full client render. It was not detected because the tests run with JS on.
+- **Fix:** Find out why the `notFound()` thrown in `[locale]/[...rest]/page.tsx` escapes the `[locale]/not-found.tsx` boundary during SSR. Candidates to check: whether the async `getTranslations("notFound")` in `not-found.tsx` resolves the locale during SSR (try `getTranslations({ locale: await getLocale(), namespace: "notFound" })`, or a client component using `useTranslations`), and whether a root-level layout (the root layout is `[locale]/layout.tsx`) affects how Next 16 places the not-found boundary. Add an e2e test using `request.get("/en/nope")` that asserts the raw HTML contains `lang="en"` and `data-testid="not-found"`.
+
+#### N-03 — NOTE — popstate listener is not removed when the provider unmounts
+- **Evidence:** `page-transition.tsx:121` adds a `popstate` listener per transition and removes it only in `finish()`. The unmount cleanup (`useEffect(() => clearAll, …)`, line 75) clears timers but not the listener. Fragment navigations also fire `popstate`, so they would cancel a running transition. The overlay blocks clicks, so this is unlikely in practice.
+- **Suggested:** Keep the active `cancel` in a ref and remove it in the unmount cleanup.
+
+#### N-04 — NOTE — Design placeholders remain in the message files (for FEAT-003)
+- **Evidence:** `messages/en.json:25` `contact.locCity: "[Office address]"` (AR `"[عنوان المكتب]"`), `:160-161` `pdH1/pdH2` (hard-coded working hours), `:97` `tbc: "To be confirmed"`. They are not rendered today, which is consistent with extracting the full `T` object.
+- **Suggested:** FEAT-003 must take address and hours from `SiteSettings` (hidden when empty), never from these keys (FEAT-002 BR-009, FEAT-003 BR-003). Consider deleting `locCity`/`pdH1`/`pdH2` once FEAT-003 confirms they are unused.
+
+#### N-05 — NOTE — New authored strings need the same native review as F-10
+- **Evidence:** `messages/{en,ar}.json` `notFound.{code,title,body,home}` are not from the design.
+
+#### N-06 — NOTE — Doc text shows the matcher with a single backslash
+- **Evidence:** `.ai/work/FEAT-001-app-foundation/tasks/T-002.md` "Fixes after review" quotes the matcher as `.*\..*`, while the code (correctly) has `"\\."`. Anyone copying from the doc would reintroduce F-02.
+- **Suggested:** Quote the exact source string.
+
+### Summary
+
+All findings that were addressed are fixed except F-08 (works only with JS, N-02). The F-01 blocker and the F-02 high are resolved and covered by tests that would catch a regression. One regression came in with the F-06 fix (N-01, MEDIUM): fix it before merge, or accept it knowingly, because it affects every slow navigation. There are no blockers. REQ-013/AC-005 (Vercel preview) and the first CI run still wait for the push.
+
+REVIEW STATUS: READY_FOR_HUMAN_REVIEW
