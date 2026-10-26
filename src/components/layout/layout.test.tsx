@@ -18,7 +18,7 @@ vi.mock("@/i18n/navigation", async () => {
     const url = typeof href === "string" ? href : `${obj.pathname}?category=${obj.query.category}`;
     return React.createElement("a", { href: url, ...rest }, children as React.ReactNode);
   };
-  return { usePathname: () => mockPathname, PlainLink: MockLink, Link: MockLink };
+  return { usePathname: () => mockPathname, useRouter: () => ({ push: vi.fn() }), PlainLink: MockLink, Link: MockLink };
 });
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),

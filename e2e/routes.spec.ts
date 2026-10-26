@@ -50,3 +50,11 @@ test("legal links reach privacy and terms", async ({ page }) => {
   await page.getByTestId("site-footer").getByRole("link", { name: "Privacy Policy" }).click();
   await expect(page).toHaveURL(/\/en\/privacy$/, { timeout: 4000 });
 });
+
+test("F-07: the language switch is in the server HTML and links to the same page", async ({ request }) => {
+  const html = await (await request.get("/en/projects/exec-hq")).text();
+  expect(html).toContain('data-testid="lang-switch"');
+  expect(html).toContain('href="/ar/projects/exec-hq"');
+  const ar = await (await request.get("/ar/about")).text();
+  expect(ar).toContain('href="/en/about"');
+});

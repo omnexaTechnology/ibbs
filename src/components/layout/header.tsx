@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Envelope, GeoAlt, Telephone } from "react-bootstrap-icons";
 import { List, X } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Suspense, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { toTelHref, usableEntries } from "@/lib/contact";
 import { cn } from "@/lib/utils";
@@ -140,9 +140,7 @@ export function Header({ settings }: { settings: SiteSettings }) {
           </nav>
 
           <div className="ms-auto flex items-center gap-2.5 nav:ms-0">
-            <Suspense fallback={null}>
-              <LangSwitch className={controlClass} />
-            </Suspense>
+            <LangSwitch className={controlClass} />
             <ThemeToggle className={cn(controlClass, "w-11 justify-center px-0")} />
             <button
               ref={menuButton}
