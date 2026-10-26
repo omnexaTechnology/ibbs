@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "schema:validate": "sanity schemas validate",
+    "typegen": "sanity schemas extract --path schema.json && sanity typegen generate"
   },
   "dependencies": {
     "@sanity/image-url": "2.1",

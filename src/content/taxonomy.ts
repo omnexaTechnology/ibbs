@@ -76,3 +76,16 @@ export const scopeItems: ScopeItem[] = [
     description: { en: "Sofas, poufs and soft seating", ar: "كنب ومقاعد ناعمة وطاولات جانبية" },
   },
 ];
+
+/**
+ * The home hero has exactly 4 slides (FEAT-002 D5): the editor only replaces each slide's image.
+ * Texts and hotspots stay in code, per slide position. These are the slides' topics, used to
+ * label the Studio fields so the editor knows which slide an image belongs to.
+ */
+export const HERO_SLIDE_COUNT = 4;
+export const HERO_SLIDE_TOPICS: readonly LocalizedString[] = [
+  { en: "Executive offices", ar: "المكاتب التنفيذية" },
+  { en: "Boardrooms & meeting spaces", ar: "قاعات الاجتماعات" },
+  { en: "Corporate offices", ar: "مكاتب الشركات" },
+  { en: "Medical facilities", ar: "المنشآت الطبية" },
+];
