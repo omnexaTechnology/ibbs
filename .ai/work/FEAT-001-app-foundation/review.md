@@ -233,3 +233,13 @@ Scope: commits `7977e4b`..`13f1d8c` (plus `05834a4`, the FEAT-002 spec change fo
 All findings that were addressed are fixed except F-08 (works only with JS, N-02). The F-01 blocker and the F-02 high are resolved and covered by tests that would catch a regression. One regression came in with the F-06 fix (N-01, MEDIUM): fix it before merge, or accept it knowingly, because it affects every slow navigation. There are no blockers. REQ-013/AC-005 (Vercel preview) and the first CI run still wait for the push.
 
 REVIEW STATUS: READY_FOR_HUMAN_REVIEW
+
+### Fixes after re-review (implementer)
+
+| Finding | Status | Commit |
+|---|---|---|
+| N-01 slow navigation | Fixed. Kept URL-change detection (no useTransition); the last-resort timeout is now 8000ms and the unit test asserts >= 6000. New unit test (page arrives 4s after the swap point: curtains still closed) and e2e with a 4s delayed RSC response (overlay stays in `hold` at 3s, URL still old, then reveal). | `0640d9a` |
+| N-02 404 in server HTML | Fixed for unknown paths under /en and /ar: `[locale]/[...rest]` is now a route handler returning a complete localized HTML document (lang, dir, text) with status 404; e2e with `javaScriptEnabled: false` and a raw-HTML check. Root cause: a thrown `notFound()` under a root layout that lives in the dynamic `[locale]` segment always yields Next's `__next_error__` shell; reproduced with a minimal layout, with Turbopack and webpack, and with `globalNotFound`. Trade-off: this 404 is not inside the header/footer shell. Not fixed: pages that call `notFound()` themselves (FEAT-003 missing project) still use `[locale]/not-found.tsx`, which only the client renders. FEAT-003 should handle a missing project without `notFound()` (or accept that). | `6e07043` |
+| N-03 popstate listener | Fixed (removed on unmount; unit test). | `0640d9a` |
+| N-04, N-05 | Not addressed (notes for FEAT-003 / native review). | - |
+| N-06 doc quote | Fixed. | `83c5684` |
