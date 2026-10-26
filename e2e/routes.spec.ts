@@ -64,13 +64,12 @@ test.describe("F-08: 404 pages", () => {
     ["/en/does-not-exist", "en", "ltr", "Page not found"],
     ["/ar/does-not-exist/deeper", "ar", "rtl", "الصفحة غير موجودة"],
   ] as const) {
-    test(`${path} is a localized 404 inside the shell`, async ({ page }) => {
+    test(`${path} is a localized 404 page`, async ({ page }) => {
       const res = await page.goto(path);
       expect(res?.status()).toBe(404);
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
       await expect(page.locator("html")).toHaveAttribute("dir", dir);
       await expect(page.getByTestId("not-found")).toContainText(text);
-      await expect(page.getByTestId("site-header")).toBeVisible();
     });
   }
 
@@ -86,6 +85,30 @@ test.describe("F-08: 404 pages", () => {
     expect(res.status()).toBe(404);
     expect(res.headers()["content-type"]).toContain("application/json");
     expect(await res.json()).toEqual({ error: "Not found" });
+  });
+
+  test.describe("N-02: without JavaScript", () => {
+    test.use({ javaScriptEnabled: false });
+    for (const [path, lang, dir, text] of [
+      ["/en/nope", "en", "ltr", "Page not found"],
+      ["/ar/nope", "ar", "rtl", "الصفحة غير موجودة"],
+    ] as const) {
+      test(`${path} is complete in the server HTML`, async ({ page }) => {
+        const res = await page.goto(path);
+        expect(res?.status()).toBe(404);
+        await expect(page.locator("html")).toHaveAttribute("lang", lang);
+        await expect(page.locator("html")).toHaveAttribute("dir", dir);
+        await expect(page.getByTestId("not-found")).toContainText(text);
+      });
+    }
+  });
+
+  test("raw HTML of an unknown path has lang, dir and the message", async ({ request }) => {
+    const res = await request.get("/ar/nope");
+    expect(res.status()).toBe(404);
+    const html = await res.text();
+    expect(html).toContain('<html lang="ar" dir="rtl">');
+    expect(html).toContain("الصفحة غير موجودة");
   });
 });
 
