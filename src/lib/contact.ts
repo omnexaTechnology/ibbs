@@ -1,4 +1,4 @@
-import type { LocalizedString, SiteSettings, SocialPlatform } from "@/types/site-settings";
+import type { LabeledValue, LocalizedString, SiteSettings, SocialPlatform } from "@/types/site-settings";
 
 /** Pick the value for a locale, falling back to the other one. */
 export function localize(value: LocalizedString, locale: string): string {
@@ -10,9 +10,11 @@ export function toTelHref(phone: string): string {
   return `tel:${phone.replace(/[^\d+]/g, "")}`;
 }
 
-/** Non-empty, trimmed entries only. */
-export function nonEmpty(values: string[]): string[] {
-  return values.map((v) => v.trim()).filter(Boolean);
+/** Entries that have a value (blank values are dropped and trimmed). */
+export function usableEntries(entries: LabeledValue[]): LabeledValue[] {
+  return entries
+    .map((e) => ({ ...e, value: e.value.trim() }))
+    .filter((e) => e.value);
 }
 
 /** wa.me link with the locale's prefilled message, or null when no number is set. */

@@ -4,7 +4,7 @@ import { Envelope, GeoAlt, Globe, Telephone } from "react-bootstrap-icons";
 import { useLocale, useTranslations } from "next-intl";
 import { projectCategories } from "@/content/taxonomy";
 import { Link } from "@/i18n/navigation";
-import { localize, nonEmpty, toTelHref } from "@/lib/contact";
+import { localize, toTelHref, usableEntries } from "@/lib/contact";
 import type { SiteSettings } from "@/types/site-settings";
 import { NAV_ITEMS } from "./nav-items";
 import { SocialLinks } from "./social-links";
@@ -22,8 +22,8 @@ export function Footer({ settings }: { settings: SiteSettings }) {
   const tcommon = useTranslations("common");
   const locale = useLocale();
 
-  const phones = nonEmpty(settings.phones);
-  const emails = nonEmpty(settings.emails);
+  const phones = usableEntries(settings.phones);
+  const emails = usableEntries(settings.emails);
   const website = settings.website.trim();
   const address = localize(settings.address, locale).trim();
   const mapUrl = settings.mapUrl.trim();
@@ -75,18 +75,18 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                 {phones.length > 0 && (
                   <ContactRow icon={<Telephone className="size-4" aria-hidden="true" />} label={tc("phone")}>
                     {phones.map((p) => (
-                      <a key={p} href={toTelHref(p)} dir="ltr" className={contactLinkClass}>
-                        {p}
-                      </a>
+                      <EntryLink key={p.value} href={toTelHref(p.value)} label={localize(p.label, locale)} dir="ltr">
+                        {p.value}
+                      </EntryLink>
                     ))}
                   </ContactRow>
                 )}
                 {emails.length > 0 && (
                   <ContactRow icon={<Envelope className="size-4" aria-hidden="true" />} label={tc("email")}>
                     {emails.map((e) => (
-                      <a key={e} href={`mailto:${e}`} className={contactLinkClass}>
-                        {e}
-                      </a>
+                      <EntryLink key={e.value} href={`mailto:${e.value}`} label={localize(e.label, locale)}>
+                        {e.value}
+                      </EntryLink>
                     ))}
                   </ContactRow>
                 )}
@@ -139,6 +139,27 @@ export function Footer({ settings }: { settings: SiteSettings }) {
 
 const contactLinkClass =
   "mt-[3px] block text-start text-[15px] font-semibold text-cream transition-colors [unicode-bidi:plaintext] hover:text-cyan";
+
+function EntryLink({
+  href,
+  label,
+  dir,
+  children,
+}: {
+  href: string;
+  label: string;
+  dir?: "ltr";
+  children: React.ReactNode;
+}) {
+  return (
+    <>
+      <a href={href} dir={dir} className={contactLinkClass}>
+        {children}
+      </a>
+      {label && <span className="block text-[12px] text-cream/55">{label}</span>}
+    </>
+  );
+}
 
 function ContactRow({ icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
   return (

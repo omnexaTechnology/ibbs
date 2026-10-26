@@ -6,7 +6,7 @@ import { List, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Suspense, useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
-import { toTelHref } from "@/lib/contact";
+import { toTelHref, usableEntries } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 import type { SiteSettings } from "@/types/site-settings";
 import { LangSwitch } from "./lang-switch";
@@ -48,8 +48,8 @@ export function Header({ settings }: { settings: SiteSettings }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [menuOpen]);
 
-  const email = settings.emails.find((e) => e.trim());
-  const phone = settings.phones.find((p) => p.trim());
+  const email = usableEntries(settings.emails)[0]?.value;
+  const phone = usableEntries(settings.phones)[0]?.value;
   const hasSocial = Object.values(settings.social).some((u) => u.trim());
 
   return (

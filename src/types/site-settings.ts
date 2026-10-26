@@ -3,6 +3,12 @@ export type LocalizedString = { en: string; ar: string };
 
 export type SocialPlatform = "linkedin" | "instagram" | "x" | "snapchat" | "tiktok";
 
+/** A contact entry with an editable label per locale (e.g. "Sales" / "المبيعات"). */
+export type LabeledValue = {
+  label: LocalizedString;
+  value: string;
+};
+
 export type WorkingHoursRow = {
   days: LocalizedString;
   time: LocalizedString;
@@ -15,9 +21,9 @@ export type WorkingHoursRow = {
  * means "not set" and the UI must hide the corresponding item.
  */
 export type SiteSettings = {
-  /** Display form, e.g. "+966 50 000 0000". The tel: link is derived from it. */
-  phones: string[];
-  emails: string[];
+  /** `value` is the display form, e.g. "+966 50 000 0000"; the tel: link is derived from it. */
+  phones: LabeledValue[];
+  emails: LabeledValue[];
   /** Full URL, e.g. "https://www.example.com". */
   website: string;
   whatsapp: {

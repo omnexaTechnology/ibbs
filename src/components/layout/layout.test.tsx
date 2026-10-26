@@ -1,6 +1,6 @@
 import { act, fireEvent, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { makeSettings, renderWithIntl } from "@/test/render";
+import { emptySettings, makeSettings, renderWithIntl } from "@/test/render";
 import { Footer } from "./footer";
 import { Header } from "./header";
 import { isNavActive } from "./nav-items";
@@ -127,7 +127,7 @@ describe("Footer", () => {
   });
 
   it("hides empty contact rows and the whole block when everything is empty", async () => {
-    const onlyEmail = await makeSettings({ phones: ["", " "], website: "", address: { en: "", ar: "" } });
+    const onlyEmail = await makeSettings({ phones: [{ label: { en: "", ar: "" }, value: "  " }], website: "", address: { en: "", ar: "" } });
     const { unmount } = renderWithIntl(<Footer settings={onlyEmail} />);
     expect(screen.queryByText("Phone")).toBeNull();
     expect(screen.getByText("Email")).toBeInTheDocument();
@@ -150,6 +150,28 @@ describe("Footer", () => {
   it("links categories to the filtered projects page", async () => {
     renderWithIntl(<Footer settings={await makeSettings()} />);
     expect(screen.getByRole("link", { name: "Mosques" })).toHaveAttribute("href", "/projects?category=mosque");
+  });
+});
+
+describe("shipped defaults (no contact data configured)", () => {
+  it("shows no top bar, no contact column and no WhatsApp button", async () => {
+    const settings = await emptySettings();
+    const header = renderWithIntl(<Header settings={settings} />);
+    expect(screen.queryByTestId("topbar")).toBeNull();
+    header.unmount();
+    const footer = renderWithIntl(<Footer settings={settings} />);
+    expect(screen.queryByTestId("footer-contact")).toBeNull();
+    expect(screen.queryByTestId("social-links")).toBeNull();
+    expect(document.body.innerHTML).not.toMatch(/example\.com|tel:|mailto:|wa\.me/);
+    footer.unmount();
+    renderWithIntl(<WhatsAppButton settings={settings} />);
+    expect(screen.queryByTestId("whatsapp-button")).toBeNull();
+  });
+
+  it("shows entry labels in the footer when set", async () => {
+    renderWithIntl(<Footer settings={await makeSettings()} />);
+    expect(screen.getByText("Main")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "+966 50 000 0000" })).toHaveAttribute("href", "tel:+966500000000");
   });
 });
 

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("shell", () => {
-  test("desktop: header nav, active state, footer, whatsapp", async ({ page }) => {
+  test("desktop: header nav, active state, footer, no placeholder contacts", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto("/en/about");
     const nav = page.getByRole("navigation", { name: "Main" }).first();
@@ -9,7 +9,11 @@ test.describe("shell", () => {
     await expect(nav.locator('[aria-current="page"]')).toHaveText("About Us");
     await expect(page.getByTestId("menu-button")).toBeHidden();
     await expect(page.getByTestId("site-footer")).toBeVisible();
-    await expect(page.getByTestId("whatsapp-button")).toHaveAttribute("href", /wa\.me\/966500000000\?text=Hello/);
+    // Shipped defaults carry no contact data: no WhatsApp button, top bar or contact column.
+    await expect(page.getByTestId("whatsapp-button")).toHaveCount(0);
+    await expect(page.getByTestId("topbar")).toHaveCount(0);
+    await expect(page.getByTestId("footer-contact")).toHaveCount(0);
+    expect(await page.content()).not.toContain("example.com");
     // No placeholder "#" links anywhere (social URLs are empty by default).
     await expect(page.locator('a[href="#"]')).toHaveCount(0);
     await expect(page.getByTestId("social-links")).toHaveCount(0);
