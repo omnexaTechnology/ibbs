@@ -343,5 +343,11 @@
     "clientsTitle": "Trusted by organisations across sectors",
     "clientsSub": "Client logos will appear here once approved for publication.",
     "clientLogo": "Client logo"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "body": "The page you are looking for does not exist or has moved.",
+    "home": "Back to home"
   }
 }
