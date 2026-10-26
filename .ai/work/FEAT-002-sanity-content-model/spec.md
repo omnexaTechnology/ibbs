@@ -29,7 +29,7 @@ The client manages **projects**, the **home hero images** and **contact & social
 ### Delivery to the site
 - **REQ-007** Typed GROQ queries in one module (`projects`, `projectBySlug`, `featuredProjects`, `heroSlides`, `siteSettings`) consumed by FEAT-003; images through Sanity's image CDN with `next/image` and hotspot/crop.
 - **REQ-008** Publishing in Studio updates the live site within ~1 minute (Sanity webhook → `revalidateTag`).
-- **REQ-009** Seed script imports the 6 design projects, the 4 hero images (from `design-reference/assets/`) and the design's placeholder contacts into the dataset.
+- **REQ-009** Seed script imports the 6 design projects and the 4 hero images (from `design-reference/assets/`) into the dataset, and creates an **empty** `siteSettings` document (only the WhatsApp prefilled messages filled from the design). The design's placeholder contacts are NOT seeded (BR-009; changed 2026-10-26 after FEAT-001 review F-16).
 
 ## Business rules
 - **BR-001** Project slug: unique, lowercase-kebab; changing it after publish adds a redirect (FEAT-005).
