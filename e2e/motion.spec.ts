@@ -32,6 +32,19 @@ test.describe("page transition and cursor (motion allowed)", () => {
     await expect(page.getByTestId("page-transition")).toHaveCount(0);
   });
 
+  test("F-05: Back during the closing curtains cancels the pending navigation", async ({ page }) => {
+    await page.goto("/en");
+    await page.goto("/en/contact");
+    await page.getByRole("navigation", { name: "Main", exact: true }).getByRole("link", { name: "About Us" }).click();
+    await expect(page.getByTestId("page-transition")).toBeVisible();
+    await page.waitForTimeout(300);
+    await page.goBack();
+    await expect(page).toHaveURL(/[/]en$/);
+    await page.waitForTimeout(1800); // past the 1.15s swap point
+    await expect(page).toHaveURL(/[/]en$/);
+    await expect(page.getByTestId("page-transition")).toHaveCount(0);
+  });
+
   test("Arabic transition shows the Arabic label", async ({ page }) => {
     await page.goto("/ar");
     await page.getByRole("navigation", { name: "التنقل الرئيسي" }).getByRole("link").nth(1).click();

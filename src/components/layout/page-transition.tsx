@@ -16,8 +16,8 @@ export const TRANSITION_TIMING = {
   openAfterCommit: 110,
   /** Opening animation length (2400 - 1260 in the design). */
   openDuration: 1140,
-  /** Safety net: open anyway if the navigation never commits. */
-  commitTimeout: 5000,
+  /** Safety net: open anyway if no navigation commits (failed, or it landed on the current URL). */
+  commitTimeout: 1500,
   commitPoll: 40,
 } as const;
 
@@ -108,17 +108,27 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
         timers.current.push(window.setTimeout(fn, ms));
       };
       const finish = () => {
+        window.removeEventListener("popstate", cancel);
         setState({ phase: null, label: "" });
         busy.current = false;
       };
+      // Browser Back/Forward while the curtains are closing: the visitor changed their mind.
+      // Drop the pending push and the overlay; the browser already navigated.
+      const cancel = () => {
+        clearAll();
+        finish();
+      };
+      window.addEventListener("popstate", cancel);
 
       after(TRANSITION_TIMING.swapAfter, () => {
         setState((s) => ({ ...s, phase: "hold" }));
+        const urlBeforePush = currentUrl();
         router.push(href);
 
         const startedAt = Date.now();
         poll.current = window.setInterval(() => {
-          const committed = currentUrl() === target;
+          // Any URL change means a navigation committed (also redirects and normalised URLs).
+          const committed = currentUrl() !== urlBeforePush;
           const timedOut = Date.now() - startedAt > TRANSITION_TIMING.commitTimeout;
           if (!committed && !timedOut) return;
           if (poll.current !== null) window.clearInterval(poll.current);
@@ -135,7 +145,7 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
 
       return true;
     },
-    [labelFor, locale, reduced, router],
+    [clearAll, labelFor, locale, reduced, router],
   );
 
   const api = useMemo<PageTransitionApi>(

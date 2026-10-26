@@ -90,14 +90,40 @@ describe("PageTransitionProvider", () => {
     expect(screen.queryByTestId("page-transition")).toBeNull();
   });
 
-  it("keeps the curtains closed until the navigation commits, with a safety timeout", () => {
+  it("keeps the curtains closed until a navigation commits, with a short safety timeout", () => {
     push.mockImplementation(() => undefined); // never commits
     mount();
     fireEvent.click(screen.getByText("go"));
-    act(() => void vi.advanceTimersByTime(TRANSITION_TIMING.swapAfter + 4000));
+    act(() => void vi.advanceTimersByTime(TRANSITION_TIMING.swapAfter + TRANSITION_TIMING.commitTimeout - 100));
     expect(screen.getByTestId("page-transition")).toHaveAttribute("data-phase", "hold");
-    act(() => void vi.advanceTimersByTime(1100 + TRANSITION_TIMING.openAfterCommit));
+    act(() => void vi.advanceTimersByTime(200 + TRANSITION_TIMING.openAfterCommit));
     expect(screen.getByTestId("page-transition")).toHaveAttribute("data-phase", "open");
+    expect(TRANSITION_TIMING.commitTimeout).toBeLessThan(2000);
+  });
+
+  it("opens when the navigation lands on a different URL than requested (redirect)", () => {
+    push.mockImplementation(() => window.history.pushState({}, "", "/en/somewhere-else"));
+    mount();
+    fireEvent.click(screen.getByText("go"));
+    act(() => void vi.advanceTimersByTime(TRANSITION_TIMING.swapAfter + TRANSITION_TIMING.commitPoll));
+    expect(window.scrollTo).toHaveBeenCalled();
+    act(() => void vi.advanceTimersByTime(TRANSITION_TIMING.openAfterCommit));
+    expect(screen.getByTestId("page-transition")).toHaveAttribute("data-phase", "open");
+  });
+
+  it("cancels the pending push when the visitor goes back during the closing curtains", () => {
+    mount();
+    fireEvent.click(screen.getByText("go"));
+    act(() => void vi.advanceTimersByTime(300));
+    act(() => {
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    });
+    expect(screen.queryByTestId("page-transition")).toBeNull();
+    act(() => void vi.advanceTimersByTime(3000));
+    expect(push).not.toHaveBeenCalled();
+    // A new navigation works afterwards.
+    fireEvent.click(screen.getByText("go"));
+    expect(screen.getByTestId("page-transition")).toBeInTheDocument();
   });
 
   it("does nothing special for reduced motion: navigates at once, no overlay", () => {
