@@ -12,7 +12,7 @@ test.describe("theme", () => {
 
   test("AC-003: dark choice survives reload with no flash", async ({ page }) => {
     await page.goto("/en");
-    await page.getByTestId("theme-toggle").click();
+    await page.getByTestId("theme-toggle").first().first().click();
     await expect(page.locator("html")).toHaveClass(/dark/);
     expect(await page.evaluate(() => localStorage.getItem("ibss-theme"))).toBe("dark");
 
@@ -37,15 +37,15 @@ test.describe("theme", () => {
 
   test("theme is shared across locales and pages", async ({ page }) => {
     await page.goto("/en/about");
-    await page.getByTestId("theme-toggle").click();
+    await page.getByTestId("theme-toggle").first().first().click();
     await page.goto("/ar");
     await expect(page.locator("html")).toHaveClass(/dark/);
   });
 
   test("toggling back to light persists", async ({ page }) => {
     await page.goto("/en");
-    await page.getByTestId("theme-toggle").click();
-    await page.getByTestId("theme-toggle").click();
+    await page.getByTestId("theme-toggle").first().first().click();
+    await page.getByTestId("theme-toggle").first().first().click();
     await page.reload();
     await expect(page.locator("html")).not.toHaveClass(/dark/);
   });

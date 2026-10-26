@@ -1,9 +1,6 @@
-import type { Locale } from "@/i18n/routing";
-import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import { Suspense } from "react";
-import { LangSwitch } from "@/components/layout/lang-switch";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { setRequestLocale } from "next-intl/server";
+import type { Locale } from "@/i18n/routing";
 
 export default async function AboutPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -14,14 +11,10 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
 function Placeholder() {
   const t = useTranslations("about");
   return (
-    <main className="p-8">
-      <h1 data-testid="page-title">
+    <section className="mx-auto max-w-[1280px] px-8 py-24">
+      <h1 data-testid="page-title" className="text-5xl font-semibold">
         {t("aboutH1a")} {t("aboutH1b")}
       </h1>
-      <ThemeToggle />
-      <Suspense fallback={null}>
-        <LangSwitch />
-      </Suspense>
-    </main>
+    </section>
   );
 }

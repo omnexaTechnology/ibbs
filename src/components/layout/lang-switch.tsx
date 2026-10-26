@@ -4,10 +4,12 @@ import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { Link, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 
 /**
  * Switches between EN and AR while staying on the same page
  * (path, dynamic params such as a project slug, and query string are preserved).
+ * Must be rendered inside a <Suspense> boundary (it reads the query string).
  */
 export function LangSwitch({ className }: { className?: string }) {
   const locale = useLocale();
@@ -22,15 +24,20 @@ export function LangSwitch({ className }: { className?: string }) {
       href={href}
       locale={target}
       scroll={false}
-      className={className}
+      className={cn("whitespace-nowrap", className)}
       aria-label={t("switchLang")}
       hrefLang={target}
-      lang={target}
       data-testid="lang-switch"
     >
-      <span aria-hidden={locale === "ar"}>EN</span>
-      <span aria-hidden="true"> | </span>
-      <span>العربية</span>
+      <span className={locale === "en" ? "font-semibold text-link" : "opacity-55"} lang="en">
+        EN
+      </span>
+      <span className="opacity-55" aria-hidden="true">
+        |
+      </span>
+      <span className={locale === "ar" ? "font-semibold text-link" : "opacity-55"} lang="ar">
+        العربية
+      </span>
     </Link>
   );
 }
