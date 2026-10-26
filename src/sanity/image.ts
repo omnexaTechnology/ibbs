@@ -1,4 +1,4 @@
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import type { LocalizedString } from "@/types/site-settings";
 import { dataset, projectId } from "./env";
 
@@ -28,7 +28,7 @@ export type SiteImage = {
   alt: LocalizedString;
 };
 
-const builder = () => imageUrlBuilder({ projectId, dataset });
+const builder = () => createImageUrlBuilder({ projectId, dataset });
 
 const pct = (n: number) => `${Math.round(Math.min(1, Math.max(0, n)) * 1000) / 10}%`;
 

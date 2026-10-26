@@ -1,0 +1,568 @@
+{
+  "projects": [
+    {
+      "id": "exec-hq",
+      "category": "exec",
+      "cover": "392f132000b6616f5bd785c5cf113e24.jpg",
+      "gallery": [
+        "392f132000b6616f5bd785c5cf113e24.jpg",
+        "f993a2ed3a31788141889f0f665e9590.jpg",
+        "cdbf3093ace57db9ae3fa096335df8cf.jpg",
+        "bdf1408b242e54d4c9ab111cdbd828ff.jpg"
+      ],
+      "areaM2": 1850,
+      "durationDays": 45,
+      "year": 2025,
+      "city": {
+        "en": "Riyadh",
+        "ar": "الرياض"
+      },
+      "scope": [
+        "exec",
+        "chairs",
+        "store",
+        "meet",
+        "recep"
+      ],
+      "title": {
+        "en": "Executive Headquarters Suite",
+        "ar": "الجناح التنفيذي للمقر الرئيسي"
+      },
+      "challenge": {
+        "en": "A leadership floor that had to feel calm and premium, while fitting private offices, storage and a meeting area into a tight footprint.",
+        "ar": "طابق إداري يجب أن يبدو هادئاً وفاخراً، مع استيعاب مكاتب خاصة ووحدات تخزين ومنطقة اجتماعات في مساحة محدودة."
+      },
+      "solution": {
+        "en": "We paired light oak desks with full-height off-white storage walls and hid warm LED in ceiling coves and shelving — creating depth without clutter.",
+        "ar": "جمعنا مكاتب البلوط الفاتح مع جدران تخزين بيضاء بطول كامل، وأخفينا إضاءة LED دافئة في السقف والأرفف — لنمنح المساحة عمقاً دون ازدحام."
+      },
+      "hotspots": [
+        {
+          "x": 52,
+          "y": 7,
+          "tag": {
+            "en": "Lighting",
+            "ar": "الإضاءة"
+          },
+          "title": {
+            "en": "Warm hidden LED cove",
+            "ar": "إضاءة مخفية دافئة"
+          },
+          "desc": {
+            "en": "Indirect light that softens the whole room.",
+            "ar": "إضاءة غير مباشرة تمنح الغرفة نعومة."
+          }
+        },
+        {
+          "x": 23,
+          "y": 36,
+          "tag": {
+            "en": "Storage",
+            "ar": "التخزين"
+          },
+          "title": {
+            "en": "Off-white storage wall",
+            "ar": "جدار تخزين أبيض"
+          },
+          "desc": {
+            "en": "Open display shelves with closed cabinets below.",
+            "ar": "أرفف عرض مفتوحة مع خزائن مغلقة بالأسفل."
+          }
+        },
+        {
+          "x": 58,
+          "y": 70,
+          "tag": {
+            "en": "Finish",
+            "ar": "التشطيب"
+          },
+          "title": {
+            "en": "Natural oak desk",
+            "ar": "مكتب بلوط طبيعي"
+          },
+          "desc": {
+            "en": "Oak top with steel A-frame legs.",
+            "ar": "سطح بلوط مع أرجل معدنية."
+          }
+        }
+      ],
+      "featured": true,
+      "order": 1
+    },
+    {
+      "id": "ops-floor",
+      "category": "hq",
+      "cover": "3633ba07edf8676f54a90c271c0b7fcf.jpg",
+      "gallery": [
+        "3633ba07edf8676f54a90c271c0b7fcf.jpg",
+        "b908eb1f5a7365ef1b38a3a2f3edcf25.jpg",
+        "10da7242b575d61237843fe30d347cc7.jpg",
+        "3ba487198e06af00a1febff5eafb7028.jpg"
+      ],
+      "areaM2": 3200,
+      "durationDays": 60,
+      "year": 2025,
+      "city": {
+        "en": "Jeddah",
+        "ar": "جدة"
+      },
+      "scope": [
+        "ws",
+        "chairs",
+        "store",
+        "meet",
+        "lounge"
+      ],
+      "title": {
+        "en": "Open-Plan Operations Floor",
+        "ar": "طابق العمليات المفتوح"
+      },
+      "challenge": {
+        "en": "A large team moving into an open floor needed focus, privacy and storage without losing the openness of the space.",
+        "ar": "فريق كبير ينتقل إلى طابق مفتوح يحتاج إلى التركيز والخصوصية والتخزين دون أن تفقد المساحة انفتاحها."
+      },
+      "solution": {
+        "en": "Clustered white workstations with acoustic fabric screens, mobile pedestals and ergonomic mesh chairs — arranged along daylight with clear circulation aisles.",
+        "ar": "محطات عمل بيضاء مجمّعة مع شاشات قماش عازلة للصوت وأدراج متحركة وكراسي شبكية — موزعة على امتداد الضوء الطبيعي مع ممرات حركة واضحة."
+      },
+      "hotspots": [
+        {
+          "x": 50,
+          "y": 30,
+          "tag": {
+            "en": "Acoustics",
+            "ar": "الصوتيات"
+          },
+          "title": {
+            "en": "Acoustic fabric partition",
+            "ar": "قاطع قماش عازل للصوت"
+          },
+          "desc": {
+            "en": "Desk-mounted screens reduce noise and add privacy.",
+            "ar": "شاشات مثبتة على المكتب تقلل الضوضاء وتمنح خصوصية."
+          }
+        },
+        {
+          "x": 31,
+          "y": 66,
+          "tag": {
+            "en": "Seating",
+            "ar": "الجلوس"
+          },
+          "title": {
+            "en": "Ergonomic mesh chair",
+            "ar": "كرسي شبكي مريح"
+          },
+          "desc": {
+            "en": "Adjustable arms, lumbar and seat depth.",
+            "ar": "مساند وارتفاع وعمق مقعد قابلة للتعديل."
+          }
+        },
+        {
+          "x": 72,
+          "y": 62,
+          "tag": {
+            "en": "Storage",
+            "ar": "التخزين"
+          },
+          "title": {
+            "en": "Mobile pedestals",
+            "ar": "أدراج متحركة"
+          },
+          "desc": {
+            "en": "Lockable three-drawer units on castors.",
+            "ar": "وحدات ثلاثية الأدراج بقفل وعجلات."
+          }
+        }
+      ],
+      "featured": true,
+      "order": 2
+    },
+    {
+      "id": "boardroom",
+      "category": "exec",
+      "cover": "b22c88edefb7a1768aaeacea88874742.jpg",
+      "gallery": [
+        "b22c88edefb7a1768aaeacea88874742.jpg",
+        "daae411e828db76d15937c6508fe9176.jpg",
+        "335452fca6e469401e459310846ba1d9.jpg",
+        "bdf1408b242e54d4c9ab111cdbd828ff.jpg"
+      ],
+      "areaM2": 920,
+      "durationDays": 30,
+      "year": 2024,
+      "city": {
+        "en": "Riyadh",
+        "ar": "الرياض"
+      },
+      "scope": [
+        "meet",
+        "chairs",
+        "exec",
+        "store",
+        "recep"
+      ],
+      "title": {
+        "en": "Boardroom & Leadership Suite",
+        "ar": "قاعة مجلس الإدارة والجناح القيادي"
+      },
+      "challenge": {
+        "en": "The client wanted a boardroom that impresses visitors yet stays practical for daily meetings and video calls.",
+        "ar": "أراد العميل قاعة مجلس إدارة تُبهر الزوار وتبقى عملية للاجتماعات اليومية والمكالمات المرئية."
+      },
+      "solution": {
+        "en": "A sculpted two-tone conference table with integrated power, tan leather chairs and a matching executive desk — tied together by a warm oak palette.",
+        "ar": "طاولة اجتماعات بلونين مع منافذ كهرباء مدمجة وكراسي جلدية بنية ومكتب تنفيذي متناسق — يجمعها لون البلوط الدافئ."
+      },
+      "hotspots": [
+        {
+          "x": 45,
+          "y": 52,
+          "tag": {
+            "en": "Table",
+            "ar": "الطاولة"
+          },
+          "title": {
+            "en": "Two-tone conference table",
+            "ar": "طاولة اجتماعات بلونين"
+          },
+          "desc": {
+            "en": "Oak top on sculpted grey base with power access.",
+            "ar": "سطح بلوط على قاعدة رمادية مع منافذ كهرباء."
+          }
+        },
+        {
+          "x": 22,
+          "y": 40,
+          "tag": {
+            "en": "Seating",
+            "ar": "الجلوس"
+          },
+          "title": {
+            "en": "Leather meeting chairs",
+            "ar": "كراسي اجتماعات جلدية"
+          },
+          "desc": {
+            "en": "Tan leather with polished base.",
+            "ar": "جلد بني مع قاعدة لامعة."
+          }
+        },
+        {
+          "x": 78,
+          "y": 30,
+          "tag": {
+            "en": "Lighting",
+            "ar": "الإضاءة"
+          },
+          "title": {
+            "en": "Backlit shelving",
+            "ar": "أرفف بإضاءة خلفية"
+          },
+          "desc": {
+            "en": "Warm LED strips inside display niches.",
+            "ar": "شرائط LED دافئة داخل فتحات العرض."
+          }
+        }
+      ],
+      "featured": true,
+      "order": 3
+    },
+    {
+      "id": "cowork",
+      "category": "exec",
+      "cover": "fd28b31c61df867042489df43132de84.jpg",
+      "gallery": [
+        "fd28b31c61df867042489df43132de84.jpg",
+        "9e9e61ba4edd26eddfa39131fe6a1f37.jpg",
+        "577e70608dc7a37abbd16925e0f84bfe.jpg",
+        "10da7242b575d61237843fe30d347cc7.jpg"
+      ],
+      "areaM2": 1400,
+      "durationDays": 40,
+      "year": 2024,
+      "city": {
+        "en": "Dammam",
+        "ar": "الدمام"
+      },
+      "scope": [
+        "ws",
+        "lounge",
+        "meet",
+        "chairs",
+        "store"
+      ],
+      "title": {
+        "en": "Collaborative Coworking Hub",
+        "ar": "مركز العمل المشترك التفاعلي"
+      },
+      "challenge": {
+        "en": "Members needed a mix of focus desks, informal lounges and bookable meeting spots in one flexible floor.",
+        "ar": "احتاج الأعضاء إلى مزيج من مكاتب التركيز والجلسات غير الرسمية وغرف الاجتماعات في طابق واحد مرن."
+      },
+      "solution": {
+        "en": "Curved lounge seating in bold colour, sage-green storage and modular desks let the floor shift between focus and collaboration through the day.",
+        "ar": "جلسات منحنية بألوان جريئة ووحدات تخزين بلون أخضر هادئ ومكاتب قابلة لإعادة التشكيل تتيح للمساحة التنقل بين التركيز والتعاون طوال اليوم."
+      },
+      "hotspots": [
+        {
+          "x": 40,
+          "y": 50,
+          "tag": {
+            "en": "Lounge",
+            "ar": "الجلسات"
+          },
+          "title": {
+            "en": "Curved lounge sofas",
+            "ar": "كنب منحني"
+          },
+          "desc": {
+            "en": "Soft seating for informal meetings.",
+            "ar": "جلسات ناعمة للاجتماعات غير الرسمية."
+          }
+        },
+        {
+          "x": 70,
+          "y": 30,
+          "tag": {
+            "en": "Fabric",
+            "ar": "القماش"
+          },
+          "title": {
+            "en": "Upholstered cushions",
+            "ar": "وسائد مُنجّدة"
+          },
+          "desc": {
+            "en": "Durable commercial-grade fabric.",
+            "ar": "قماش تجاري متين."
+          }
+        },
+        {
+          "x": 20,
+          "y": 70,
+          "tag": {
+            "en": "Table",
+            "ar": "الطاولة"
+          },
+          "title": {
+            "en": "Round side table",
+            "ar": "طاولة جانبية دائرية"
+          },
+          "desc": {
+            "en": "White top for coffee and laptops.",
+            "ar": "سطح أبيض للقهوة والحاسب."
+          }
+        }
+      ],
+      "featured": false,
+      "order": 4
+    },
+    {
+      "id": "medical",
+      "category": "health",
+      "cover": "059d62bc5cad5484372e45267ff298d0.jpg",
+      "gallery": [
+        "059d62bc5cad5484372e45267ff298d0.jpg",
+        "54a25c19dfd1011e003c4757f5e99ce9.jpg",
+        "8e377a47e0ba9148c7f37704e1bff84f.jpg",
+        "cdbf3093ace57db9ae3fa096335df8cf.jpg"
+      ],
+      "areaM2": 2100,
+      "durationDays": 50,
+      "year": 2025,
+      "city": {
+        "en": "Riyadh",
+        "ar": "الرياض"
+      },
+      "scope": [
+        "recep",
+        "lounge",
+        "chairs",
+        "store",
+        "exec"
+      ],
+      "title": {
+        "en": "Medical Centre Reception & Lounges",
+        "ar": "استقبال وصالات انتظار مركز طبي"
+      },
+      "challenge": {
+        "en": "Patients and visitors needed a welcoming, calm arrival — with surfaces that are easy to clean and hold up to heavy daily use.",
+        "ar": "احتاج المرضى والزوار إلى استقبال مريح وهادئ — بأسطح سهلة التنظيف وتتحمل الاستخدام اليومي المكثف."
+      },
+      "solution": {
+        "en": "A slatted reception counter with a glowing LED base, wipe-clean upholstery and generous lounge seating, in a warm neutral palette that lowers stress.",
+        "ar": "كاونتر استقبال بشرائح خشبية وقاعدة مضيئة، وتنجيد سهل التنظيف، وجلسات انتظار مريحة بألوان دافئة محايدة تبعث على الهدوء."
+      },
+      "hotspots": [
+        {
+          "x": 50,
+          "y": 52,
+          "tag": {
+            "en": "Reception",
+            "ar": "الاستقبال"
+          },
+          "title": {
+            "en": "Slatted LED counter",
+            "ar": "كاونتر بإضاءة LED"
+          },
+          "desc": {
+            "en": "Timber slats with a floating light line.",
+            "ar": "شرائح خشبية مع خط إضاءة سفلي."
+          }
+        },
+        {
+          "x": 60,
+          "y": 12,
+          "tag": {
+            "en": "Lighting",
+            "ar": "الإضاءة"
+          },
+          "title": {
+            "en": "Linear pendant",
+            "ar": "إضاءة معلقة خطية"
+          },
+          "desc": {
+            "en": "Marks the arrival point from across the lobby.",
+            "ar": "تحدد نقطة الاستقبال من أي مكان في البهو."
+          }
+        },
+        {
+          "x": 20,
+          "y": 60,
+          "tag": {
+            "en": "Seating",
+            "ar": "الجلوس"
+          },
+          "title": {
+            "en": "Wipe-clean lounge seats",
+            "ar": "جلسات سهلة التنظيف"
+          },
+          "desc": {
+            "en": "Healthcare-grade upholstery.",
+            "ar": "تنجيد مناسب للمنشآت الصحية."
+          }
+        }
+      ],
+      "featured": true,
+      "order": 5
+    },
+    {
+      "id": "clinic-admin",
+      "category": "health",
+      "cover": "577e70608dc7a37abbd16925e0f84bfe.jpg",
+      "gallery": [
+        "577e70608dc7a37abbd16925e0f84bfe.jpg",
+        "9e9e61ba4edd26eddfa39131fe6a1f37.jpg",
+        "29113ad126b971881de08fbbc68b5c2a.jpg",
+        "cdbf3093ace57db9ae3fa096335df8cf.jpg"
+      ],
+      "areaM2": 780,
+      "durationDays": 25,
+      "year": 2024,
+      "city": {
+        "en": "Jeddah",
+        "ar": "جدة"
+      },
+      "scope": [
+        "exec",
+        "chairs",
+        "store",
+        "ws",
+        "meet"
+      ],
+      "title": {
+        "en": "Clinic Administrative Offices",
+        "ar": "المكاتب الإدارية لعيادة طبية"
+      },
+      "challenge": {
+        "en": "Doctors and admin staff shared one floor and needed quiet private offices alongside efficient shared workspace.",
+        "ar": "تشارك الأطباء والإداريون طابقاً واحداً واحتاجوا مكاتب خاصة هادئة إلى جانب مساحات عمل مشتركة فعّالة."
+      },
+      "solution": {
+        "en": "Oak desks with sage-green storage returns, ergonomic seating and slatted timber feature walls bring warmth to a clinical setting.",
+        "ar": "مكاتب بلوط مع وحدات تخزين بلون أخضر هادئ وكراسي مريحة وجدران خشبية مضلعة تضفي دفئاً على البيئة الطبية."
+      },
+      "hotspots": [
+        {
+          "x": 47,
+          "y": 30,
+          "tag": {
+            "en": "Wall",
+            "ar": "الجدار"
+          },
+          "title": {
+            "en": "Slatted oak feature wall",
+            "ar": "جدار خشبي مضلّع"
+          },
+          "desc": {
+            "en": "Adds warmth and helps absorb sound.",
+            "ar": "يضيف دفئاً ويساعد على امتصاص الصوت."
+          }
+        },
+        {
+          "x": 52,
+          "y": 66,
+          "tag": {
+            "en": "Storage",
+            "ar": "التخزين"
+          },
+          "title": {
+            "en": "Sage-green return",
+            "ar": "وحدة تخزين خضراء"
+          },
+          "desc": {
+            "en": "Integrated drawers and open niche.",
+            "ar": "أدراج مدمجة وفتحة مفتوحة."
+          }
+        },
+        {
+          "x": 80,
+          "y": 60,
+          "tag": {
+            "en": "Seating",
+            "ar": "الجلوس"
+          },
+          "title": {
+            "en": "Ergonomic mesh chair",
+            "ar": "كرسي شبكي مريح"
+          },
+          "desc": {
+            "en": "Full adjustability for long shifts.",
+            "ar": "قابلية تعديل كاملة للمناوبات الطويلة."
+          }
+        }
+      ],
+      "featured": false,
+      "order": 6
+    }
+  ],
+  "hero": [
+    {
+      "image": "392f132000b6616f5bd785c5cf113e24.jpg",
+      "alt": {
+        "en": "Executive office with oak desk and warm hidden LED",
+        "ar": "مكتب تنفيذي بمكتب بلوط وإضاءة مخفية دافئة"
+      }
+    },
+    {
+      "image": "b22c88edefb7a1768aaeacea88874742.jpg",
+      "alt": {
+        "en": "Boardroom with two-tone conference table",
+        "ar": "قاعة اجتماعات بطاولة بلونين"
+      }
+    },
+    {
+      "image": "3633ba07edf8676f54a90c271c0b7fcf.jpg",
+      "alt": {
+        "en": "Open-plan workstations with fabric screens",
+        "ar": "محطات عمل مفتوحة بشاشات قماش"
+      }
+    },
+    {
+      "image": "54a25c19dfd1011e003c4757f5e99ce9.jpg",
+      "alt": {
+        "en": "Calm waiting lounge with soft seating",
+        "ar": "صالة انتظار هادئة بجلسات مريحة"
+      }
+    }
+  ]
+}

@@ -21,3 +21,6 @@ Discovery batch 2 answered (2026-10-26): contact + social links editable in Sani
 
 ## Next recommended action
 Review FEAT-001 (branch `feat/FEAT-001-app-foundation`), then allow the first push to `omnexaTechnology/ibbs` and check CI + the Vercel preview. Then start FEAT-002 (needs Sanity token for project `zf4tpgl3`, Resend account, lead fallback inbox).
+
+## FEAT-002 (2026-10-26)
+Implemented on local branch `feat/FEAT-002-sanity` (6 tasks, one commit each): embedded Studio at /studio, schemas, desk, query layer + typegen, site settings from Sanity, signed revalidate webhook, seed (run twice against production: 18 assets + 8 documents, no duplicates), lead privacy proven on the public dataset. Validation: lint, tsc, 131 unit tests, build with and without env, 72 e2e. BLOCKED on the user: CORS origins, webhook creation, private dataset, Studio login check, `SANITY_REVALIDATE_SECRET` is empty in .env.local. See docs/SANITY-SETUP.md.

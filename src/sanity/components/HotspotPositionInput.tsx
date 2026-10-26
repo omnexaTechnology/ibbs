@@ -1,6 +1,6 @@
 "use client";
 
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import type { MouseEvent } from "react";
 import { set, useClient, useFormValue, type ObjectInputProps } from "sanity";
 import { apiVersion } from "../env";
@@ -16,7 +16,7 @@ export function HotspotPositionInput(props: ObjectInputProps) {
   const value = props.value as { x?: number; y?: number } | undefined;
 
   const hasCover = Boolean(cover?.asset?._ref);
-  const src = hasCover ? imageUrlBuilder(client).image(cover as never).width(900).url() : null;
+  const src = hasCover ? createImageUrlBuilder(client).image(cover as never).width(900).url() : null;
 
   const onPick = (event: MouseEvent<HTMLDivElement>) => {
     const point = clickToPercent(event.currentTarget.getBoundingClientRect(), event.clientX, event.clientY);
