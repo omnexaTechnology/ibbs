@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../styles/page-transition.css";
+@import "../styles/custom-cursor.css";
 
 /* Dark mode = `.dark` class on <html> (next-themes, attribute="class"). */
 @custom-variant dark (&:is(.dark, .dark *));
@@ -182,5 +184,19 @@ html[dir="rtl"] {
   }
   .dark a:hover {
     color: var(--cream);
+  }
+}
+
+/* BR-002: reduced motion switches off animations and smooth scrolling everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -10,17 +10,15 @@ let mockPathname = "/";
 
 vi.mock("@/i18n/navigation", async () => {
   const React = await import("react");
-  return {
-    usePathname: () => mockPathname,
-    Link: ({ href, children, ...props }: Record<string, unknown>) => {
-      const { locale: _l, scroll: _s, ...rest } = props;
-      void _l;
-      void _s;
-      const obj = href as { pathname: string; query: { category: string } };
-      const url = typeof href === "string" ? href : `${obj.pathname}?category=${obj.query.category}`;
-      return React.createElement("a", { href: url, ...rest }, children as React.ReactNode);
-    },
+  const MockLink = ({ href, children, ...props }: Record<string, unknown>) => {
+    const { locale: _l, scroll: _s, ...rest } = props;
+    void _l;
+    void _s;
+    const obj = href as { pathname: string; query: { category: string } };
+    const url = typeof href === "string" ? href : `${obj.pathname}?category=${obj.query.category}`;
+    return React.createElement("a", { href: url, ...rest }, children as React.ReactNode);
   };
+  return { usePathname: () => mockPathname, PlainLink: MockLink, Link: MockLink };
 });
 vi.mock("next/navigation", () => ({
   useSearchParams: () => new URLSearchParams(),

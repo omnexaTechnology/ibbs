@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { CustomCursor } from "@/components/layout/custom-cursor";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { PageTransitionProvider } from "@/components/layout/page-transition";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { fontClassFor } from "@/lib/fonts";
@@ -41,10 +43,13 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body className="site">
         <ThemeProvider>
           <NextIntlClientProvider>
-            <Header settings={settings} />
-            <main id="main">{children}</main>
-            <Footer settings={settings} />
-            <WhatsAppButton settings={settings} />
+            <PageTransitionProvider>
+              <Header settings={settings} />
+              <main id="main">{children}</main>
+              <Footer settings={settings} />
+              <WhatsAppButton settings={settings} />
+              <CustomCursor />
+            </PageTransitionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

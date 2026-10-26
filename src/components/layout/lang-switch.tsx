@@ -2,7 +2,7 @@
 
 import { useLocale, useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
-import { Link, usePathname } from "@/i18n/navigation";
+import { PlainLink, usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +20,7 @@ export function LangSwitch({ className }: { className?: string }) {
   const href = search ? `${pathname}?${search}` : pathname;
 
   return (
-    <Link
+    <PlainLink
       href={href}
       locale={target}
       scroll={false}
@@ -38,6 +38,6 @@ export function LangSwitch({ className }: { className?: string }) {
       <span className={locale === "ar" ? "font-semibold text-link" : "opacity-55"} lang="ar">
         العربية
       </span>
-    </Link>
+    </PlainLink>
   );
 }
