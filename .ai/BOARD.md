@@ -1,7 +1,7 @@
 # Board
 
 Workspace: `ibss-web` (IBSS Innovations Furniture — Next.js + Sanity)
-Last update: 2026-10-26 (FEAT-001 implemented locally)
+Last update: 2026-10-26 (FEAT-001 in review, PR #1)
 
 ## Inbox
 
@@ -20,11 +20,11 @@ Last update: 2026-10-26 (FEAT-001 implemented locally)
 ## In Progress
 | ID | Title | Branches | Next | Updated |
 |---|---|---|---|---|
-| FEAT-001 | App foundation: Next.js, EN/AR + RTL, theme, layout shell | `feat/FEAT-001-app-foundation` (local, not pushed) | T-001..T-005 DONE; T-006 DONE except GitHub push + Vercel preview (BLOCKED: push not yet permitted). Next: review, then push + verify CI and preview URL | 2026-10-26 |
 
 ## Review
 | ID | Title | Branches | Next | Updated |
 |---|---|---|---|---|
+| FEAT-001 | App foundation: Next.js, EN/AR + RTL, theme, layout shell | `feat/FEAT-001-app-foundation` → PR #1 (omnexaTechnology/ibbs) | Opus review + re-review passed (READY_FOR_HUMAN_REVIEW); waiting: CI run, Vercel preview (user creates the project), Arabic string check, user merge | 2026-10-26 |
 
 ## Done
 
