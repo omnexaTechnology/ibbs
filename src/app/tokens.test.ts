@@ -10,6 +10,7 @@ describe("design tokens (REQ-004)", () => {
     ["--blue", "#2e6eb5"],
     ["--cyan", "#4ca6cb"],
     ["--green", "#8bc34a"],
+    ["--gray", "#e6e6e6"],
     ["--cream", "#f5f2ec"],
     ["--night", "#0b1120"],
     ["--night-2", "#131d36"],

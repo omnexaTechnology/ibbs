@@ -19,6 +19,7 @@
   --night: #0b1120;
   --night-2: #131d36;
   --white: #ffffff;
+  --gray: #e6e6e6;
   --navy-rgb: 30, 46, 90;
   --blue-rgb: 46, 110, 181;
   --cyan-rgb: 76, 166, 203;
@@ -99,6 +100,7 @@ html[dir="rtl"] {
   --color-cream: var(--cream);
   --color-night: var(--night);
   --color-night-2: var(--night-2);
+  --color-gray: var(--gray);
 
   --color-bg: var(--bg);
   --color-surface: var(--surface);
@@ -171,6 +173,12 @@ html[dir="rtl"] {
   }
   html[dir="rtl"] .site {
     line-height: 1.85;
+  }
+
+  /* Keyboard focus ring (design: cyan, 2px). Visible on cream, navy and glass surfaces. */
+  :focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
   }
 
   a {
