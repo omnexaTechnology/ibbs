@@ -58,3 +58,66 @@ test("F-07: the language switch is in the server HTML and links to the same page
   const ar = await (await request.get("/ar/about")).text();
   expect(ar).toContain('href="/en/about"');
 });
+
+test.describe("F-08: 404 pages", () => {
+  for (const [path, lang, dir, text] of [
+    ["/en/does-not-exist", "en", "ltr", "Page not found"],
+    ["/ar/does-not-exist/deeper", "ar", "rtl", "الصفحة غير موجودة"],
+  ] as const) {
+    test(`${path} is a localized 404 inside the shell`, async ({ page }) => {
+      const res = await page.goto(path);
+      expect(res?.status()).toBe(404);
+      await expect(page.locator("html")).toHaveAttribute("lang", lang);
+      await expect(page.locator("html")).toHaveAttribute("dir", dir);
+      await expect(page.getByTestId("not-found")).toContainText(text);
+      await expect(page.getByTestId("site-header")).toBeVisible();
+    });
+  }
+
+  test("an unprefixed unknown path ends on the localized 404", async ({ page }) => {
+    const res = await page.goto("/does-not-exist");
+    expect(res?.status()).toBe(404);
+    await expect(page).toHaveURL(/[/]en[/]does-not-exist$/);
+    await expect(page.getByTestId("not-found")).toBeVisible();
+  });
+
+  test("unknown /api paths answer with a JSON 404, not an HTML page", async ({ request }) => {
+    const res = await request.get("/api/unknown");
+    expect(res.status()).toBe(404);
+    expect(res.headers()["content-type"]).toContain("application/json");
+    expect(await res.json()).toEqual({ error: "Not found" });
+  });
+});
+
+test("F-15: a favicon is declared and served (no 404 on load)", async ({ page, request }) => {
+  const failed: string[] = [];
+  page.on("response", (r) => {
+    if (r.status() === 404 && !r.url().includes("does-not-exist")) failed.push(r.url());
+  });
+  await page.goto("/en");
+  const href = await page.locator('link[rel~="icon"]').first().getAttribute("href");
+  expect(href).toBeTruthy();
+  const res = await request.get(href!);
+  expect(res.status()).toBe(200);
+  expect(res.headers()["content-type"]).toContain("svg");
+  expect(failed).toEqual([]);
+});
+
+test("F-12: the footer shows the current year", async ({ page }) => {
+  await page.goto("/en");
+  await expect(page.getByTestId("site-footer")).toContainText(String(new Date().getFullYear()));
+});
+
+test("F-11: keyboard focus shows a cyan outline", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/en");
+  await page.keyboard.press("Tab"); // skip link
+  await page.keyboard.press("Tab");
+  const outline = await page.evaluate(() => {
+    const s = getComputedStyle(document.activeElement as Element);
+    return { color: s.outlineColor, width: s.outlineWidth, style: s.outlineStyle };
+  });
+  expect(outline.style).toBe("solid");
+  expect(outline.width).toBe("2px");
+  expect(outline.color).toBe("rgb(76, 166, 203)");
+});
