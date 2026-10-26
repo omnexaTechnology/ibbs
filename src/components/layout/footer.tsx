@@ -6,6 +6,7 @@ import { projectCategories } from "@/content/taxonomy";
 import { Link } from "@/i18n/navigation";
 import { localize, toTelHref, usableEntries } from "@/lib/contact";
 import type { SiteSettings } from "@/types/site-settings";
+import { CurrentYear } from "./current-year";
 import { NAV_ITEMS } from "./nav-items";
 import { SocialLinks } from "./social-links";
 
@@ -114,7 +115,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
 
           <div className="mt-14 grid items-center gap-4 border-t border-cream/10 pt-7 md:grid-cols-[1fr_auto_1fr]">
             <p className="text-[14px]">
-              © {new Date().getFullYear()} <b className="font-semibold text-cyan">{tcommon("brand")}</b> · {t("rights")}
+              © <CurrentYear /> <b className="font-semibold text-cyan">{tcommon("brand")}</b> · {t("rights")}
             </p>
             <SocialLinks
               settings={settings}
