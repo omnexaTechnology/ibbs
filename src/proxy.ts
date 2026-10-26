@@ -7,5 +7,7 @@ export const proxy = createMiddleware(routing);
 
 export const config = {
   // Skip: /api, /studio (Sanity), /_next, /_vercel, and anything with a file extension.
-  matcher: ["/((?!api|studio|_next|_vercel|.*\..*).*)"],
+  // The dot must be escaped twice: "\\." in a JS string is the regex "\.".
+  // Segment boundaries so that e.g. /studios-x or /apiary are still handled.
+  matcher: ["/((?!(?:api|studio|_next|_vercel)(?:/|$)|.*\\..*).*)"],
 };

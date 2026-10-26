@@ -42,9 +42,35 @@ test.describe("browser language redirect", () => {
   });
 });
 
-test("proxy does not touch /api, /studio, static files", async ({ request }) => {
-  const r = await request.get("/studio", { maxRedirects: 0 });
-  expect(r.headers()["location"] ?? "").not.toMatch(/\/(en|ar)\/studio/);
-  const f = await request.get("/favicon.ico", { maxRedirects: 0 });
-  expect(f.headers()["location"] ?? "").not.toMatch(/\/(en|ar)\//);
+test.describe("proxy matcher (F-02)", () => {
+  for (const path of ["/about", "/contact", "/projects/exec-hq", "/projects?category=mosque"]) {
+    test(`${path} without a locale redirects to /en${path}`, async ({ request }) => {
+      const r = await request.get(path, { maxRedirects: 0 });
+      expect(r.status()).toBe(307);
+      expect(new URL(r.headers()["location"], "http://x").pathname + new URL(r.headers()["location"], "http://x").search).toBe(
+        `/en${path}`,
+      );
+    });
+
+    test(`${path} redirects to /ar${path} for an Arabic browser`, async ({ request }) => {
+      const r = await request.get(path, { maxRedirects: 0, headers: { "Accept-Language": "ar-SA,ar;q=0.9" } });
+      expect(r.status()).toBe(307);
+      const u = new URL(r.headers()["location"], "http://x");
+      expect(u.pathname + u.search).toBe(`/ar${path}`);
+    });
+  }
+
+  // These are excluded from the proxy: no redirect to a locale-prefixed URL.
+  for (const path of ["/studio", "/studio/structure", "/api/x", "/favicon.ico", "/brand/logo-light.png"]) {
+    test(`${path} is not redirected`, async ({ request }) => {
+      const r = await request.get(path, { maxRedirects: 0 });
+      expect(r.status()).not.toBe(307);
+      expect(r.headers()["location"] ?? "").toBe("");
+    });
+  }
+
+  test("a path that merely starts with an excluded word is still localised", async ({ request }) => {
+    const r = await request.get("/apiary", { maxRedirects: 0 });
+    expect(r.status()).toBe(307);
+  });
 });
