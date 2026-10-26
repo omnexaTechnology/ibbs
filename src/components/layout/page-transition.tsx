@@ -16,8 +16,11 @@ export const TRANSITION_TIMING = {
   openAfterCommit: 110,
   /** Opening animation length (2400 - 1260 in the design). */
   openDuration: 1140,
-  /** Safety net: open anyway if no navigation commits (failed, or it landed on the current URL). */
-  commitTimeout: 1500,
+  /**
+   * Last resort only: open anyway if the URL never changes (navigation failed, or it ended on the
+   * current URL). Real completion is detected by the URL change, so slow pages keep the curtains closed.
+   */
+  commitTimeout: 8000,
   commitPoll: 40,
 } as const;
 
@@ -64,6 +67,7 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
   const busy = useRef(false);
   const timers = useRef<number[]>([]);
   const poll = useRef<number | null>(null);
+  const cancelRef = useRef<(() => void) | null>(null);
 
   const clearAll = useCallback(() => {
     timers.current.forEach((id) => window.clearTimeout(id));
@@ -72,7 +76,14 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
     poll.current = null;
   }, []);
 
-  useEffect(() => clearAll, [clearAll]);
+  useEffect(
+    () => () => {
+      clearAll();
+      if (cancelRef.current) window.removeEventListener("popstate", cancelRef.current);
+      cancelRef.current = null;
+    },
+    [clearAll],
+  );
 
   const labelFor = useCallback(
     (url: string) => {
@@ -109,6 +120,7 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
       };
       const finish = () => {
         window.removeEventListener("popstate", cancel);
+        cancelRef.current = null;
         setState({ phase: null, label: "" });
         busy.current = false;
       };
@@ -119,6 +131,7 @@ export function PageTransitionProvider({ children }: { children: React.ReactNode
         finish();
       };
       window.addEventListener("popstate", cancel);
+      cancelRef.current = cancel;
 
       after(TRANSITION_TIMING.swapAfter, () => {
         setState((s) => ({ ...s, phase: "hold" }));

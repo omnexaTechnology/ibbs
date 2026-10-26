@@ -45,6 +45,24 @@ test.describe("page transition and cursor (motion allowed)", () => {
     await expect(page.getByTestId("page-transition")).toHaveCount(0);
   });
 
+  test("N-01: a slow navigation keeps the curtains closed until the new page arrives", async ({ page }) => {
+    // Delay every RSC (client navigation / prefetch) response for the About page by 4s.
+    await page.route("**/en/about**", async (route) => {
+      if (route.request().headers()["rsc"]) await new Promise((r) => setTimeout(r, 4000));
+      await route.continue();
+    });
+    await page.goto("/en");
+    const overlay = page.getByTestId("page-transition");
+    await page.getByRole("navigation", { name: "Main", exact: true }).getByRole("link", { name: "About Us" }).click();
+    await page.waitForTimeout(3000); // far past the 1.15s swap point and the old 1.5s timeout
+    await expect(overlay).toHaveAttribute("data-phase", "hold");
+    await expect(page).toHaveURL(/[/]en$/);
+    // Once the page arrives it is revealed by the opening curtains, then the overlay goes.
+    await expect(page).toHaveURL(/[/]en[/]about$/, { timeout: 6000 });
+    await expect(overlay).toHaveCount(0, { timeout: 5000 });
+    await expect(page.getByTestId("page-title")).toBeVisible();
+  });
+
   test("Arabic transition shows the Arabic label", async ({ page }) => {
     await page.goto("/ar");
     await page.getByRole("navigation", { name: "التنقل الرئيسي" }).getByRole("link").nth(1).click();

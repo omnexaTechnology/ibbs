@@ -98,7 +98,35 @@ describe("PageTransitionProvider", () => {
     expect(screen.getByTestId("page-transition")).toHaveAttribute("data-phase", "hold");
     act(() => void vi.advanceTimersByTime(200 + TRANSITION_TIMING.openAfterCommit));
     expect(screen.getByTestId("page-transition")).toHaveAttribute("data-phase", "open");
-    expect(TRANSITION_TIMING.commitTimeout).toBeLessThan(2000);
+    expect(TRANSITION_TIMING.commitTimeout).toBeGreaterThanOrEqual(6000);
+  });
+
+  it("N-01: a slow navigation keeps the curtains closed until the new page commits", () => {
+    let commit: () => void = () => undefined;
+    push.mockImplementation((href: string) => {
+      commit = () => window.history.pushState({}, "", `/en${href}`);
+    });
+    mount();
+    fireEvent.click(screen.getByText("go"));
+    act(() => void vi.advanceTimersByTime(TRANSITION_TIMING.swapAfter + 4000));
+    // 4s after the swap point the page has still not arrived: curtains must still be closed.
+    expect(screen.getByTestId("page-transition")).toHaveAttribute("data-phase", "hold");
+    expect(window.scrollTo).not.toHaveBeenCalled();
+
+    act(() => commit());
+    act(() => void vi.advanceTimersByTime(TRANSITION_TIMING.commitPoll));
+    expect(window.scrollTo).toHaveBeenCalled();
+    act(() => void vi.advanceTimersByTime(TRANSITION_TIMING.openAfterCommit));
+    expect(screen.getByTestId("page-transition")).toHaveAttribute("data-phase", "open");
+  });
+
+  it("N-03: removes the popstate listener when the provider unmounts mid-transition", () => {
+    const spy = vi.spyOn(window, "removeEventListener");
+    const { unmount } = mount();
+    fireEvent.click(screen.getByText("go"));
+    unmount();
+    expect(spy.mock.calls.some(([type]) => type === "popstate")).toBe(true);
+    spy.mockRestore();
   });
 
   it("opens when the navigation lands on a different URL than requested (redirect)", () => {
