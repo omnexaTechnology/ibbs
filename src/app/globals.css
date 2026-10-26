@@ -1,13 +1,180 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Fonts: next/font sets --font-montserrat (EN) or --font-alexandria (AR) on <html>. */
+/* Dark mode = `.dark` class on <html> (next-themes, attribute="class"). */
+@custom-variant dark (&:is(.dark, .dark *));
+
+/* ------------------------------------------------------------------ */
+/* Design tokens, taken from the design's :root and .site variables.   */
+/* ------------------------------------------------------------------ */
 :root {
+  /* Brand */
+  --navy: #1e2e5a;
+  --blue: #2e6eb5;
+  --cyan: #4ca6cb;
+  --green: #8bc34a;
+  --cream: #f5f2ec;
+  --night: #0b1120;
+  --night-2: #131d36;
+  --white: #ffffff;
+  --navy-rgb: 30, 46, 90;
+  --blue-rgb: 46, 110, 181;
+  --cyan-rgb: 76, 166, 203;
+  --green-rgb: 139, 195, 74;
+  --cream-rgb: 245, 242, 236;
+  --night-rgb: 11, 17, 32;
+  --night-2-rgb: 19, 29, 54;
+
+  /* Surface variables: light (the design's default theme) */
+  --bg: var(--cream);
+  --surface: var(--white);
+  --surface2: color-mix(in srgb, var(--navy) 5%, var(--cream));
+  --text: var(--navy);
+  --muted: rgba(var(--navy-rgb), 0.72);
+  --line: rgba(var(--navy-rgb), 0.14);
+  --link: var(--blue);
+  --btn: var(--navy);
+  --btnText: var(--cream);
+  --glass: rgba(var(--cream-rgb), 0.72);
+  --dot: rgba(var(--navy-rgb), 0.16);
+  --shadow: 0 24px 60px -28px rgba(var(--navy-rgb), 0.35);
+
+  /* Fonts: next/font sets --font-montserrat (EN) or --font-alexandria (AR) on <html>. */
   --ff: var(--font-montserrat), system-ui, sans-serif;
+
+  /* shadcn/ui variables, mapped onto the design's surfaces */
+  --radius: 0.625rem;
+  --background: var(--bg);
+  --foreground: var(--text);
+  --card: var(--surface);
+  --card-foreground: var(--text);
+  --popover: var(--surface);
+  --popover-foreground: var(--text);
+  --primary: var(--btn);
+  --primary-foreground: var(--btnText);
+  --secondary: var(--surface2);
+  --secondary-foreground: var(--text);
+  --muted-foreground: var(--muted);
+  --accent: var(--surface2);
+  --accent-foreground: var(--text);
+  --destructive: #c0392b;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--blue);
 }
+
+/* Surface variables: dark */
+.dark {
+  --bg: var(--night);
+  --surface: var(--night-2);
+  --surface2: var(--navy);
+  --text: var(--cream);
+  --muted: rgba(var(--cream-rgb), 0.72);
+  --line: rgba(var(--cream-rgb), 0.14);
+  --link: var(--cyan);
+  --btn: var(--blue);
+  --btnText: var(--white);
+  --glass: rgba(var(--night-rgb), 0.7);
+  --dot: rgba(var(--cream-rgb), 0.16);
+  --shadow: 0 30px 70px -30px rgba(0, 0, 0, 0.8);
+  --ring: var(--cyan);
+  color-scheme: dark;
+}
+
 html[dir="rtl"] {
   --ff: var(--font-alexandria), system-ui, sans-serif;
 }
-body {
-  font-family: var(--ff);
+
+/* ------------------------------------------------------------------ */
+/* Tailwind theme: colours resolve through the CSS variables above, so */
+/* switching light/dark only swaps variables.                          */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --color-navy: var(--navy);
+  --color-blue: var(--blue);
+  --color-cyan: var(--cyan);
+  --color-green: var(--green);
+  --color-cream: var(--cream);
+  --color-night: var(--night);
+  --color-night-2: var(--night-2);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface2);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-link: var(--link);
+  --color-btn: var(--btn);
+  --color-btn-text: var(--btnText);
+
+  --font-sans: var(--ff);
+  --shadow-site: var(--shadow);
+
+  /* shadcn/ui */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+  }
+
+  /* `.site` is the page surface (the design's root wrapper class). */
+  .site {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--ff);
+    font-size: 16px;
+    line-height: 1.65;
+    overflow-x: clip;
+    transition:
+      background-color 0.5s ease,
+      color 0.5s ease;
+  }
+  html[dir="rtl"] .site {
+    line-height: 1.85;
+  }
+
+  a {
+    color: var(--blue);
+  }
+  a:hover {
+    color: var(--navy);
+  }
+  .dark a {
+    color: var(--cyan);
+  }
+  .dark a:hover {
+    color: var(--cream);
+  }
 }

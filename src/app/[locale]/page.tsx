@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { Suspense } from "react";
 import { LangSwitch } from "@/components/layout/lang-switch";
+import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Link } from "@/i18n/navigation";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
@@ -18,6 +19,7 @@ function Placeholder() {
     <main className="p-8">
       <h1 data-testid="hero-title">{t("heroL1")}</h1>
       <Link href="/about">{n("navAbout")}</Link>
+      <ThemeToggle />
       <Suspense fallback={null}>
         <LangSwitch />
       </Suspense>
