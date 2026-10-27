@@ -9,7 +9,7 @@ import { useLeadForm } from "./use-lead-form";
 /** Quick "request a call" form: a phone number, optionally a name (REQ-002). */
 export function CallForm({ whatsappHref, className }: LeadFormProps) {
   const t = useTranslations("forms");
-  const { formRef, status, errors, onSubmit, reset } = useLeadForm("call");
+  const { formRef, status, errors, ready, onSubmit, reset } = useLeadForm("call");
   const err = (field: string) => (errors[field] ? t(`errors.${errors[field]}`) : undefined);
 
   if (status === "sent") {
@@ -21,16 +21,16 @@ export function CallForm({ whatsappHref, className }: LeadFormProps) {
   }
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} noValidate data-testid="call-form" data-form-type="call" aria-busy={status === "sending"} className={className}>
+    <form ref={formRef} method="post" onSubmit={onSubmit} noValidate data-testid="call-form" data-form-type="call" aria-busy={status === "sending"} className={className}>
       <div className="grid gap-4 sm:grid-cols-2">
-        <TextField id="cf-name" name="name" label={t("fName")} autoComplete="name" placeholder={t("phName")} error={err("name")} />
-        <TextField id="cf-ph" name="phone" type="tel" label={t("fPhone")} required autoComplete="tel" placeholder={t("phPhone")} error={err("phone")} />
+        <TextField id="cf-name" name="name" maxLength={120} label={t("fName")} autoComplete="name" placeholder={t("phName")} error={err("name")} />
+        <TextField id="cf-ph" name="phone" maxLength={40} type="tel" label={t("fPhone")} required autoComplete="tel" placeholder={t("phPhone")} error={err("phone")} />
       </div>
       <Honeypot />
       <div className="mt-5 flex flex-col gap-4">
         {status === "error" && <FormAlert message={t("fFailed")} whatsappHref={whatsappHref} />}
         <div>
-          <button type="submit" disabled={status === "sending"} className={submitButtonClass}>
+          <button type="submit" disabled={!ready || status === "sending"} className={submitButtonClass}>
             {status === "sending" ? t("sending") : t("sendQuick")}
           </button>
         </div>

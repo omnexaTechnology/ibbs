@@ -33,7 +33,7 @@ export function FormAlert({ message, whatsappHref }: { message: string; whatsapp
 /** Full enquiry form (name, company, email, phone, space type, area, message) used by the contact and project forms. */
 export function RequestForm({ formType, whatsappHref, className, heading }: LeadFormProps & { formType: Extract<FormType, "contact" | "project">; heading?: boolean }) {
   const t = useTranslations("forms");
-  const { formRef, status, errors, onSubmit, reset } = useLeadForm(formType);
+  const { formRef, status, errors, ready, onSubmit, reset } = useLeadForm(formType);
   const prefix = formType === "contact" ? "f" : "pf";
   const err = (field: string) => (errors[field] ? t(`errors.${errors[field]}`) : undefined);
   const hasErrors = Object.keys(errors).length > 0;
@@ -47,7 +47,7 @@ export function RequestForm({ formType, whatsappHref, className, heading }: Lead
   }
 
   return (
-    <form ref={formRef} onSubmit={onSubmit} noValidate data-testid={`${formType}-form`} data-form-type={formType} aria-busy={status === "sending"} className={className}>
+    <form ref={formRef} method="post" onSubmit={onSubmit} noValidate data-testid={`${formType}-form`} data-form-type={formType} aria-busy={status === "sending"} className={className}>
       {heading && (
         <div className="mb-6">
           <p className="text-xs font-semibold uppercase tracking-widest text-link">{t("formEyebrow")}</p>
@@ -55,10 +55,10 @@ export function RequestForm({ formType, whatsappHref, className, heading }: Lead
         </div>
       )}
       <div className="grid gap-5 sm:grid-cols-2">
-        <TextField id={`${prefix}-name`} name="name" label={t("fName")} required autoComplete="name" placeholder={t("phName")} error={err("name")} />
-        <TextField id={`${prefix}-ph`} name="phone" type="tel" label={t("fPhone")} required autoComplete="tel" placeholder={t("phPhone")} error={err("phone")} />
-        <TextField id={`${prefix}-em`} name="email" type="email" label={t("fEmail")} autoComplete="email" placeholder="example@company.com" error={err("email")} />
-        <TextField id={`${prefix}-co`} name="company" label={t("fCompany")} autoComplete="organization" placeholder={t("phCo")} error={err("company")} />
+        <TextField id={`${prefix}-name`} name="name" maxLength={120} label={t("fName")} required autoComplete="name" placeholder={t("phName")} error={err("name")} />
+        <TextField id={`${prefix}-ph`} name="phone" maxLength={40} type="tel" label={t("fPhone")} required autoComplete="tel" placeholder={t("phPhone")} error={err("phone")} />
+        <TextField id={`${prefix}-em`} name="email" maxLength={254} type="email" label={t("fEmail")} autoComplete="email" placeholder="example@company.com" error={err("email")} />
+        <TextField id={`${prefix}-co`} name="company" maxLength={160} label={t("fCompany")} autoComplete="organization" placeholder={t("phCo")} error={err("company")} />
         <SelectField
           id={`${prefix}-type`}
           name="spaceType"
@@ -67,14 +67,14 @@ export function RequestForm({ formType, whatsappHref, className, heading }: Lead
           options={SPACE_TYPE_KEYS.map((key) => ({ value: key, label: t(`spaceTypes.${key}`) }))}
           error={err("spaceType")}
         />
-        <TextField id={`${prefix}-area`} name="area" label={t("fArea")} inputMode="numeric" placeholder="1200" error={err("area")} />
-        <TextAreaField id={`${prefix}-msg`} name="message" label={t("fMsg")} placeholder={t("fMsgPh")} className="sm:col-span-2" error={err("message")} />
+        <TextField id={`${prefix}-area`} name="area" maxLength={20} label={t("fArea")} inputMode="numeric" placeholder="1200" error={err("area")} />
+        <TextAreaField id={`${prefix}-msg`} name="message" maxLength={5000} label={t("fMsg")} placeholder={t("fMsgPh")} className="sm:col-span-2" error={err("message")} />
       </div>
       <Honeypot />
       <div className="mt-6 flex flex-col gap-4">
         {status === "error" ? <FormAlert message={t("fFailed")} whatsappHref={whatsappHref} /> : hasErrors && <FormAlert message={t("fInvalid")} />}
         <div>
-          <button type="submit" disabled={status === "sending"} className={submitButtonClass}>
+          <button type="submit" disabled={!ready || status === "sending"} className={submitButtonClass}>
             {status === "sending" ? t("sending") : t("send")}
           </button>
         </div>

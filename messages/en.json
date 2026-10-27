@@ -49,7 +49,7 @@
     "phName": "Enter your name",
     "phPhone": "Enter your phone",
     "phCo": "Company or organisation",
-    "fInvalid": "Please complete the required fields marked with *.",
+    "fInvalid": "Please correct the highlighted fields.",
     "fFailed": "We couldn’t send your request. Please try again, or contact us by phone or email.",
     "quickDone": "Thank you — our team will call you shortly.",
     "sendQuick": "Request a call",

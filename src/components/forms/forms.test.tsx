@@ -15,6 +15,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
+const m_email = () => en.forms.fEmail;
 const WA = "https://wa.me/966500000000?text=hi";
 const json = (status: number, body: unknown) => Promise.resolve(new Response(JSON.stringify(body), { status }));
 
@@ -76,8 +77,8 @@ describe("submission", () => {
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe("/api/leads");
     const body = JSON.parse(init.body);
-    expect(body).toMatchObject({ formType: "contact", locale: "ar", name: "Sara", phone: "0501234567", message: "Need desks", spaceType: "mosque", website: "" });
-    expect(body.pageUrl).toBe(`${window.location.origin}${window.location.pathname}`);
+    expect(body).toMatchObject({ formType: "contact", locale: "ar", name: "Sara", phone: "0501234567", message: "Need desks", spaceType: "mosque", hp_extra: "" });
+    expect(body.pageUrl).toBe(window.location.pathname);
     expect(typeof body.elapsedMs).toBe("number");
 
     await user.click(screen.getByRole("button", { name: m.okAgain }));
@@ -97,6 +98,50 @@ describe("submission", () => {
     await fillAndSend("en", <ContactForm whatsappHref={null} />);
     expect(await screen.findByTestId("form-alert")).toBeInTheDocument();
     expect(screen.queryByTestId("form-whatsapp")).not.toBeInTheDocument();
+  });
+
+  it("every form posts (never a native GET) and its submit button is enabled once mounted (F4-01)", async () => {
+    renderWithIntl(
+      <>
+        <ContactForm />
+        <ProjectForm />
+        <CallForm />
+      </>,
+      "en",
+    );
+    for (const id of ["contact-form", "project-form", "call-form"]) expect(screen.getByTestId(id)).toHaveAttribute("method", "post");
+    for (const b of screen.getAllByRole("button")) expect(b).toBeEnabled();
+  });
+
+  it("required fields are announced with aria-required; inputs carry maxLength (F4-06, F4-12)", () => {
+    renderWithIntl(<ContactForm />, "en");
+    expect(screen.getByLabelText(new RegExp(en.forms.fName))).toHaveAttribute("aria-required", "true");
+    expect(screen.getByLabelText(m_email())).not.toHaveAttribute("aria-required");
+    expect(screen.getByLabelText(m_email())).toHaveAttribute("maxlength", "254");
+  });
+
+  it("double submit while sending posts once", async () => {
+    let resolve!: (r: Response) => void;
+    fetchMock.mockReturnValue(new Promise<Response>((r) => (resolve = r)));
+    const { user, m } = await fillAndSend("en");
+    const btn = screen.getByRole("button", { name: en.forms.sending });
+    expect(btn).toBeDisabled();
+    await user.click(btn);
+    expect(fetchMock).toHaveBeenCalledOnce();
+    resolve(new Response("{}", { status: 200 }));
+    await screen.findByTestId("form-success");
+    void m;
+  });
+
+  it("after a server 400 the timing clock keeps running: the resend reports a larger elapsedMs (F4-02)", async () => {
+    fetchMock.mockReturnValueOnce(json(400, { ok: false, error: "invalid", fields: { phone: "phoneInvalid" } })).mockReturnValueOnce(json(200, { ok: true }));
+    const { user } = await fillAndSend("en");
+    await screen.findByText(en.forms.errors.phoneInvalid);
+    const first = JSON.parse(fetchMock.mock.calls[0][1].body).elapsedMs;
+    await new Promise((r) => setTimeout(r, 30));
+    await user.click(screen.getByRole("button", { name: en.forms.send }));
+    await screen.findByTestId("form-success");
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).elapsedMs).toBeGreaterThanOrEqual(first + 30);
   });
 
   it("server field errors (400) are shown inline", async () => {
@@ -134,8 +179,10 @@ describe("submission", () => {
 
   it("the honeypot field is hidden from assistive tech and out of the tab order", () => {
     renderWithIntl(<ContactForm />, "en");
-    const trap = document.querySelector<HTMLInputElement>('input[name="website"]')!;
+    const trap = document.querySelector<HTMLInputElement>('input[name="hp_extra"]')!;
     expect(trap).toHaveAttribute("tabindex", "-1");
+    expect(trap).toHaveAttribute("data-1p-ignore");
+    expect(trap).toHaveAttribute("data-lpignore", "true");
     expect(trap.closest('[aria-hidden="true"]')).not.toBeNull();
   });
 });
