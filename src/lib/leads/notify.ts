@@ -31,7 +31,7 @@ export async function notifyLead(record: LeadRecord): Promise<void> {
   if (!to.length) throw new Error("No lead recipient configured.");
 
   const { subject, html, text } = renderNewLeadEmail(record);
-  // The signal aborts the request itself, so a late answer is never sent-but-counted-as-failed (R2-03).
+  // The signal aborts our wait, not an email Resend already accepted; with no retry that cannot duplicate (R2-03, R3-05).
   const { error } = await new Resend(apiKey).emails.send(
     {
       from: process.env.LEAD_FROM_EMAIL?.trim() || DEFAULT_FROM,

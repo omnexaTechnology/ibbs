@@ -94,7 +94,7 @@ export default async function ProjectPage({ params }: Props) {
             <ProjectOverview project={project} locale={locale} />
             <ProjectScope project={project} locale={locale} />
           </div>
-          <aside className="flex flex-col gap-6 lg:sticky lg:top-28" aria-label={t("factsLabel")}>
+          <aside className="flex flex-col gap-6" aria-label={t("factsLabel")}>
             <ProjectFacts project={project} />
             <ProjectFormSlot locale={locale} projectSlug={project.slug} settings={settings} />
           </aside>

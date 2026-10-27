@@ -189,10 +189,10 @@ describe("submission", () => {
     expect(await screen.findByLabelText(new RegExp(en.forms.fPhone))).toHaveAccessibleDescription(en.forms.errors.phoneInvalid);
   });
 
-  it("project form sends formType project and shows its heading", async () => {
+  it("project form sends formType project and leaves the heading to the page slot", async () => {
     fetchMock.mockReturnValue(json(200, { ok: true }));
     renderWithIntl(<ProjectForm />, "en");
-    expect(screen.getByRole("heading", { name: en.forms.formTitle })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: en.forms.formTitle })).not.toBeInTheDocument();
     const user = userEvent.setup();
     await user.type(screen.getByLabelText(new RegExp(en.forms.fName)), "Sara");
     await user.type(screen.getByLabelText(new RegExp(en.forms.fPhone)), "+966501234567");
