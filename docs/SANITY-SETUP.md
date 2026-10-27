@@ -16,7 +16,7 @@ Copy `.env.example` to `.env.local` (it is git-ignored) and fill in:
 | `SANITY_API_WRITE_TOKEN` | token with role **Editor** (section 3) | seed script now (your computer only), lead creation in FEAT-004; server only |
 | `SANITY_REVALIDATE_SECRET` | any long random string you invent (section 4) | `POST /api/revalidate` |
 
-In **Vercel**: Project -> Settings -> Environment Variables, add the first four for **Production** and **Preview** (not "Development"; the read token only to Preview if previews must show content). Redeploy afterwards. Never prefix a token with `NEXT_PUBLIC_`.
+In **Vercel**: Project -> Settings -> Environment Variables, add exactly these four, for **Production** and **Preview** (not "Development"): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN` and `SANITY_REVALIDATE_SECRET`. Redeploy afterwards. Never prefix a token with `NEXT_PUBLIC_`.
 
 **Do not add `SANITY_API_WRITE_TOKEN` to Vercel yet.** It is an Editor token for the whole dataset and nothing deployed uses it until the forms (FEAT-004) ship. Then add it to **Production only** (previews should not create real leads).
 
