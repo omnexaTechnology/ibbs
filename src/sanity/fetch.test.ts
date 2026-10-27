@@ -67,13 +67,13 @@ describe("content API", () => {
   });
 
   it("getHomeContent is ONE query tagged with hero and project (NFR-001)", async () => {
-    fetchMock.mockResolvedValue({ hero: null, featured: [] });
+    fetchMock.mockResolvedValue({ hero: null, projects: [] });
     const { getHomeContent } = await import("./content");
     const home = await getHomeContent();
     expect(fetchMock).toHaveBeenCalledTimes(1);
     expect(fetchMock.mock.calls[0][2].next.tags).toEqual(["heroSlides", "project"]);
     expect(home.hero).toHaveLength(4);
-    expect(home.featured).toEqual([]);
+    expect(home.projects).toEqual([]);
   });
 
   it("getProjectBySlug passes the slug as a query parameter, never string-concatenated", async () => {
@@ -86,7 +86,7 @@ describe("content API", () => {
 
   it("queries never read drafts or leads", async () => {
     const q = await import("./queries");
-    const all = [q.PROJECTS_QUERY, q.PROJECT_BY_SLUG_QUERY, q.FEATURED_PROJECTS_QUERY, q.HOME_QUERY, q.HERO_SLIDES_QUERY, q.SITE_SETTINGS_QUERY];
+    const all = [q.PROJECTS_QUERY, q.PROJECT_BY_SLUG_QUERY, q.HOME_QUERY, q.HERO_SLIDES_QUERY, q.SITE_SETTINGS_QUERY];
     for (const query of all) {
       expect(query).not.toContain("drafts");
       expect(query).not.toContain('"lead"');

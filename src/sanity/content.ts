@@ -1,7 +1,6 @@
 import "server-only";
 import { sanityFetch } from "./fetch";
 import {
-  FEATURED_PROJECTS_QUERY,
   HERO_SLIDES_QUERY,
   HOME_QUERY,
   PROJECT_BY_SLUG_QUERY,
@@ -25,16 +24,12 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
   );
 }
 
-export async function getFeaturedProjects(): Promise<Project[]> {
-  return toProjects(await sanityFetch({ query: FEATURED_PROJECTS_QUERY, tags: [SANITY_TAGS.project] }));
-}
-
 export async function getHeroSlides(): Promise<HeroSlideContent[]> {
   return toHeroSlides(await sanityFetch({ query: HERO_SLIDES_QUERY, tags: [SANITY_TAGS.heroSlides] }));
 }
 
-/** Home page: hero images + featured projects in one round trip. */
-export async function getHomeContent(): Promise<{ hero: HeroSlideContent[]; featured: Project[] }> {
+/** Home page: hero images + the projects in design order (max HOME_PROJECT_LIMIT) in one round trip. */
+export async function getHomeContent(): Promise<{ hero: HeroSlideContent[]; projects: Project[] }> {
   const raw = await sanityFetch({ query: HOME_QUERY, tags: [SANITY_TAGS.heroSlides, SANITY_TAGS.project] });
-  return { hero: toHeroSlides(raw.hero), featured: toProjects(raw.featured) };
+  return { hero: toHeroSlides(raw.hero), projects: toProjects(raw.projects) };
 }

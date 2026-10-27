@@ -21,7 +21,6 @@ const raw = (over: Partial<RawProject> = {}): RawProject => ({
   challenge: { en: "c", ar: "ت" },
   solution: { en: "s", ar: "ح" },
   scope: ["exec", "chairs", "nonsense"],
-  featured: true,
   order: 1,
   cover: { ...img(), hotspot: { x: 0.25, y: 0.75 } },
   gallery: [

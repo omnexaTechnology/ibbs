@@ -17,7 +17,6 @@ export type SeedProject = {
   challenge: LocalizedString;
   solution: LocalizedString;
   hotspots: { x: number; y: number; tag: LocalizedString; title: LocalizedString; desc: LocalizedString }[];
-  featured: boolean;
   order: number;
 };
 export type SeedHero = { image: string; alt: LocalizedString };
@@ -84,7 +83,6 @@ export function buildDocuments(assetIdFor: AssetIdFor, data: SeedData = DEFAULT_
       description: { _type: "localeText", ...h.desc },
     })),
     scope: p.scope,
-    featured: p.featured,
     order: p.order,
   }));
 

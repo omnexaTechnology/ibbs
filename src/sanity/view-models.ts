@@ -24,7 +24,6 @@ export type RawProject = {
   challenge?: Loc;
   solution?: Loc;
   scope?: string[] | null;
-  featured?: boolean | null;
   order?: number | null;
   cover?: RawImage | null;
   gallery?: (RawImage & { _key?: string; alt?: Loc })[] | null;
@@ -83,7 +82,6 @@ export type Project = {
   hotspots: ProjectHotspot[];
   /** Keys into `scopeItems` (taxonomy); unknown keys are dropped. */
   scope: ScopeKey[];
-  featured: boolean;
   order: number | null;
 };
 
@@ -135,7 +133,6 @@ export function toProject(raw: RawProject | null | undefined): Project | null {
         description: loc(h.description),
       })),
     scope: (raw.scope ?? []).filter(isScope),
-    featured: raw.featured === true,
     order: num(raw.order),
   };
 }

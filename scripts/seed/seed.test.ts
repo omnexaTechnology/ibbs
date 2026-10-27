@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { PROJECT_CATEGORY_KEYS, SCOPE_KEYS } from "../../src/content/taxonomy";
+import { HOME_PROJECT_LIMIT, PROJECT_CATEGORY_KEYS, SCOPE_KEYS } from "../../src/content/taxonomy";
 import { isKebabSlug } from "../../src/sanity/schemaTypes/validation";
 import { DEFAULT_SEED_DATA, buildDocuments, imageFileNames, projectDocumentId } from "./build-documents";
 import { runSeed, type SeedStore } from "./run-seed";
@@ -36,9 +36,10 @@ describe("seed content (AC-004: matches the design)", () => {
     expect(projects.map((p) => p.order)).toEqual([1, 2, 3, 4, 5, 6]);
   });
 
-  it("features the 4 projects the home page shows (exec-hq, ops-floor, boardroom, medical)", () => {
-    const featured = docs().filter((d) => d._type === "project" && d.featured).map((d) => d._id);
-    expect(featured).toEqual(["project-exec-hq", "project-ops-floor", "project-boardroom", "project-medical"]);
+  it("F-03: no featured flag; the home page shows all 6 projects in order", () => {
+    const projects = docs().filter((d) => d._type === "project");
+    for (const p of projects) expect(p).not.toHaveProperty("featured");
+    expect(projects).toHaveLength(HOME_PROJECT_LIMIT);
   });
 
   it("carries area, duration and year from the design", () => {

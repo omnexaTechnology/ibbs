@@ -35,7 +35,7 @@ describe("getLeadRecipients (F-01, server only)", () => {
 describe("F-01/F-08: no page query touches lead data", () => {
   const groq = Object.entries(queries).filter(([, v]) => typeof v === "string" && /\*\[|\{/.test(v as string));
 
-  it("has queries to check", () => expect(groq.length).toBeGreaterThan(5));
+  it("has queries to check", () => expect(groq.length).toBeGreaterThanOrEqual(5));
 
   it.each(groq)("%s never mentions leads, lead routing or recipients", (_name, q) => {
     expect(q as string).not.toMatch(/lead|recipient|private\./i);

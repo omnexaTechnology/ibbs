@@ -1,4 +1,5 @@
 import { defineQuery } from "next-sanity";
+import { HOME_PROJECT_LIMIT } from "@/content/taxonomy";
 
 /**
  * All GROQ queries of the site (REQ-007). Drafts never appear: the client uses the "published"
@@ -32,7 +33,6 @@ const PROJECT = `{
   challenge,
   solution,
   scope,
-  featured,
   order,
   cover{ ${IMAGE} },
   gallery[]{ _key, alt, ${IMAGE} },
@@ -56,16 +56,12 @@ export const PROJECT_BY_SLUG_QUERY = defineQuery(
   `*[_type == "project" && slug.current == $slug][0] ${PROJECT}`,
 );
 
-export const FEATURED_PROJECTS_QUERY = defineQuery(
-  `*[_type == "project" && featured == true && defined(slug.current)] | ${ORDER} [0...4] ${PROJECT}`,
-);
-
 export const HERO_SLIDES_QUERY = defineQuery(`*[_id == "heroSlides"][0] ${HERO}`);
 
-/** Home page: hero + featured projects in a single round trip. */
+/** Home page: hero + the projects in design order (up to HOME_PROJECT_LIMIT) in a single round trip. */
 export const HOME_QUERY = defineQuery(`{
   "hero": *[_id == "heroSlides"][0] ${HERO},
-  "featured": *[_type == "project" && featured == true && defined(slug.current)] | ${ORDER} [0...4] ${PROJECT}
+  "projects": *[_type == "project" && defined(slug.current)] | ${ORDER} [0...${HOME_PROJECT_LIMIT}] ${PROJECT}
 }`);
 
 export const SITE_SETTINGS_QUERY = defineQuery(`*[_id == "siteSettings"][0]{

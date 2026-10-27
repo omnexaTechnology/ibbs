@@ -50,9 +50,15 @@ describe("REQ-004 project", () => {
     expect(names).toEqual(
       expect.arrayContaining([
         "title", "slug", "category", "cover", "gallery", "areaM2", "durationDays", "year", "city",
-        "client", "challenge", "solution", "hotspots", "scope", "featured", "order",
+        "client", "challenge", "solution", "hotspots", "scope", "order",
       ]),
     );
+  });
+
+  it("F-03: the retired featured flag stays only as a hidden, deprecated field", () => {
+    const f = field("project", "featured") as AnyField & { hidden?: boolean; deprecated?: { reason: string } };
+    expect(f.hidden).toBe(true);
+    expect(f.deprecated?.reason).toBeTruthy();
   });
 
   it("offers exactly the category keys from taxonomy (BR-005)", () => {

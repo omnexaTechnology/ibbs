@@ -86,7 +86,6 @@
           }
         }
       ],
-      "featured": true,
       "order": 1
     },
     {
@@ -175,7 +174,6 @@
           }
         }
       ],
-      "featured": true,
       "order": 2
     },
     {
@@ -264,7 +262,6 @@
           }
         }
       ],
-      "featured": true,
       "order": 3
     },
     {
@@ -353,7 +350,6 @@
           }
         }
       ],
-      "featured": false,
       "order": 4
     },
     {
@@ -442,7 +438,6 @@
           }
         }
       ],
-      "featured": true,
       "order": 5
     },
     {
@@ -531,7 +526,6 @@
           }
         }
       ],
-      "featured": false,
       "order": 6
     }
   ],

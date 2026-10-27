@@ -52,7 +52,7 @@ _(none right now)_
 |---|---|---|
 | FEAT-001 | Default language | English; `/` follows the browser language |
 | FEAT-002 | Are stats (120 projects, 85k m², 60 clients, 10 years), testimonials, client/partner logos real? | Hidden on the live site until you confirm real values |
-| FEAT-002 | Home page project panels: 4 "featured" or all 6? (review F-03) | All projects, as in the design (6 panels) |
+| FEAT-002 | Home page project panels: 4 "featured" or all 6? (review F-03) | All projects, as in the design (6 panels). The "Show on the home page" switch in the Studio is retired and hidden: order is set with the Order number |
 | FEAT-002 | Studio UI in Arabic for editors? | English Studio, Arabic content fields |
 | FEAT-003 | Is the design final? | Built from the 2026-10-26 export; later changes handled as new work |
 | FEAT-003 | Contact page map | Link to Google Maps from Site settings (no embedded map) |

@@ -108,10 +108,12 @@ export const project = defineType({
     }),
     defineField({
       name: "featured",
-      title: "Show on the home page",
-      description: "The home page shows up to four featured projects.",
+      title: "Show on the home page (no longer used)",
+      description:
+        "No longer used: the home page now shows all projects in their order. Kept only so older documents open without warnings.",
       type: "boolean",
-      initialValue: false,
+      hidden: true,
+      deprecated: { reason: "The home page shows all projects in order. Use the Order field to change the sequence." },
     }),
     defineField({
       name: "order",

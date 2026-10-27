@@ -8,7 +8,6 @@ import { randomUUID } from "node:crypto";
 import { createClient } from "@sanity/client";
 import { LEAD_ROUTING_ID, leadDocumentId } from "../src/sanity/lead-id";
 import {
-  FEATURED_PROJECTS_QUERY,
   HERO_SLIDES_QUERY,
   HOME_QUERY,
   PROJECT_BY_SLUG_QUERY,
@@ -50,13 +49,15 @@ async function verifyContent() {
   check(one?.title.en === "Boardroom & Leadership Suite", "PROJECT_BY_SLUG_QUERY(boardroom)", one?.title.en);
   check((await c.fetch(PROJECT_BY_SLUG_QUERY, { slug: "nope" })) === null, "unknown slug -> null");
 
-  const featured = toProjects(await c.fetch(FEATURED_PROJECTS_QUERY));
-  check(featured.map((p) => p.slug).join() === "exec-hq,ops-floor,boardroom,medical", "4 featured projects", featured.map((p) => p.slug).join());
-
   const hero = toHeroSlides(await c.fetch(HERO_SLIDES_QUERY));
   check(hero.length === 4 && hero.every((s) => s.image?.src.startsWith("https://cdn.sanity.io/images/")), "4 hero images on the Sanity CDN");
   const home = await c.fetch(HOME_QUERY);
-  check(toHeroSlides(home.hero).length === 4 && toProjects(home.featured).length === 4, "HOME_QUERY: hero + 4 featured in one round trip");
+  const homeProjects = toProjects(home.projects).map((p) => p.slug).join();
+  check(
+    toHeroSlides(home.hero).length === 4 && homeProjects === "exec-hq,ops-floor,boardroom,cowork,medical,clinic-admin",
+    "HOME_QUERY: hero + all 6 projects in design order, one round trip",
+    homeProjects,
+  );
 
   const settings = toSiteSettings(await c.fetch(SITE_SETTINGS_QUERY), {
     phones: [], emails: [], website: "", whatsapp: { number: "", message: { en: "", ar: "" } }, workingHours: [],
