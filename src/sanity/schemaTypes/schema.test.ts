@@ -140,3 +140,15 @@ describe("validation helpers", () => {
     for (const bad of ["+966501234567", "966 50 123", "0501234567", "abc", "123"]) expect(isWhatsappNumber(bad)).toBe(false);
   });
 });
+
+describe("review F-10 / F-12", () => {
+  it("F-12: leads are live-edit (no Publish step for 'Handled')", () => {
+    expect((byName("lead") as AnyType & { liveEdit?: boolean }).liveEdit).toBe(true);
+  });
+
+  it("F-10: a missing gallery description warns, it does not block", () => {
+    const gallery = field("project", "gallery") as unknown as { of: { fields: { name: string; validation?: unknown }[] }[] };
+    const alt = gallery.of[0].fields.find((f) => f.name === "alt")!;
+    expect(alt.validation).toBeTypeOf("function");
+  });
+});

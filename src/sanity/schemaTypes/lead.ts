@@ -13,6 +13,8 @@ export const lead = defineType({
   name: "lead",
   title: "Lead",
   type: "document",
+  // No draft/publish step: ticking "Handled" saves at once (a lead is never public content).
+  liveEdit: true,
   fields: [
     defineField({ name: "handled", title: "Handled", description: "Tick when someone has replied to this enquiry.", type: "boolean", initialValue: false }),
     defineField({

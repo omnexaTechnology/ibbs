@@ -58,7 +58,16 @@ export const project = defineType({
         defineArrayMember({
           type: "image",
           options: { hotspot: true },
-          fields: [defineField({ name: "alt", title: "Description of the photo", type: "localeString" })],
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Description of the photo",
+              description: "A short sentence for screen readers, in both languages.",
+              type: "localeString",
+              // A warning, not an error: a missing description never blocks publishing (the site falls back to the project title).
+              validation: (rule) => rule.custom(requireBothLocales).warning(),
+            }),
+          ],
           preview: {
             select: { title: "alt.en", media: "asset" },
             prepare: ({ title, media }) => ({ title: title || "Photo", media }),

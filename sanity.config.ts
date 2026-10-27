@@ -19,6 +19,9 @@ export default defineConfig({
   projectId: projectId || "unconfigured",
   dataset,
   plugins: [structureTool({ structure }), visionTool({ defaultApiVersion: apiVersion })],
+  // The Vision tool runs arbitrary GROQ (it can read leads): administrators only.
+  tools: (prev, { currentUser }) =>
+    currentUser?.roles.some((role) => role.name === "administrator") ? prev : prev.filter((tool) => tool.name !== "vision"),
   schema: {
     types: schemaTypes,
     // Singletons and leads are not created from the "New document" menu (leads come from the website forms).
