@@ -23,8 +23,8 @@ Last update: 2026-10-27
 ## Review
 | ID | Title | Branches | Next | Updated |
 |---|---|---|---|---|
-| FEAT-001 | App foundation: Next.js, EN/AR + RTL, theme, layout shell | `feat/FEAT-001-app-foundation` → PR #1 | Review + re-review passed; CI green; waiting: Vercel preview (user creates the project), Arabic strings, user merge | 2026-10-26 |
-| FEAT-002 | Sanity: projects, hero images, site settings, lead routing, leads + Studio + seed | `feat/FEAT-002-sanity` → PR #2 (stacked on #1) | Review → fixes → re-review READY_FOR_HUMAN_REVIEW; follow-ups R-01..R-04, R-07 done. Waiting: dashboard steps + live Studio checks (USER-ACTIONS), user merge | 2026-10-27 |
+| FEAT-001 | App foundation: Next.js, EN/AR + RTL, theme, layout shell | `feat/FEAT-001-app-foundation` → PR #1 | Merged to main (PR #1) | 2026-10-27 |
+| FEAT-002 | Sanity: projects, hero images, site settings, lead routing, leads + Studio + seed | `feat/FEAT-002-sanity` → PR #2 (stacked on #1) | Merged to main (PR #2). Waiting: dashboard steps + live Studio checks (USER-ACTIONS) | 2026-10-27 |
 
 ## Done
 

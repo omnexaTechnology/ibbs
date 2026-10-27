@@ -12,12 +12,11 @@ _(none right now)_
 ## To do (accounts and dashboards)
 
 - [ ] **Create the Vercel project** from GitHub repo `omnexaTechnology/ibbs` (you said you'd do this manually).
-  - Until FEAT-001 is merged, `main` has no app, so the first production build fails — expected.
   - Add these env vars in Vercel → Settings → Environment Variables (Production + Preview): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`. Copy the values from your `.env.local`. (Claude generated `SANITY_REVALIDATE_SECRET` there on 2026-10-26 because it was empty. Use the same value in the Sanity webhook.)
   - **Do not add `SANITY_API_WRITE_TOKEN` to Vercel yet.** Nothing deployed uses it until the forms (FEAT-004) ship. Then add it to Production only. (Corrected 2026-10-27 after review F-07.)
   - Then check: PR #1 shows a Vercel preview link; `/en` and `/ar` open on it.
 - [ ] **Make the Sanity dataset private**: sanity.io/manage → project `zf4tpgl3` → Datasets → `production` → Private. It is public now (checked 2026-10-26). The code also hides leads on its own, but private is the safe setting.
-- [ ] **Sanity dashboard steps** — exact clicks in `docs/SANITY-SETUP.md` (in the repo on branch `feat/FEAT-002-sanity` until merged). After the Vercel project exists:
+- [ ] **Sanity dashboard steps** — exact clicks in `docs/SANITY-SETUP.md` (in the repo on `main`). After the Vercel project exists:
   - CORS origins, with "Allow credentials" on (needed to log in at `/studio`): add **exact addresses only**: `http://localhost:3000`, plus your production domain or the stable `<project>.vercel.app` address. **Never add a wildcard like `https://*-team.vercel.app`.** Anyone can create a matching vercel.app address and use a logged-in editor's session from it. Use the Studio on production or localhost, not on preview URLs. (Corrected 2026-10-27 after review F-04. The setup doc gets the same fix.)
   - Publish webhook → `https://<your-domain>/api/revalidate`, signed with the `SANITY_REVALIDATE_SECRET` value. Copy the filter and projection from the doc: the filter now includes `leadRouting`.
 - [ ] **Open `/studio` and log in** (http://localhost:3000/studio with `npm run dev`, or the Vercel URL). Check:
@@ -31,8 +30,6 @@ _(none right now)_
 
 ## To review when you have time
 
-- [ ] **PR #2 — FEAT-002 Sanity + Studio**: https://github.com/omnexaTechnology/ibbs/pull/2. It is stacked on PR #1, so merge #1 first; #2 then points at `main`. Opus review found 1 blocker (lead emails in page HTML), now fixed; the re-review passed. Details are in `.ai/work/FEAT-002-sanity-content-model/review.md`.
-- [ ] **PR #1 — FEAT-001 app foundation**: https://github.com/omnexaTechnology/ibbs/pull/1 — CI green, Opus review + re-review passed. Merge when the Vercel preview looks right. (Claude keeps building the next items on top of this branch, so merging is not urgent.)
 - [ ] **Arabic phrases written by Claude, not taken from the design** (`messages/ar.json`). Change any you'd phrase differently:
   | English | Arabic |
   |---|---|
@@ -76,6 +73,7 @@ _(none right now)_
 
 ## Done
 
+- [x] PR #1 (FEAT-001) and PR #2 (FEAT-002) merged into `main` (2026-10-27). CI now installs npm 11 first, because npm 10 rejected the lock file.
 - [x] Sanity read + write tokens created and put in `.env.local` (2026-10-26).
 - [x] Leads fallback inbox: `melamrosy72@gmail.com` (2026-10-26).
 - [x] GitHub repo `omnexaTechnology/ibbs`, Sanity project `zf4tpgl3` / `production` (2026-10-26).
