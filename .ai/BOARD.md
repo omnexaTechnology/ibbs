@@ -1,7 +1,7 @@
 # Board
 
 Workspace: `ibss-web` (IBSS Innovations Furniture — Next.js + Sanity)
-Last update: 2026-10-26 (FEAT-001 implemented locally)
+Last update: 2026-10-27
 
 ## Inbox
 
@@ -13,18 +13,18 @@ Last update: 2026-10-26 (FEAT-001 implemented locally)
 ## Ready
 | ID | Title | Depends on | Current step | Open items | Updated |
 |---|---|---|---|---|---|
-| FEAT-002 | Sanity: projects, hero images, site settings, leads + Studio + seed | FEAT-001 | implement (6 tasks, 4.25d) | Non-blocking: real stats/logos, Arabic Studio UI | 2026-10-26 |
-| FEAT-003 | Pages: 7 views, animations and all 3D | FEAT-001, FEAT-002 | implement (10 tasks, 12d) | Non-blocking: design final?, map embed, related projects | 2026-10-26 |
-| FEAT-004 | Lead forms: contact, project request, call request | FEAT-001, FEAT-002 | implement (3 tasks, 2.5d) | Non-blocking: required fields, spam, fallback inbox | 2026-10-26 |
 
 ## In Progress
 | ID | Title | Branches | Next | Updated |
 |---|---|---|---|---|
-| FEAT-001 | App foundation: Next.js, EN/AR + RTL, theme, layout shell | `feat/FEAT-001-app-foundation` (local, not pushed) | T-001..T-005 DONE; T-006 DONE except GitHub push + Vercel preview (BLOCKED: push not yet permitted). Next: review, then push + verify CI and preview URL | 2026-10-26 |
+| FEAT-003 | Pages: 7 views, animations and all 3D | `feat/FEAT-003-pages` (local, worktree `../ibss-web-feat003`) | T-001, T-002 done; rebased onto FEAT-002 head (232 unit pass). Batch-1 review FIX_REQUIRED (1 blocker: Three in initial JS; 2 major: touch swipe, RTL pin mirroring). Running: T-003, T-009, then batch-1 fixes | 2026-10-27 |
+| FEAT-004 | Lead forms: contact, project request, call request | `feat/FEAT-004-forms` (local, worktree `../ibss-web-feat004`) | T-001 endpoint + T-002 forms done. Review FIX_REQUIRED (1 major: forms GET-submit before hydration leaks PII to URL). Fixes running. T-003 waits for FEAT-003 T-003/T-009 | 2026-10-27 |
 
 ## Review
 | ID | Title | Branches | Next | Updated |
 |---|---|---|---|---|
+| FEAT-001 | App foundation: Next.js, EN/AR + RTL, theme, layout shell | `feat/FEAT-001-app-foundation` → PR #1 | Review + re-review passed; CI green; waiting: Vercel preview (user creates the project), Arabic strings, user merge | 2026-10-26 |
+| FEAT-002 | Sanity: projects, hero images, site settings, lead routing, leads + Studio + seed | `feat/FEAT-002-sanity` → PR #2 (stacked on #1) | Review → fixes → re-review READY_FOR_HUMAN_REVIEW; follow-ups R-01..R-04, R-07 done. Waiting: dashboard steps + live Studio checks (USER-ACTIONS), user merge | 2026-10-27 |
 
 ## Done
 

@@ -1,6 +1,6 @@
 # FEAT-004 — Open questions
 
-Answered 2026-10-26: destination = email (Resend) + Sanity leads (D1); recipients = editable in Site settings (D2).
+Answered 2026-10-26: destination = email (Resend) + Sanity leads (D1); recipients = editable in the private "Lead routing" entry in the Studio (D2; moved out of Site settings by FEAT-002 review F-01).
 
 Non-blocking (defaults in brackets):
 - **Q2** Which fields are required? [name, phone, and email or message]

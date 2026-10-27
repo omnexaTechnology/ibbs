@@ -3,7 +3,8 @@ import { vi } from "vitest";
 
 // jsdom has no matchMedia: default to "no reduced motion, coarse pointer".
 // Tests override window.matchMedia when they need other values.
-if (!window.matchMedia) {
+// (Server-side tests use `// @vitest-environment node` and have no window.)
+if (typeof window !== "undefined" && !window.matchMedia) {
   window.matchMedia = vi.fn().mockImplementation((query: string) => ({
     matches: false,
     media: query,
@@ -15,4 +16,4 @@ if (!window.matchMedia) {
     dispatchEvent: vi.fn(),
   }));
 }
-window.scrollTo = vi.fn() as unknown as typeof window.scrollTo;
+if (typeof window !== "undefined") window.scrollTo = vi.fn() as unknown as typeof window.scrollTo;

@@ -8,7 +8,7 @@ Every request a visitor sends reaches the IBSS sales team reliably, and the visi
 
 ## Confirmed decisions
 - D1 Each submission is emailed to the sales team via Resend **and** saved as a `lead` document in Sanity (schema in FEAT-002 REQ-006) (user, 2026-10-26).
-- D2 The notification email goes to the **lead notification emails** set in Sanity Site settings (FEAT-002 REQ-005b), so the client chooses and changes the inbox themselves. Until it is set, emails go to an Omnexa address configured as an env fallback.
+- D2 The notification email goes to the **lead notification emails** set in the private "Lead routing" document in the Studio (FEAT-002 REQ-005b, moved out of Site settings by review F-01; read on the server with `getLeadRecipients()`, `private.leadRouting`), so the client chooses and changes the inbox themselves. Until it is set, emails go to an Omnexa address configured as an env fallback.
 
 ## Requirements
 - **REQ-008** Delivery order: save the lead in Sanity first, then send the email, then set `emailDelivered`. If one of the two succeeds the visitor sees success; if both fail, the error state (BR-003).

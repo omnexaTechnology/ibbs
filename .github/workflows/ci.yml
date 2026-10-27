@@ -24,6 +24,9 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Lock file is written by npm 11; npm 10 (bundled with Node 22) rejects it.
+      - run: npm install -g npm@11
+
       - run: npm ci
 
       - name: Lint

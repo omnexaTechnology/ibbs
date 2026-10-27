@@ -12,6 +12,10 @@ export default defineConfig({
     exclude: [...configDefaults.exclude, "e2e/**"],
   },
   resolve: {
-    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
+    alias: {
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      // `import "server-only"` throws outside Next's server bundles; tests run it as a no-op.
+      "server-only": fileURLToPath(new URL("./src/test/server-only-stub.ts", import.meta.url)),
+    },
   },
 });

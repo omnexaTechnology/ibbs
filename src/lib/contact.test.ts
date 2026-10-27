@@ -20,7 +20,6 @@ describe("getSiteSettings", () => {
     expect(s.address).toEqual({ en: "", ar: "" });
     expect(s.mapUrl).toBe("");
     expect(Object.values(s.social).every((u) => u === "")).toBe(true);
-    expect(s.leadNotificationEmails).toEqual([]);
     expect(JSON.stringify(s)).not.toMatch(/example\.com|000 000|\[Office|\[عنوان/);
   });
 

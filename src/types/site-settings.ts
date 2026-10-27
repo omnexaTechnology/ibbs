@@ -15,7 +15,10 @@ export type WorkingHoursRow = {
 };
 
 /**
- * Editable contact & social settings.
+ * Editable contact & social settings. PUBLIC by design: this object is passed to client
+ * components, so it is serialised into every page. Never add private data here (lead recipients
+ * live in the private `leadRouting` document, see src/sanity/lead-routing.ts).
+ *
  * FEAT-002 swaps the source of `getSiteSettings()` to Sanity ("Site settings");
  * this shape is the contract the UI depends on. An empty string / empty array
  * means "not set" and the UI must hide the corresponding item.
@@ -37,6 +40,4 @@ export type SiteSettings = {
   /** Link opened by the address (e.g. a Google Maps URL). Empty = address shown as plain text. */
   mapUrl: string;
   social: Record<SocialPlatform, string>;
-  /** Recipients of new-lead notification emails (used by FEAT-004). */
-  leadNotificationEmails: string[];
 };

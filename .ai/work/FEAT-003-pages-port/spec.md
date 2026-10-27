@@ -17,7 +17,7 @@ Every page looks and behaves like the approved design in both languages, with co
 - **REQ-002** Partners strip (seamless loop), kinetic words band, about intro with stats counters (count up on scroll).
 - **REQ-003** Process section: 4 stages, carousel + 3D scene stages (`applyStage`) with callouts.
 - **REQ-004** Office walk-through (`wk`): scroll to walk, look with cursor, blue markers with details, skip / explore freely.
-- **REQ-005** Featured projects accordion (desktop) / auto-advancing row (phone), with hover "peek" preview.
+- **REQ-005** Projects accordion (all projects in order from `getHomeContent().projects`, max 6, as in the design) (desktop) / auto-advancing row (phone), with hover "peek" preview.
 - **REQ-006** Materials picker (6), testimonials slider, FAQ accordion, clients section, CTA with 3D.
 ### About `/[locale]/about`
 - **REQ-007** Hero, who we are, vision / strengths / mission tabs, stats, 3D build of reception + boardroom (8 steps, evening light), clients, CTA.
