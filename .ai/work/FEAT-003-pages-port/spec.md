@@ -28,7 +28,7 @@ Every page looks and behaves like the approved design in both languages, with co
 ### Contact `/[locale]/contact`
 - **REQ-010** Direct contacts (phone, email, website, hours), WhatsApp block, contact form (FEAT-004), map/location block (`ctm`).
 ### Legal `/[locale]/privacy`, `/[locale]/terms`
-- **REQ-011** Content from MDX files per locale in code (`src/content/legal/{en,ar}/`) — not Sanity, per FEAT-002 D2 (changed 2026-10-26 in impact analysis).
+- **REQ-011** Content as typed TS modules per locale in code (`src/content/legal/{en,ar}.ts`, one `LegalDoc` per page; the contents list is generated from the sections; edit the text there) — not Sanity, per FEAT-002 D2 (changed 2026-10-26 in impact analysis).
 
 ### Cross-cutting
 - **REQ-012** Three.js scenes load client-side only, lazily when near the viewport, paused off-screen (IntersectionObserver), disposed on unmount — as in the design.

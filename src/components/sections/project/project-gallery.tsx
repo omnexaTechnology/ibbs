@@ -67,7 +67,7 @@ export function ProjectGallery({ images, title }: Props) {
             <button
               key={g.image.src}
               type="button"
-              aria-label={`${tc("enlarge")} ${i + 1}`}
+              aria-label={t("goToSlide", { n: i + 1 })}
               aria-current={i === c.index ? "true" : undefined}
               onClick={() => c.goTo(i)}
               className={cn(

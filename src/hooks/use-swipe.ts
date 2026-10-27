@@ -36,6 +36,7 @@ export function useSwipe(onSwipe: (dir: "left" | "right") => void) {
     onClickCapture: (e: MouseEvent) => {
       if (!swiped.current) return;
       swiped.current = false;
+      if (e.detail === 0) return; // keyboard activation (Enter/Space) is never a swipe artefact
       e.stopPropagation();
     },
   };

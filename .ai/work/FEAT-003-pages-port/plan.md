@@ -5,8 +5,8 @@ Inputs: `spec.md`, `impact.md`. Tasks in `tasks/`. Estimate: 12 day(s).
 
 | Task | Title | Depends on | Days | Status |
 |---|---|---|---|---|
-| T-001 | UI primitives | FEAT-001/T-004 | 1.0 | PENDING |
-| T-002 | 3D core: kit, renderer, scene wrapper | FEAT-001/T-001 | 1.5 | PENDING |
+| T-001 | UI primitives | FEAT-001/T-004 | 1.0 | DONE |
+| T-002 | 3D core: kit, renderer, scene wrapper | FEAT-001/T-001 | 1.5 | DONE |
 | T-003 | Project detail page | T-001, FEAT-002/T-003 | 1.0 | DONE |
 | T-004 | Projects list page with 3D floor | T-002, T-003 | 1.0 | PENDING |
 | T-005 | Home 1: hero, partners, about intro, stats, sectors | T-001, FEAT-002/T-003 | 1.0 | PENDING |

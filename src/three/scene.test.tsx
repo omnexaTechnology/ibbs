@@ -119,6 +119,16 @@ describe("SceneCanvas lifecycle (REQ-012)", () => {
     err.mockRestore();
   });
 
+  it("B1-13a/R2-10: aria-label follows the label prop", async () => {
+    const s = makeScene();
+    const first = vi.fn();
+    const second = vi.fn();
+    const { rerender, container } = render(<SceneCanvas load={s.load} label="one" onStatus={first} />);
+    await waitFor(() => expect(first).toHaveBeenCalledWith("ready"));
+    rerender(<SceneCanvas load={s.load} label="two" onStatus={second} />);
+    expect(container.querySelector("canvas")).toHaveAttribute("aria-label", "two");
+  });
+
   it("BR-001: reduced motion draws a still frame, not a loop", async () => {
     setReducedMotion(true);
     const s = makeScene();

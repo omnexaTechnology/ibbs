@@ -5,6 +5,8 @@ import { ContactCards } from "./contact-cards";
 import { ContactFormSection } from "./contact-form-slot";
 import { ContactMap } from "./contact-map";
 import { ContactWhatsApp } from "./contact-whatsapp";
+import { LegalPage } from "../legal/legal-page";
+import { getLegalDoc } from "@/content/legal";
 
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ href, children, ...rest }: { href: string; children: React.ReactNode }) => (
@@ -13,6 +15,15 @@ vi.mock("@/i18n/navigation", () => ({
     </a>
   ),
 }));
+
+describe("<LegalPage>", () => {
+  it("R2-08/R2-09: mailto opens in place; the contents nav is not named like the H1", async () => {
+    const doc = getLegalDoc("en", "privacy");
+    renderWithIntl(<LegalPage doc={doc} settings={await makeSettings()} />);
+    expect(screen.getByRole("link", { name: "info@example.com" })).not.toHaveAttribute("target");
+    expect(screen.getByRole("navigation", { name: "Contents" })).toBeInTheDocument();
+  });
+});
 
 describe("contact blocks with data from the site settings", () => {
   it("cards show phones, emails, website, address and hours; a phone changed in settings is shown", async () => {

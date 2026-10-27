@@ -23,7 +23,7 @@ export function LegalPage({ doc, settings }: { doc: LegalDoc; settings: SiteSett
       <PageHero crumbs={[{ label: t("navHome"), href: "/" }, { label: doc.title }]} eyebrow={tc("brand")} title={doc.title} lead={doc.lead} />
       <section className="mx-auto max-w-[1280px] px-8 pb-28 pt-10">
         <div className="grid items-start gap-16 lg:grid-cols-[260px_minmax(0,1fr)]">
-          <nav aria-label={doc.title} className="flex flex-col gap-3 rounded-[20px] border border-line bg-surface p-6 text-sm text-muted lg:sticky lg:top-28" data-testid="legal-toc">
+          <nav aria-label={tc("contents")} className="flex flex-col gap-3 rounded-[20px] border border-line bg-surface p-6 text-sm text-muted lg:sticky lg:top-28" data-testid="legal-toc">
             {doc.sections.map((s, i) => (
               <a key={i} href={`#legal-${i + 1}`} className="text-muted no-underline hover:text-link">
                 <span className="me-2 font-semibold text-cyan tabular-nums">{num(i)}</span>

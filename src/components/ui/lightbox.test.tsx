@@ -77,10 +77,32 @@ describe("<Lightbox>", () => {
     const dlg = screen.getByRole("dialog");
     fireEvent.pointerDown(dlg, { clientX: 300, clientY: 100 });
     fireEvent.pointerUp(dlg, { clientX: 150, clientY: 100 });
-    fireEvent.click(dlg);
+    fireEvent.click(dlg, { detail: 1 });
     expect(onClose).not.toHaveBeenCalled();
-    fireEvent.click(dlg);
+    fireEvent.click(dlg, { detail: 1 });
     expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("R2-01: a keyboard click (detail 0) after a swipe is not swallowed", () => {
+    const onClose = vi.fn();
+    renderWithIntl(<Harness onClose={onClose} />);
+    const dlg = screen.getByRole("dialog");
+    fireEvent.pointerDown(dlg, { clientX: 300, clientY: 100 });
+    fireEvent.pointerUp(dlg, { clientX: 150, clientY: 100 });
+    const close = screen.getByRole("button", { name: "Close image viewer" });
+    fireEvent.click(close, { detail: 0 });
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  it("R2-02: Tab and Shift+Tab from the dialog root re-enter the cycle", () => {
+    renderWithIntl(<Harness />);
+    const dlg = screen.getByRole("dialog");
+    dlg.focus();
+    fireEvent.keyDown(dlg, { key: "Tab", shiftKey: true });
+    expect(screen.getByRole("button", { name: "Next image" })).toHaveFocus();
+    dlg.focus();
+    fireEvent.keyDown(dlg, { key: "Tab" });
+    expect(screen.getByRole("button", { name: "Close image viewer" })).toHaveFocus();
   });
 
   it("swipe left goes to the next image, swipe right to the previous", () => {

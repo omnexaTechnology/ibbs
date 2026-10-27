@@ -61,6 +61,12 @@ export function Lightbox({ images, index, onIndexChange, onClose, label }: Props
     } else if (e.key === "Tab") {
       const f = Array.from(root.current?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []);
       if (!f.length) return;
+      if (document.activeElement === root.current) {
+        // focus on the dialog root (after a click on the image): re-enter the cycle at the matching end
+        e.preventDefault();
+        f[e.shiftKey ? f.length - 1 : 0].focus();
+        return;
+      }
       const first = f[0];
       const last = f[f.length - 1];
       if (e.shiftKey && document.activeElement === first) {
