@@ -111,7 +111,7 @@ export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = tr
       aria-label={label}
       tabIndex={0}
       dir={dir}
-      className={cn("relative", className)}
+      className={cn("relative touch-pan-y", className)}
       data-testid="carousel"
       onKeyDown={onKeyDown}
       onMouseEnter={() => setHover(true)}

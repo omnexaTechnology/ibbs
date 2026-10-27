@@ -66,6 +66,23 @@ describe("<Lightbox>", () => {
     expect(screen.queryByRole("dialog")).toBeNull();
   });
 
+  it("B1-04: the dialog itself can take focus, so keys keep working after a click on the image", () => {
+    renderWithIntl(<Harness />);
+    expect(screen.getByRole("dialog")).toHaveAttribute("tabindex", "-1");
+  });
+
+  it("B1-13: a drag that ends on the backdrop does not close it", () => {
+    const onClose = vi.fn();
+    renderWithIntl(<Harness onClose={onClose} />);
+    const dlg = screen.getByRole("dialog");
+    fireEvent.pointerDown(dlg, { clientX: 300, clientY: 100 });
+    fireEvent.pointerUp(dlg, { clientX: 150, clientY: 100 });
+    fireEvent.click(dlg);
+    expect(onClose).not.toHaveBeenCalled();
+    fireEvent.click(dlg);
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
   it("swipe left goes to the next image, swipe right to the previous", () => {
     renderWithIntl(<Harness />);
     const dlg = screen.getByRole("dialog");

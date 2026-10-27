@@ -77,6 +77,7 @@ export function Lightbox({ images, index, onIndexChange, onClose, label }: Props
     <div
       ref={root}
       className="ui-lb"
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label={label ?? t("viewerLabel")}
