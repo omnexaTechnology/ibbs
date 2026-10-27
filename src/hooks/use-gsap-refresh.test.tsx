@@ -8,6 +8,7 @@ vi.mock("@/i18n/navigation", () => ({ usePathname: () => pathname }));
 vi.mock("@/lib/gsap", () => ({ ScrollTrigger: { refresh } }));
 
 import { GsapRefresh } from "@/components/ui/gsap-refresh";
+import { isGsapLoaded, markGsapLoaded, resetGsapLoaded } from "@/lib/gsap-state";
 import { GSAP_REFRESH } from "./use-gsap-refresh";
 
 const flush = async () => {
@@ -23,6 +24,7 @@ describe("useGsapRefresh (REQ-014)", () => {
 
   beforeEach(() => {
     refresh.mockClear();
+    markGsapLoaded();
     pathname = "/en";
     frame = [];
     vi.useFakeTimers();
@@ -72,5 +74,14 @@ describe("useGsapRefresh (REQ-014)", () => {
     });
     await flush();
     expect(refresh).toHaveBeenCalledTimes(1);
+  });
+
+  it("B1-07: does not touch GSAP when no section loaded it", async () => {
+    resetGsapLoaded();
+    expect(isGsapLoaded()).toBe(false);
+    render(<GsapRefresh />);
+    await flush();
+    act(() => frame.splice(0).forEach((f) => f(0)));
+    expect(refresh).not.toHaveBeenCalled();
   });
 });

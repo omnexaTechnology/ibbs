@@ -3,6 +3,7 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { markGsapLoaded } from "./gsap-state";
 
 let registered = false;
 
@@ -14,5 +15,6 @@ export function registerGsap() {
 }
 
 registerGsap();
+markGsapLoaded();
 
 export { gsap, ScrollTrigger, useGSAP };
