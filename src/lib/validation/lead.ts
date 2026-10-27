@@ -55,7 +55,9 @@ export function normalizeDigits(input: string): string {
 export function normalizePhone(input: string): string {
   const cleaned = normalizeDigits(input).replace(/[\s\p{Cf}\p{Pd}−().]/gu, "");
   const intl = cleaned.startsWith("00") ? `+${cleaned.slice(2)}` : cleaned;
-  return intl.replace(/^(\+?966)0(?=\d)/, "$1");
+  const noTrunk = intl.replace(/^(\+?966)0(?=\d)/, "$1");
+  // One stored shape per Saudi number: +9665XXXXXXXX (mobile), +9661XXXXXXXX (landline). 9200/800 stay digits (R2-06).
+  return noTrunk.replace(/^(?:\+?966|0)?(5\d{8}|1[1-467]\d{7})$/, "+966$1");
 }
 
 // Saudi mobile: 05xxxxxxxx, 5xxxxxxxx, 9665xxxxxxxx, +9665xxxxxxxx.
@@ -74,8 +76,8 @@ export function isValidPhone(input: string): boolean {
   return INTERNATIONAL.test(n);
 }
 
-/** Only a same-site path is accepted for the "sent from" line (F4-08); anything else is dropped. */
-const PATH = /^\/[\w\-/%.~]{0,199}$/;
+/** Only a same-site locale path (/en, /ar, /en/..., /ar/...) is accepted for the "sent from" line (F4-08); anything else is dropped. */
+const PATH = /^\/(?:en|ar)(?:\/[\w\-/%.~]{0,190})?$/;
 export const toPagePath = (input: string | undefined) => (input && PATH.test(input) ? input : undefined);
 
 const optionalText = (max: number) =>

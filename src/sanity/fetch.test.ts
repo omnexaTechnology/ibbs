@@ -61,6 +61,16 @@ describe("sanityFetch", () => {
   });
 });
 
+describe("sanityFetch signal (R2-02)", () => {
+  it("passes an abort signal through to the client", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "proj123");
+    const { sanityFetch } = await import("./fetch");
+    const signal = new AbortController().signal;
+    await sanityFetch({ query: "*", tags: ["project"], signal });
+    expect(fetchMock.mock.calls[0][2].signal).toBe(signal);
+  });
+});
+
 describe("content API", () => {
   beforeEach(() => {
     vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "proj123");

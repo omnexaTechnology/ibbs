@@ -4,7 +4,7 @@ import { apiVersion, dataset, isSanityConfigured, projectId } from "@/sanity/env
 import { leadDocumentId } from "@/sanity/lead-id";
 import { SPACE_TYPE_LABELS_EN, type LeadInput } from "@/lib/validation/lead";
 
-/** Max wait per Sanity call. The create runs in parallel with the email, so both share one ~8 s window. */
+/** Max wait for the create. The route runs save, then email, then patch in sequence, so the worst case is the sum of the three limits plus the recipients read. */
 export const SAVE_TIMEOUT_MS = 8_000;
 /** The flag patch runs last and only matters for the Studio hint, so it gets less time. */
 export const PATCH_TIMEOUT_MS = 3_000;

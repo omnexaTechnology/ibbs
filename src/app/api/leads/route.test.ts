@@ -68,7 +68,7 @@ describe("POST /api/leads", () => {
 
     const doc = create.mock.calls[0][0];
     expect(doc._id).toMatch(/^lead\.[0-9a-f-]{36}$/);
-    expect(doc).toMatchObject({ _type: "lead", formType: "contact", name: "Sara Test", phone: "0501234567", locale: "en", spaceType: "Mosque", emailDelivered: false });
+    expect(doc).toMatchObject({ _type: "lead", formType: "contact", name: "Sara Test", phone: "+966501234567", locale: "en", spaceType: "Mosque", emailDelivered: false });
     expect(doc.pageUrl).toBe("/en/contact");
     expect(doc).not.toHaveProperty("hp_extra");
     expect(doc).not.toHaveProperty("elapsedMs");
@@ -204,6 +204,19 @@ describe("POST /api/leads", () => {
   it("pageUrl keeps only a same-site path; full URLs and junk are dropped (F4-08)", async () => {
     await post({ ...valid, pageUrl: "https://evil.test/en/contact" });
     expect(create.mock.calls[0][0].pageUrl).toBeUndefined();
+  });
+
+  it("Resend gets an abort signal (5 s) instead of a Promise.race (R2-03)", async () => {
+    await post(valid);
+    const options = send.mock.calls[0][1];
+    expect(options.signal).toBeInstanceOf(AbortSignal);
+    expect(options.signal.aborted).toBe(false);
+  });
+
+  it("an aborted Resend call (error result) counts as an email failure, not a success", async () => {
+    create.mockRejectedValue(new Error("sanity down"));
+    send.mockResolvedValue({ data: null, error: { name: "application_error", message: "aborted" } });
+    expect((await post(valid)).status).toBe(502);
   });
 
   it("recipients read failure falls back to LEAD_FALLBACK_EMAIL and logs recipients-fallback without data", async () => {

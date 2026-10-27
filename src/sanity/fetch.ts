@@ -15,12 +15,16 @@ export async function sanityFetch<const Query extends string>({
   query,
   params = {},
   tags,
+  signal,
 }: {
   query: Query;
   params?: QueryParams;
   tags: SanityTag[];
+  /** Abort a hanging read (the client's own default timeout is 300 s). */
+  signal?: AbortSignal;
 }) {
   return createReadClient().fetch(query, params, {
     next: { revalidate: SAFETY_REVALIDATE_SECONDS, tags },
+    ...(signal && { signal }),
   });
 }

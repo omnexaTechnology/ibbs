@@ -1,5 +1,8 @@
-import { screen, waitFor } from "@testing-library/react";
+import { act, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { hydrateRoot } from "react-dom/client";
+import { renderToString } from "react-dom/server";
+import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import ar from "../../../messages/ar.json";
 import en from "../../../messages/en.json";
@@ -111,6 +114,42 @@ describe("submission", () => {
     );
     for (const id of ["contact-form", "project-form", "call-form"]) expect(screen.getByTestId(id)).toHaveAttribute("method", "post");
     for (const b of screen.getAllByRole("button")) expect(b).toBeEnabled();
+  });
+
+  it("server-rendered submit buttons are disabled and forms post (F4-01, R2-07)", () => {
+    const html = renderToString(
+      <NextIntlClientProvider locale="en" messages={en}>
+        <ContactForm />
+        <ProjectForm />
+        <CallForm />
+      </NextIntlClientProvider>,
+    );
+    const buttons = html.match(/<button[^>]*type="submit"[^>]*>/g) ?? [];
+    expect(buttons).toHaveLength(3);
+    for (const b of buttons) expect(b).toMatch(/\sdisabled=""/);
+    expect(html.match(/<form[^>]*method="post"/g)).toHaveLength(3);
+  });
+
+  it("typed before hydration: the timer starts at page load, so an immediate send is not 'too fast' (R2-01)", async () => {
+    fetchMock.mockReturnValue(json(200, { ok: true }));
+    const tree = (
+      <NextIntlClientProvider locale="en" messages={en}>
+        <ContactForm />
+      </NextIntlClientProvider>
+    );
+    const host = document.createElement("div");
+    document.body.append(host);
+    host.innerHTML = renderToString(tree);
+    host.querySelector<HTMLInputElement>('input[name="name"]')!.value = "Sara";
+    host.querySelector<HTMLInputElement>('input[name="phone"]')!.value = "0501234567";
+    host.querySelector<HTMLTextAreaElement>('textarea[name="message"]')!.value = "hi";
+    await act(async () => {
+      hydrateRoot(host, tree);
+    });
+    await userEvent.setup().click(within(host).getByRole("button", { name: en.forms.send }));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledOnce());
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).elapsedMs).toBeGreaterThanOrEqual(2_000);
+    host.remove();
   });
 
   it("required fields are announced with aria-required; inputs carry maxLength (F4-06, F4-12)", () => {

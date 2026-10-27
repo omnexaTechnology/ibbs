@@ -9,11 +9,6 @@ const DEFAULT_FROM = "IBSS Website <onboarding@resend.dev>";
 
 export const EMAIL_TIMEOUT_MS = 5_000;
 
-/** Resend has no timeout option: race it so a hanging call cannot outlast NFR-001. */
-function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
-  return Promise.race([promise, new Promise<never>((_, reject) => setTimeout(() => reject(new Error("Email send timed out.")), ms).unref?.())]);
-}
-
 /** Studio recipients (private leadRouting), else LEAD_FALLBACK_EMAIL (D2). Empty = nobody to notify. */
 export async function resolveRecipients(): Promise<string[]> {
   let fromStudio: string[] = [];
@@ -36,16 +31,17 @@ export async function notifyLead(record: LeadRecord): Promise<void> {
   if (!to.length) throw new Error("No lead recipient configured.");
 
   const { subject, html, text } = renderNewLeadEmail(record);
-  const { error } = await withTimeout(
-    new Resend(apiKey).emails.send({
+  // The signal aborts the request itself, so a late answer is never sent-but-counted-as-failed (R2-03).
+  const { error } = await new Resend(apiKey).emails.send(
+    {
       from: process.env.LEAD_FROM_EMAIL?.trim() || DEFAULT_FROM,
       to,
       replyTo: record.email,
       subject,
       html,
       text,
-    }),
-    EMAIL_TIMEOUT_MS,
+    },
+    { signal: AbortSignal.timeout(EMAIL_TIMEOUT_MS) },
   );
   if (error) throw new Error(`Resend rejected the email (${error.name}).`);
 }

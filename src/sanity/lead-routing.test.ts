@@ -14,7 +14,7 @@ describe("getLeadRecipients (F-01, server only)", () => {
     sanityFetch.mockResolvedValue([" a@example.com ", "", "b@example.com"]);
     const { getLeadRecipients, LEAD_RECIPIENTS_QUERY } = await import("./lead-routing");
     expect(await getLeadRecipients()).toEqual(["a@example.com", "b@example.com"]);
-    expect(sanityFetch).toHaveBeenCalledWith({ query: LEAD_RECIPIENTS_QUERY, tags: ["leadRouting"] });
+    expect(sanityFetch).toHaveBeenCalledWith({ query: LEAD_RECIPIENTS_QUERY, tags: ["leadRouting"], signal: expect.any(AbortSignal) });
     expect(LEAD_RECIPIENTS_QUERY).toContain(`"${LEAD_ROUTING_ID}"`);
     expect(LEAD_ROUTING_ID).toContain(".");
   });
@@ -23,6 +23,16 @@ describe("getLeadRecipients (F-01, server only)", () => {
     sanityFetch.mockResolvedValue(null);
     const { getLeadRecipients } = await import("./lead-routing");
     expect(await getLeadRecipients()).toEqual([]);
+  });
+
+  it("aborts a hanging read so the caller can fall back (R2-02)", async () => {
+    vi.useFakeTimers();
+    sanityFetch.mockImplementation(({ signal }: { signal: AbortSignal }) => new Promise((_, reject) => signal.addEventListener("abort", () => reject(signal.reason))));
+    const { getLeadRecipients, RECIPIENTS_TIMEOUT_MS } = await import("./lead-routing");
+    const pending = expect(getLeadRecipients()).rejects.toMatchObject({ name: "TimeoutError" });
+    await vi.advanceTimersByTimeAsync(RECIPIENTS_TIMEOUT_MS + 1);
+    await pending;
+    vi.useRealTimers();
   });
 
   it("propagates Sanity errors (the caller decides the fallback)", async () => {

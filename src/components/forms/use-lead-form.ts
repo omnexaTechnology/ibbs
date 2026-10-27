@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore, type FormEvent } from "react";
 import { useLocale } from "next-intl";
-import { leadSchema, toFieldErrors, type FieldErrors, type FormType } from "@/lib/validation/lead";
+import { HONEYPOT_FIELD, leadSchema, toFieldErrors, type FieldErrors, type FormType } from "@/lib/validation/lead";
 
 const subscribeNever = () => () => {};
 
@@ -24,8 +24,10 @@ export function useLeadForm(formType: FormType) {
   const [errorRun, setErrorRun] = useState(0);
 
   // The timing check measures from mount (and again after "send another"), never from a validation error (F4-02).
+  // If the visitor already typed before hydration, they have been on the page since load: use the page age (R2-01).
   useEffect(() => {
-    startedAt.current = Date.now();
+    const typed = formRef.current ? [...new FormData(formRef.current).entries()].some(([k, v]) => k !== HONEYPOT_FIELD && typeof v === "string" && v !== "") : false;
+    startedAt.current = typed ? performance.timeOrigin : Date.now();
   }, []);
 
   // After errors are rendered, move focus to the first invalid control (document order).
