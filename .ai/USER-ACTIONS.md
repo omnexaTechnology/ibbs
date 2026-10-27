@@ -67,6 +67,7 @@ _(none right now)_
 | FEAT-004 | Required form fields | Name, phone, and email or message |
 | FEAT-004 | Spam protection | Honeypot + rate limit (no Turnstile) |
 | FEAT-004 | Confirmation email to the visitor | No |
+| FEAT-004 | Fallback inbox for enquiries (used when Lead routing is empty or can't be read) | `melamrosy72@gmail.com` for now. **Before launch, give a client-owned address** so enquiries don't land in a personal Gmail (review F4-09) |
 | FEAT-004 | Language of the "space type" in saved leads and emails | English label for every lead, so the sales team reads one language |
 | FEAT-004 | Phone number format in saved leads | Normalised (e.g. `+9665…` or `05…`), not exactly as typed |
 | FEAT-004 | "Space type" dropdown | Starts on "Select…" and is optional (the design had no placeholder) |
