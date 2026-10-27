@@ -13,7 +13,7 @@ The write token's scope is **Editor on the whole dataset**. Sanity's per-documen
 A Viewer token can read every document, so "the read token cannot read leads" is **not enforceable by Sanity** on this plan. What protects leads from the website side:
 
 1. `src/sanity/client.ts` (the only place the read token is used) starts with `import "server-only"`: importing it from a client component fails the build. A unit test pins this and that no token is read from a `NEXT_PUBLIC_` variable.
-2. No GROQ query in `src/sanity/queries.ts` selects `lead` documents (unit test).
+2. No GROQ query in `src/sanity/queries.ts` mentions leads, recipients or private IDs (unit test `src/sanity/lead-routing.test.ts`). The lead recipients (document `private.leadRouting`, dotted ID, so also not anonymously readable) are read only by the server-only `getLeadRecipients()` in `src/sanity/lead-routing.ts`; they are not part of `SiteSettings`, so they never reach a client component or a page. See `.ai/decisions/2026-10-27-lead-privacy.md`.
 3. The build output contains neither the token names nor values (checked below).
 
 ## Leads are private even on a public dataset
