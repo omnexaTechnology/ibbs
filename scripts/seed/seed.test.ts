@@ -67,9 +67,14 @@ describe("seed content (AC-004: matches the design)", () => {
     for (const f of imageFileNames()) expect(existsSync(path.join("design-reference/assets", f))).toBe(true);
   });
 
-  it("uses stable IDs without dots (public content), so a re-run addresses the same documents", () => {
-    for (const d of docs()) expect(d._id).not.toContain(".");
-    expect(new Set(docs().map((d) => d._id)).size).toBe(8);
+  it("uses stable IDs, so a re-run addresses the same documents; only the private routing doc has a dot", () => {
+    expect(docs().filter((d) => d._id.includes(".")).map((d) => d._id)).toEqual(["private.leadRouting"]);
+    expect(new Set(docs().map((d) => d._id)).size).toBe(9);
+  });
+
+  it("F-01: the private lead routing document is created empty (no recipients, no addresses)", () => {
+    const r = docs().find((d) => d._id === "private.leadRouting")!;
+    expect(r).toEqual({ _id: "private.leadRouting", _type: "leadRouting" });
   });
 });
 
@@ -106,14 +111,14 @@ const sha1 = (b: Buffer) => createHash("sha1").update(b).digest("hex");
 const readFile = async (name: string) => Buffer.from(`bytes-of-${name}`);
 
 describe("runSeed idempotency (T-005)", () => {
-  it("first run creates 8 documents and uploads each image once", async () => {
+  it("first run creates 9 documents and uploads each image once", async () => {
     const f = fakeStore();
     const report = await runSeed(f.store, { readFile, sha1 });
-    expect(report.created).toBe(8);
+    expect(report.created).toBe(9);
     expect(report.existing).toBe(0);
-    expect(report.byType).toEqual({ project: 6, heroSlides: 1, siteSettings: 1 });
+    expect(report.byType).toEqual({ project: 6, heroSlides: 1, siteSettings: 1, leadRouting: 1 });
     expect(f.uploads()).toBe(imageFileNames().length);
-    expect(f.documents.size).toBe(8);
+    expect(f.documents.size).toBe(9);
   });
 
   it("second run changes nothing: no uploads, no new documents", async () => {
@@ -122,11 +127,11 @@ describe("runSeed idempotency (T-005)", () => {
     const uploadsAfterFirst = f.uploads();
     const report = await runSeed(f.store, { readFile, sha1 });
     expect(report.created).toBe(0);
-    expect(report.existing).toBe(8);
+    expect(report.existing).toBe(9);
     expect(report.uploaded).toBe(0);
     expect(report.reusedAssets).toBe(imageFileNames().length);
     expect(f.uploads()).toBe(uploadsAfterFirst);
-    expect(f.documents.size).toBe(8);
+    expect(f.documents.size).toBe(9);
   });
 
   it("a re-run does not overwrite an editor change", async () => {
@@ -144,6 +149,14 @@ describe("runSeed idempotency (T-005)", () => {
     const report = await runSeed(f.store, { readFile, sha1, force: true });
     expect(report.replaced).toBe(8);
     expect(f.documents.get("project-exec-hq")!.year).toBe(2025);
+  });
+
+  it("--force never wipes the lead recipients", async () => {
+    const f = fakeStore();
+    await runSeed(f.store, { readFile, sha1 });
+    f.documents.get("private.leadRouting")!.recipients = ["someone@example.com"];
+    await runSeed(f.store, { readFile, sha1, force: true });
+    expect(f.documents.get("private.leadRouting")!.recipients).toEqual(["someone@example.com"]);
   });
 
   it("design data is the one the seed uses", () => {

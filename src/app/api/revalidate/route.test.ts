@@ -56,7 +56,7 @@ describe("POST /api/revalidate (REQ-008)", () => {
     expect(revalidateTag).toHaveBeenCalledWith("project", { expire: 0 });
   });
 
-  it.each(["heroSlides", "siteSettings"])("valid signature + %s -> revalidates its tag", async (type) => {
+  it.each(["heroSlides", "siteSettings", "leadRouting"])("valid signature + %s -> revalidates its tag", async (type) => {
     const res = await post({ _type: type });
     expect(res.status).toBe(200);
     expect(revalidateTag).toHaveBeenCalledWith(type, { expire: 0 });

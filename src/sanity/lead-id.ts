@@ -16,3 +16,9 @@ export function leadDocumentId(uuid: string = crypto.randomUUID()): string {
 export function isLeadDocumentId(id: string): boolean {
   return id.startsWith(LEAD_ID_PREFIX);
 }
+
+/**
+ * Fixed ID of the "Lead routing" singleton (who gets the notification emails). Same rule as
+ * leads: the "." keeps it unreadable for anonymous users, even on a public dataset.
+ */
+export const LEAD_ROUTING_ID = "private.leadRouting";

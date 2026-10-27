@@ -6,7 +6,7 @@
  */
 import { randomUUID } from "node:crypto";
 import { createClient } from "@sanity/client";
-import { leadDocumentId } from "../src/sanity/lead-id";
+import { LEAD_ROUTING_ID, leadDocumentId } from "../src/sanity/lead-id";
 import {
   FEATURED_PROJECTS_QUERY,
   HERO_SLIDES_QUERY,
@@ -61,7 +61,6 @@ async function verifyContent() {
   const settings = toSiteSettings(await c.fetch(SITE_SETTINGS_QUERY), {
     phones: [], emails: [], website: "", whatsapp: { number: "", message: { en: "", ar: "" } }, workingHours: [],
     address: { en: "", ar: "" }, mapUrl: "", social: { linkedin: "", instagram: "", x: "", snapchat: "", tiktok: "" },
-    leadNotificationEmails: [],
   });
   check(settings.phones.length === 0 && settings.whatsapp.number === "" && settings.whatsapp.message.en.includes("IBSS"), "site settings: empty except the WhatsApp message");
 
@@ -84,6 +83,16 @@ async function verifyPrivacy() {
   const writer = createClient({ projectId, dataset, apiVersion, useCdn: false, token: writeToken });
   const id = leadDocumentId(randomUUID());
   check(id.includes("."), "test lead ID contains a dot", id.slice(0, 9) + "...");
+
+  // F-01: the lead routing document (recipient emails) is private too. Read-only check.
+  for (const host of ["api", "apicdn"]) {
+    const routing = await anonymousQuery(`*[_id == $id || _type == "leadRouting"]{_id}`, { id: LEAD_ROUTING_ID }, host);
+    const n = Array.isArray(routing.result) ? routing.result.length : 0;
+    check(n === 0, `anonymous query for the lead routing document via ${host}.sanity.io returns nothing`, `HTTP ${routing.status}, ${n} results`);
+  }
+  const routingDoc = await fetch(`https://${projectId}.api.sanity.io/v${apiVersion}/data/doc/${dataset}/${LEAD_ROUTING_ID}`);
+  const routingBody = (await routingDoc.json().catch(() => ({}))) as { documents?: unknown[] };
+  check((routingBody.documents ?? []).length === 0, "anonymous GET of the lead routing document returns no document", `HTTP ${routingDoc.status}`);
 
   const published = await anonymousQuery(`count(*[_type == "project"])`);
   console.log(`INFO  anonymous access to the dataset: HTTP ${published.status}, ${published.status === 200 ? "dataset is PUBLIC (projects readable)" : "dataset is PRIVATE"}`);

@@ -3,7 +3,7 @@ import { requireWhatsappNumber } from "./validation";
 
 const emptyHides = "Leave empty to hide it on the website.";
 
-/** Singleton (document ID "siteSettings"): contact details, social links and lead notification emails. */
+/** Singleton (document ID "siteSettings"): contact details and social links (all public). Lead recipients live in `leadRouting`. */
 export const siteSettings = defineType({
   name: "siteSettings",
   title: "Site settings",
@@ -114,15 +114,6 @@ export const siteSettings = defineType({
       ].map(([name, title]) =>
         defineField({ name, title, type: "url", validation: (rule) => rule.uri({ scheme: ["http", "https"] }) }),
       ),
-    }),
-    defineField({
-      name: "leadNotificationEmails",
-      title: "Who receives new enquiries by email",
-      description:
-        "Every message sent through the website forms is emailed to these addresses (and also saved under Leads). Add one or more.",
-      type: "array",
-      of: [defineArrayMember({ type: "string", validation: (rule) => rule.email() })],
-      validation: (rule) => rule.unique(),
     }),
   ],
   preview: { prepare: () => ({ title: "Contact & social settings" }) },

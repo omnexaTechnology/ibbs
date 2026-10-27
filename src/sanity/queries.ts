@@ -11,6 +11,8 @@ export const SANITY_TAGS = {
   project: "project",
   heroSlides: "heroSlides",
   siteSettings: "siteSettings",
+  /** Private lead recipients: read by getLeadRecipients() only, never by pages. */
+  leadRouting: "leadRouting",
 } as const;
 export type SanityTag = (typeof SANITY_TAGS)[keyof typeof SANITY_TAGS];
 
@@ -75,6 +77,5 @@ export const SITE_SETTINGS_QUERY = defineQuery(`*[_id == "siteSettings"][0]{
   workingHours[]{ days, time },
   address,
   mapUrl,
-  social,
-  leadNotificationEmails
+  social
 }`);

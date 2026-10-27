@@ -51,7 +51,6 @@ export type RawSiteSettings =
       address?: Loc;
       mapUrl?: string | null;
       social?: { [K in keyof SiteSettings["social"]]?: string | null } | null;
-      leadNotificationEmails?: string[] | null;
     }
   | null
   | undefined;
@@ -188,6 +187,5 @@ export function toSiteSettings(raw: RawSiteSettings, defaults: SiteSettings): Si
       snapchat: text(raw.social?.snapchat),
       tiktok: text(raw.social?.tiktok),
     },
-    leadNotificationEmails: (raw.leadNotificationEmails ?? []).map(text).filter(Boolean),
   };
 }

@@ -12,7 +12,7 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "schema:validate": "sanity schemas validate",
-    "typegen": "sanity schemas extract --path schema.json && sanity typegen generate",
+    "typegen": "sanity schemas extract --path schema.json --force && sanity typegen generate",
     "seed": "tsx --env-file-if-exists=.env.local scripts/seed.ts",
     "sanity": "node --env-file-if-exists=.env.local node_modules/@sanity/cli/bin/run.js",
     "verify:content": "tsx --env-file-if-exists=.env.local scripts/verify-sanity.ts content",

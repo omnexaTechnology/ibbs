@@ -59,4 +59,19 @@ describe("getSiteSettings with Sanity (FEAT-002 T-004)", () => {
     expect(s.emails).toEqual([]);
     expect(console.warn).toHaveBeenCalled();
   });
+
+  it("F-01: only display fields reach the client components, even if Sanity returns more", async () => {
+    sanityFetch.mockResolvedValue({
+      phones: [],
+      leadNotificationEmails: ["secret@example.com"],
+      recipients: ["secret@example.com"],
+      _id: "siteSettings",
+    });
+    const getSiteSettings = await load(true);
+    const s = await getSiteSettings();
+    expect(Object.keys(s).sort()).toEqual(
+      ["address", "emails", "mapUrl", "phones", "social", "website", "whatsapp", "workingHours"],
+    );
+    expect(JSON.stringify(s)).not.toContain("secret@example.com");
+  });
 });

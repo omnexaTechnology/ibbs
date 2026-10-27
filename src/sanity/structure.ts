@@ -1,6 +1,7 @@
 import type { StructureResolver } from "sanity/structure";
+import { LEAD_ROUTING_ID } from "./lead-id";
 
-/** Desk structure (REQ-002): Projects · Hero images · Site settings · Leads. */
+/** Desk structure (REQ-002): Projects · Hero images · Site settings · Lead routing · Leads. */
 export const structure: StructureResolver = (S) =>
   S.list()
     .title("Content")
@@ -21,6 +22,10 @@ export const structure: StructureResolver = (S) =>
         .title("Site settings")
         .id("siteSettings")
         .child(S.document().schemaType("siteSettings").documentId("siteSettings").title("Site settings")),
+      S.listItem()
+        .title("Lead routing (private)")
+        .id("leadRouting")
+        .child(S.document().schemaType("leadRouting").documentId(LEAD_ROUTING_ID).title("Lead routing (private)")),
       S.divider(),
       S.listItem()
         .title("Leads")

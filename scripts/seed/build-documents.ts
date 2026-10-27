@@ -1,4 +1,5 @@
 import type { LocalizedString } from "../../src/types/site-settings";
+import { LEAD_ROUTING_ID } from "../../src/sanity/lead-id";
 import seedData from "./seed-data.json";
 
 /** Content extracted once from design-reference/Main.dc.html (PR projects and SL hero slides). */
@@ -104,5 +105,8 @@ export function buildDocuments(assetIdFor: AssetIdFor, data: SeedData = DEFAULT_
     whatsappMessage: { _type: "localeText", ...WHATSAPP_MESSAGE },
   };
 
-  return [...projects, hero, settings];
+  // Empty private routing document (dotted ID: not readable anonymously). The client fills it in the Studio.
+  const routing: SeedDocument = { _id: LEAD_ROUTING_ID, _type: "leadRouting" };
+
+  return [...projects, hero, settings, routing];
 }

@@ -29,7 +29,6 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
   address: { en: "", ar: "" },
   mapUrl: "",
   social: { linkedin: "", instagram: "", x: "", snapchat: "", tiktok: "" },
-  leadNotificationEmails: [],
 };
 
 /**

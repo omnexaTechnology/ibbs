@@ -2,6 +2,7 @@ import type { SchemaTypeDefinition } from "sanity";
 import { heroSlideImage, heroSlides } from "./heroSlides";
 import { imageHotspot } from "./imageHotspot";
 import { lead } from "./lead";
+import { leadRouting } from "./leadRouting";
 import { localeString } from "./localeString";
 import { localeText } from "./localeText";
 import { project } from "./project";
@@ -13,6 +14,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   heroSlides,
   siteSettings,
   lead,
+  leadRouting,
   // building blocks
   localeString,
   localeText,
@@ -21,7 +23,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 ];
 
 /** Document types that exist exactly once (fixed document ID = type name). */
-export const SINGLETON_TYPES = ["heroSlides", "siteSettings"] as const;
+export const SINGLETON_TYPES = ["heroSlides", "siteSettings", "leadRouting"] as const;
 
 /** Document types the Studio must not offer in the "create new" menu. */
-export const NO_CREATE_TYPES = ["heroSlides", "siteSettings", "lead"] as const;
+export const NO_CREATE_TYPES = ["heroSlides", "siteSettings", "leadRouting", "lead"] as const;

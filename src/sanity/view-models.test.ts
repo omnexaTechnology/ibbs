@@ -115,7 +115,6 @@ const DEFAULTS: SiteSettings = {
   address: { en: "", ar: "" },
   mapUrl: "",
   social: { linkedin: "", instagram: "", x: "", snapchat: "", tiktok: "" },
-  leadNotificationEmails: [],
 };
 
 describe("toSiteSettings", () => {
@@ -138,7 +137,8 @@ describe("toSiteSettings", () => {
         address: { en: "Riyadh", ar: "الرياض" },
         mapUrl: "https://maps.example/x",
         social: { instagram: "https://instagram.com/ibss", tiktok: "  " },
-        leadNotificationEmails: ["a@example.com", " ", "b@example.com"],
+        // Not part of the public settings: a stray field must never be copied through (F-01).
+        ...({ leadNotificationEmails: ["a@example.com"], recipients: ["b@example.com"] } as object),
       },
       DEFAULTS,
     );
@@ -149,7 +149,7 @@ describe("toSiteSettings", () => {
     expect(s.workingHours).toHaveLength(1);
     expect(s.social.instagram).toBe("https://instagram.com/ibss");
     expect(s.social.tiktok).toBe("");
-    expect(s.leadNotificationEmails).toEqual(["a@example.com", "b@example.com"]);
+    expect(JSON.stringify(s)).not.toMatch(/a@example|b@example|leadNotification|recipients/);
   });
 
   it("BR-009: empty Sanity fields stay empty (nothing falls back to placeholders)", () => {

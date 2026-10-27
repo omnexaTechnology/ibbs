@@ -1,3 +1,4 @@
+import { LEAD_ROUTING_ID } from "../../src/sanity/lead-id";
 import { buildDocuments, imageFileNames, type SeedData, DEFAULT_SEED_DATA } from "./build-documents";
 
 /** The few Sanity operations the seed needs (a fake implements this in tests). */
@@ -60,7 +61,8 @@ export async function runSeed(store: SeedStore, options: SeedOptions): Promise<S
 
   for (const doc of docs) {
     report.byType[doc._type] = (report.byType[doc._type] ?? 0) + 1;
-    if (options.force) {
+    // --force resets design content only: it must never wipe the private lead recipients.
+    if (options.force && doc._id !== LEAD_ROUTING_ID) {
       await store.createOrReplace(doc);
       report.replaced++;
       log(`replaced       ${doc._id}`);

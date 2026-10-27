@@ -55,6 +55,15 @@ export type LocaleString = {
   ar?: string;
 };
 
+export type LeadRouting = {
+  _id: string;
+  _type: "leadRouting";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  recipients?: Array<string>;
+};
+
 export type Lead = {
   _id: string;
   _type: "lead";
@@ -112,7 +121,6 @@ export type SiteSettings = {
     snapchat?: string;
     tiktok?: string;
   };
-  leadNotificationEmails?: Array<string>;
 };
 
 export type HeroSlides = {
@@ -294,6 +302,7 @@ export type AllSanitySchemaTypes =
   | ImageHotspot
   | LocaleText
   | LocaleString
+  | LeadRouting
   | Lead
   | SiteSettings
   | HeroSlides
@@ -309,6 +318,11 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint;
+
+// Source: src/sanity/lead-routing.ts
+// Variable: LEAD_RECIPIENTS_QUERY
+// Query: *[_id == "private.leadRouting"][0].recipients
+export type LEAD_RECIPIENTS_QUERY_RESULT = Array<string> | null;
 
 // Source: src/sanity/queries.ts
 // Variable: PROJECTS_QUERY
@@ -528,7 +542,7 @@ export type HOME_QUERY_RESULT = {
 
 // Source: src/sanity/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_id == "siteSettings"][0]{  phones[]{ label, number },  emails[]{ label, address },  website,  whatsappNumber,  whatsappMessage,  workingHours[]{ days, time },  address,  mapUrl,  social,  leadNotificationEmails}
+// Query: *[_id == "siteSettings"][0]{  phones[]{ label, number },  emails[]{ label, address },  website,  whatsappNumber,  whatsappMessage,  workingHours[]{ days, time },  address,  mapUrl,  social}
 export type SITE_SETTINGS_QUERY_RESULT =
   | {
       phones: null;
@@ -540,7 +554,6 @@ export type SITE_SETTINGS_QUERY_RESULT =
       address: null;
       mapUrl: null;
       social: null;
-      leadNotificationEmails: null;
     }
   | {
       phones: Array<{
@@ -567,19 +580,19 @@ export type SITE_SETTINGS_QUERY_RESULT =
         snapchat?: string;
         tiktok?: string;
       } | null;
-      leadNotificationEmails: Array<string> | null;
     }
   | null;
 
 // Query TypeMap
 declare global {
   interface SanityQueries {
+    '*[_id == "private.leadRouting"][0].recipients': LEAD_RECIPIENTS_QUERY_RESULT;
     '*[_type == "project" && defined(slug.current)] | order(order asc, year desc, _createdAt desc) {\n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  featured,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n}': PROJECTS_QUERY_RESULT;
     '*[_type == "project" && slug.current == $slug][0] {\n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  featured,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n}': PROJECT_BY_SLUG_QUERY_RESULT;
     '*[_type == "project" && featured == true && defined(slug.current)] | order(order asc, year desc, _createdAt desc) [0...4] {\n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  featured,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n}': FEATURED_PROJECTS_QUERY_RESULT;
     '*[_id == "heroSlides"][0] { "slides": [\n  slide1{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide2{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide3{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide4{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } }\n] }': HERO_SLIDES_QUERY_RESULT;
     '{\n  "hero": *[_id == "heroSlides"][0] { "slides": [\n  slide1{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide2{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide3{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide4{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } }\n] },\n  "featured": *[_type == "project" && featured == true && defined(slug.current)] | order(order asc, year desc, _createdAt desc) [0...4] {\n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  featured,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n}\n}': HOME_QUERY_RESULT;
-    '*[_id == "siteSettings"][0]{\n  phones[]{ label, number },\n  emails[]{ label, address },\n  website,\n  whatsappNumber,\n  whatsappMessage,\n  workingHours[]{ days, time },\n  address,\n  mapUrl,\n  social,\n  leadNotificationEmails\n}': SITE_SETTINGS_QUERY_RESULT;
+    '*[_id == "siteSettings"][0]{\n  phones[]{ label, number },\n  emails[]{ label, address },\n  website,\n  whatsappNumber,\n  whatsappMessage,\n  workingHours[]{ days, time },\n  address,\n  mapUrl,\n  social\n}': SITE_SETTINGS_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too

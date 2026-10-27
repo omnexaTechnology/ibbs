@@ -86,11 +86,18 @@ describe("REQ-005 hero", () => {
 });
 
 describe("REQ-005b site settings", () => {
-  it("has contacts, social, whatsapp and lead notification emails", () => {
+  it("has contacts, social and whatsapp, and NO private lead recipients (F-01)", () => {
     expect(byName("siteSettings").fields?.map((f) => f.name)).toEqual([
       "phones", "emails", "website", "whatsappNumber", "whatsappMessage", "workingHours", "address", "mapUrl", "social",
-      "leadNotificationEmails",
     ]);
+  });
+});
+
+describe("F-01 lead routing", () => {
+  it("is a private singleton with the recipient list, not creatable from the menu", () => {
+    expect(byName("leadRouting").fields?.map((f) => f.name)).toEqual(["recipients"]);
+    expect(SINGLETON_TYPES).toContain("leadRouting");
+    expect(NO_CREATE_TYPES).toContain("leadRouting");
   });
 });
 
