@@ -1,0 +1,222 @@
+/* Page transition: curtains + opening label (design "v16"). Dark in both themes. */
+.tr {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  direction: ltr;
+  pointer-events: all;
+}
+.tr-p {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  background: var(--night);
+}
+.tr-p.l {
+  left: 0;
+}
+.tr-p.r {
+  right: 0;
+}
+.tr-p::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--cyan);
+  box-shadow: 0 0 18px rgba(var(--cyan-rgb), 0.55);
+}
+.tr-p.l::after {
+  right: 0;
+}
+.tr-p.r::after {
+  left: 0;
+}
+.tr-p.l::before,
+.tr-p.r::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--cyan);
+  opacity: 0.55;
+}
+.tr-p.l::before {
+  right: 6px;
+}
+.tr-p.r::before {
+  left: 6px;
+}
+.tr.close .tr-p {
+  animation: trIn 0.62s cubic-bezier(0.7, 0, 0.2, 1) both;
+}
+.tr.hold .tr-p {
+  width: 50.5%;
+}
+.tr.open .tr-p {
+  width: 50.5%;
+  animation: trOut 0.85s cubic-bezier(0.7, 0, 0.2, 1) 0.25s both;
+}
+@keyframes trIn {
+  from {
+    width: 0;
+  }
+  to {
+    width: 50.5%;
+  }
+}
+@keyframes trOut {
+  from {
+    width: 50.5%;
+  }
+  to {
+    width: 0;
+  }
+}
+.tr-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--cyan);
+  transform: scaleY(0);
+  transform-origin: 50% 50%;
+  z-index: 2;
+}
+.tr.close .tr-line {
+  animation: trLineOut 0.55s cubic-bezier(0.7, 0, 0.2, 1) 0.55s both;
+}
+.tr.open .tr-line {
+  animation:
+    trLineIn 0.28s cubic-bezier(0.2, 0.7, 0.2, 1) both,
+    trFade 0.2s 0.32s forwards;
+}
+@keyframes trLineOut {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
+  }
+}
+@keyframes trLineIn {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes trFade {
+  to {
+    opacity: 0;
+  }
+}
+.tr-c {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--cream);
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+}
+.tr.close .tr-c {
+  animation: trTxt 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) 0.42s both;
+}
+.tr.hold .tr-c {
+  opacity: 1;
+}
+.tr.open .tr-c {
+  animation: trTxtOut 0.25s ease both;
+}
+@keyframes trTxt {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes trTxtOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+.tr-k {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: rgba(var(--cream-rgb), 0.55);
+}
+[dir="rtl"] .tr-k {
+  letter-spacing: 0;
+  font-size: 13px;
+}
+.tr-t {
+  font-size: clamp(38px, 5.4vw, 80px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  padding: 0 24px;
+}
+[dir="rtl"] .tr-t {
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+.tr-st {
+  display: inline-flex;
+  gap: 5px;
+  height: 16px;
+}
+.tr-st i {
+  display: block;
+  width: 10px;
+  transform: skewX(-28deg);
+}
+.tr-st i:nth-child(1) {
+  background: var(--blue);
+}
+.tr-st i:nth-child(2) {
+  background: var(--cyan);
+}
+.tr-st i:nth-child(3) {
+  background: var(--green);
+}
+.tr.close .tr-st i {
+  animation: stripeBeat 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) 0.7s;
+}
+@keyframes stripeBeat {
+  0% {
+    transform: skewX(-28deg) scaleY(1);
+  }
+  40% {
+    transform: skewX(-28deg) scaleY(1.7);
+  }
+  100% {
+    transform: skewX(-28deg) scaleY(1);
+  }
+}
+/* Reduced motion: never show the transition (the code also skips it). */
+@media (prefers-reduced-motion: reduce) {
+  .tr {
+    display: none;
+  }
+}

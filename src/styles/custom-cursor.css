@@ -1,0 +1,106 @@
+/* Custom cursor (design "setupCur"). Only active when <html> has .has-cur (fine pointer, no reduced motion). */
+.cur {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 400;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  display: none;
+}
+html.has-cur .cur {
+  display: block;
+}
+.cur::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--blue);
+  background: rgba(var(--blue-rgb), 0.08);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cur::after {
+  content: "";
+  position: absolute;
+  left: -2.5px;
+  top: -2.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--navy);
+  transition: opacity 0.3s;
+}
+.dark .cur::before {
+  border-color: var(--cyan);
+  background: rgba(var(--cyan-rgb), 0.12);
+}
+.dark .cur::after {
+  background: var(--cream);
+}
+.cur:not([data-on="1"]) {
+  opacity: 0;
+}
+.cur .ci {
+  position: absolute;
+  left: -10px;
+  top: -10px;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: var(--cream);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  transform: scale(0.4);
+  transition:
+    opacity 0.3s,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1;
+}
+.cur[data-m="go"]::before {
+  left: -28px;
+  top: -28px;
+  width: 56px;
+  height: 56px;
+  background: var(--navy);
+  border-color: var(--navy);
+}
+.cur[data-m="view"]::before {
+  left: -38px;
+  top: -38px;
+  width: 76px;
+  height: 76px;
+  background: rgba(var(--navy-rgb), 0.82);
+  border-color: transparent;
+  backdrop-filter: blur(4px);
+}
+.dark .cur[data-m="go"]::before {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+.cur[data-m="go"]::after,
+.cur[data-m="view"]::after {
+  opacity: 0;
+}
+.cur[data-m="go"] .ci-g,
+.cur[data-m="view"] .ci-v {
+  opacity: 1;
+  transform: none;
+}
+.cur[data-dn="1"]::before {
+  transform: scale(0.85);
+}
+html.has-cur .site,
+html.has-cur .site * {
+  cursor: none !important;
+}
+html.has-cur .site input,
+html.has-cur .site textarea {
+  cursor: text !important;
+}
