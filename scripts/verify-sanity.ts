@@ -11,10 +11,11 @@ import {
   HERO_SLIDES_QUERY,
   HOME_QUERY,
   PROJECT_BY_SLUG_QUERY,
+  PROJECT_SLUGS_QUERY,
   PROJECTS_QUERY,
   SITE_SETTINGS_QUERY,
 } from "../src/sanity/queries";
-import { toHeroSlides, toProject, toProjects, toSiteSettings } from "../src/sanity/view-models";
+import { toHeroSlides, toProjectPage, toProjects, toProjectSlugs, toSiteSettings } from "../src/sanity/view-models";
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? "";
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
@@ -45,8 +46,15 @@ async function verifyContent() {
   check(projects.every((p) => p.client === null), "no client names (BR-003)");
   check(projects[0]?.slug === "exec-hq" && projects[0].areaM2 === 1850, "first project is exec-hq, 1850 m2");
 
-  const one = toProject(await c.fetch(PROJECT_BY_SLUG_QUERY, { slug: "boardroom" }));
-  check(one?.title.en === "Boardroom & Leadership Suite", "PROJECT_BY_SLUG_QUERY(boardroom)", one?.title.en);
+  const page = toProjectPage(await c.fetch(PROJECT_BY_SLUG_QUERY, { slug: "boardroom" }));
+  check(page?.project.title.en === "Boardroom & Leadership Suite", "PROJECT_BY_SLUG_QUERY(boardroom)", page?.project.title.en);
+  check(
+    (page?.related.length ?? 99) <= 3 && page!.related.every((p) => p.category === page!.project.category && p.slug !== "boardroom"),
+    "related: same category, not itself, max 3",
+    page?.related.map((p) => p.slug).join(),
+  );
+  const slugs = toProjectSlugs(await c.fetch(PROJECT_SLUGS_QUERY));
+  check(slugs.join() === "exec-hq,ops-floor,boardroom,cowork,medical,clinic-admin", "PROJECT_SLUGS_QUERY: 6 slugs in order", slugs.join());
   check((await c.fetch(PROJECT_BY_SLUG_QUERY, { slug: "nope" })) === null, "unknown slug -> null");
 
   const hero = toHeroSlides(await c.fetch(HERO_SLIDES_QUERY));

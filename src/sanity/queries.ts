@@ -20,7 +20,7 @@ export type SanityTag = (typeof SANITY_TAGS)[keyof typeof SANITY_TAGS];
 // Image fields needed by src/sanity/image.ts: asset ref, crop, hotspot + placeholder and size.
 const IMAGE = `asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions`;
 
-const PROJECT = `{
+const PROJECT_FIELDS = `
   _id,
   title,
   "slug": slug.current,
@@ -37,7 +37,11 @@ const PROJECT = `{
   cover{ ${IMAGE} },
   gallery[]{ _key, alt, ${IMAGE} },
   hotspots[]{ _key, x, y, tag, title, description }
-}`;
+`;
+const PROJECT = `{${PROJECT_FIELDS}}`;
+
+/** Related projects on a project page: same category, never the project itself, max 3 (FEAT-003 REQ-009). */
+export const RELATED_PROJECT_LIMIT = 3;
 
 const ORDER = `order(order asc, year desc, _createdAt desc)`;
 
@@ -52,8 +56,17 @@ export const PROJECTS_QUERY = defineQuery(
   `*[_type == "project" && defined(slug.current)] | ${ORDER} ${PROJECT}`,
 );
 
+/** Project page: the project and its related projects in ONE query (NFR-001). */
 export const PROJECT_BY_SLUG_QUERY = defineQuery(
-  `*[_type == "project" && slug.current == $slug][0] ${PROJECT}`,
+  `*[_type == "project" && slug.current == $slug][0]{
+  ${PROJECT_FIELDS},
+  "related": *[_type == "project" && defined(slug.current) && category == ^.category && _id != ^._id] | ${ORDER} [0...${RELATED_PROJECT_LIMIT}] ${PROJECT}
+}`,
+);
+
+/** Slugs of every project, for generateStaticParams of the project page. */
+export const PROJECT_SLUGS_QUERY = defineQuery(
+  `*[_type == "project" && defined(slug.current)] | ${ORDER} { "slug": slug.current }`,
 );
 
 export const HERO_SLIDES_QUERY = defineQuery(`*[_id == "heroSlides"][0] ${HERO}`);

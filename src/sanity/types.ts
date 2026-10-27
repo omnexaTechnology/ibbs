@@ -369,7 +369,7 @@ export type PROJECTS_QUERY_RESULT = Array<{
 
 // Source: src/sanity/queries.ts
 // Variable: PROJECT_BY_SLUG_QUERY
-// Query: *[_type == "project" && slug.current == $slug][0] {  _id,  title,  "slug": slug.current,  category,  areaM2,  durationDays,  year,  city,  client,  challenge,  solution,  scope,  order,  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },  hotspots[]{ _key, x, y, tag, title, description }}
+// Query: *[_type == "project" && slug.current == $slug][0]{    _id,  title,  "slug": slug.current,  category,  areaM2,  durationDays,  year,  city,  client,  challenge,  solution,  scope,  order,  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },  hotspots[]{ _key, x, y, tag, title, description },  "related": *[_type == "project" && defined(slug.current) && category == ^.category && _id != ^._id] | order(order asc, year desc, _createdAt desc) [0...3] {  _id,  title,  "slug": slug.current,  category,  areaM2,  durationDays,  year,  city,  client,  challenge,  solution,  scope,  order,  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },  hotspots[]{ _key, x, y, tag, title, description }}}
 export type PROJECT_BY_SLUG_QUERY_RESULT = {
   _id: string;
   title: LocaleString | null;
@@ -408,7 +408,53 @@ export type PROJECT_BY_SLUG_QUERY_RESULT = {
     title: LocaleString | null;
     description: LocaleText | null;
   }> | null;
+  related: Array<{
+    _id: string;
+    title: LocaleString | null;
+    slug: string | null;
+    category: "exec" | "health" | "hq" | "mosque" | "school" | "uni" | null;
+    areaM2: number | null;
+    durationDays: number | null;
+    year: number | null;
+    city: LocaleString | null;
+    client: LocaleString | null;
+    challenge: LocaleText | null;
+    solution: LocaleText | null;
+    scope: Array<string> | null;
+    order: number | null;
+    cover: {
+      asset: SanityImageAssetReference | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    } | null;
+    gallery: Array<{
+      _key: string;
+      alt: LocaleString | null;
+      asset: SanityImageAssetReference | null;
+      hotspot: SanityImageHotspot | null;
+      crop: SanityImageCrop | null;
+      lqip: string | null;
+      dimensions: SanityImageDimensions | null;
+    }> | null;
+    hotspots: Array<{
+      _key: string;
+      x: number | null;
+      y: number | null;
+      tag: LocaleString | null;
+      title: LocaleString | null;
+      description: LocaleText | null;
+    }> | null;
+  }>;
 } | null;
+
+// Source: src/sanity/queries.ts
+// Variable: PROJECT_SLUGS_QUERY
+// Query: *[_type == "project" && defined(slug.current)] | order(order asc, year desc, _createdAt desc) { "slug": slug.current }
+export type PROJECT_SLUGS_QUERY_RESULT = Array<{
+  slug: string | null;
+}>;
 
 // Source: src/sanity/queries.ts
 // Variable: HERO_SLIDES_QUERY
@@ -541,7 +587,8 @@ declare global {
   interface SanityQueries {
     '*[_id == "private.leadRouting"][0].recipients': LEAD_RECIPIENTS_QUERY_RESULT;
     '*[_type == "project" && defined(slug.current)] | order(order asc, year desc, _createdAt desc) {\n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n}': PROJECTS_QUERY_RESULT;
-    '*[_type == "project" && slug.current == $slug][0] {\n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n}': PROJECT_BY_SLUG_QUERY_RESULT;
+    '*[_type == "project" && slug.current == $slug][0]{\n  \n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n,\n  "related": *[_type == "project" && defined(slug.current) && category == ^.category && _id != ^._id] | order(order asc, year desc, _createdAt desc) [0...3] {\n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n}\n}': PROJECT_BY_SLUG_QUERY_RESULT;
+    '*[_type == "project" && defined(slug.current)] | order(order asc, year desc, _createdAt desc) { "slug": slug.current }': PROJECT_SLUGS_QUERY_RESULT;
     '*[_id == "heroSlides"][0] { "slides": [\n  slide1{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide2{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide3{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide4{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } }\n] }': HERO_SLIDES_QUERY_RESULT;
     '{\n  "hero": *[_id == "heroSlides"][0] { "slides": [\n  slide1{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide2{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide3{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } },\n  slide4{ alt, "image": image{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions } }\n] },\n  "projects": *[_type == "project" && defined(slug.current)] | order(order asc, year desc, _createdAt desc) [0...6] {\n  _id,\n  title,\n  "slug": slug.current,\n  category,\n  areaM2,\n  durationDays,\n  year,\n  city,\n  client,\n  challenge,\n  solution,\n  scope,\n  order,\n  cover{ asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  gallery[]{ _key, alt, asset, hotspot, crop, "lqip": asset->metadata.lqip, "dimensions": asset->metadata.dimensions },\n  hotspots[]{ _key, x, y, tag, title, description }\n}\n}': HOME_QUERY_RESULT;
     '*[_id == "siteSettings"][0]{\n  phones[]{ label, number },\n  emails[]{ label, address },\n  website,\n  whatsappNumber,\n  whatsappMessage,\n  workingHours[]{ days, time },\n  address,\n  mapUrl,\n  social\n}': SITE_SETTINGS_QUERY_RESULT;

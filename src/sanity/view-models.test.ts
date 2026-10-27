@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SiteSettings } from "@/types/site-settings";
-import { toHeroSlides, toProject, toProjects, toSiteSettings, type RawProject } from "./view-models";
+import { toHeroSlides, toProject, toProjectPage, toProjects, toProjectSlugs, toSiteSettings, type RawProject } from "./view-models";
 
 const img = (id = "image-abc123-1600x900-jpg") => ({
   asset: { _ref: id },
@@ -39,6 +39,36 @@ const raw = (over: Partial<RawProject> = {}): RawProject => ({
     { _key: "h2", x: null, y: 3 },
   ],
   ...over,
+});
+
+describe("toProjectPage / toProjectSlugs (F-11)", () => {
+  const rel = (slug: string, over: Partial<RawProject> = {}) => raw({ _id: slug, slug, ...over });
+
+  it("maps the project and its related projects", () => {
+    const page = toProjectPage({ ...raw(), related: [rel("a"), rel("b")] })!;
+    expect(page.project.slug).toBe("exec-hq");
+    expect(page.related.map((p) => p.slug)).toEqual(["a", "b"]);
+  });
+
+  it("defends the contract: drops itself and other categories, keeps at most 3", () => {
+    const page = toProjectPage({
+      ...raw(),
+      related: [rel("exec-hq"), rel("x", { category: "hq" }), rel("a"), rel("b"), rel("c"), rel("d")],
+    })!;
+    expect(page.related.map((p) => p.slug)).toEqual(["a", "b", "c"]);
+  });
+
+  it("drops incomplete related projects; null / incomplete project -> null; no related -> []", () => {
+    expect(toProjectPage({ ...raw(), related: [rel("a", { cover: null })] })!.related).toEqual([]);
+    expect(toProjectPage({ ...raw(), related: null })!.related).toEqual([]);
+    expect(toProjectPage(null)).toBeNull();
+    expect(toProjectPage(raw({ cover: null }))).toBeNull();
+  });
+
+  it("toProjectSlugs keeps non-empty slugs in order", () => {
+    expect(toProjectSlugs([{ slug: "a" }, { slug: null }, null, { slug: "b" }])).toEqual(["a", "b"]);
+    expect(toProjectSlugs(null)).toEqual([]);
+  });
 });
 
 describe("toProject", () => {

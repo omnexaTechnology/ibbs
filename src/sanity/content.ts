@@ -4,10 +4,19 @@ import {
   HERO_SLIDES_QUERY,
   HOME_QUERY,
   PROJECT_BY_SLUG_QUERY,
+  PROJECT_SLUGS_QUERY,
   PROJECTS_QUERY,
   SANITY_TAGS,
 } from "./queries";
-import { toHeroSlides, toProject, toProjects, type HeroSlideContent, type Project } from "./view-models";
+import {
+  toHeroSlides,
+  toProjectPage,
+  toProjects,
+  toProjectSlugs,
+  type HeroSlideContent,
+  type Project,
+  type ProjectPage,
+} from "./view-models";
 
 /**
  * Typed content API for the pages (FEAT-003). Each function is ONE query (NFR-001) and returns
@@ -18,10 +27,16 @@ export async function getProjects(): Promise<Project[]> {
   return toProjects(await sanityFetch({ query: PROJECTS_QUERY, tags: [SANITY_TAGS.project] }));
 }
 
-export async function getProjectBySlug(slug: string): Promise<Project | null> {
-  return toProject(
+/** The project and its related projects (same category, max 3) in one query; null if unknown or incomplete. */
+export async function getProjectBySlug(slug: string): Promise<ProjectPage | null> {
+  return toProjectPage(
     await sanityFetch({ query: PROJECT_BY_SLUG_QUERY, params: { slug }, tags: [SANITY_TAGS.project] }),
   );
+}
+
+/** Every project slug, for `generateStaticParams`. */
+export async function getProjectSlugs(): Promise<string[]> {
+  return toProjectSlugs(await sanityFetch({ query: PROJECT_SLUGS_QUERY, tags: [SANITY_TAGS.project] }));
 }
 
 export async function getHeroSlides(): Promise<HeroSlideContent[]> {

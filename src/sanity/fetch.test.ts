@@ -76,6 +76,27 @@ describe("content API", () => {
     expect(home.projects).toEqual([]);
   });
 
+  it("getProjectSlugs is one project-tagged query returning plain slugs", async () => {
+    fetchMock.mockResolvedValue([{ slug: "a" }, { slug: "b" }]);
+    const { getProjectSlugs } = await import("./content");
+    expect(await getProjectSlugs()).toEqual(["a", "b"]);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock.mock.calls[0][2].next.tags).toEqual(["project"]);
+  });
+
+  it("getProjectBySlug is ONE project-tagged query that also asks for same-category related (max 3, not itself)", async () => {
+    fetchMock.mockResolvedValue(null);
+    const { getProjectBySlug } = await import("./content");
+    await getProjectBySlug("x");
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    const groq = fetchMock.mock.calls[0][0] as string;
+    expect(groq).toContain('"related"');
+    expect(groq).toContain("category == ^.category");
+    expect(groq).toContain("_id != ^._id");
+    expect(groq).toContain("[0...3]");
+    expect(fetchMock.mock.calls[0][2].next.tags).toEqual(["project"]);
+  });
+
   it("getProjectBySlug passes the slug as a query parameter, never string-concatenated", async () => {
     fetchMock.mockResolvedValue(null);
     const { getProjectBySlug } = await import("./content");
@@ -86,7 +107,7 @@ describe("content API", () => {
 
   it("queries never read drafts or leads", async () => {
     const q = await import("./queries");
-    const all = [q.PROJECTS_QUERY, q.PROJECT_BY_SLUG_QUERY, q.HOME_QUERY, q.HERO_SLIDES_QUERY, q.SITE_SETTINGS_QUERY];
+    const all = [q.PROJECTS_QUERY, q.PROJECT_BY_SLUG_QUERY, q.PROJECT_SLUGS_QUERY, q.HOME_QUERY, q.HERO_SLIDES_QUERY, q.SITE_SETTINGS_QUERY];
     for (const query of all) {
       expect(query).not.toContain("drafts");
       expect(query).not.toContain('"lead"');

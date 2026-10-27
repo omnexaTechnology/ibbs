@@ -137,6 +137,21 @@ export function toProject(raw: RawProject | null | undefined): Project | null {
   };
 }
 
+export type RawProjectPage = (RawProject & { related?: (RawProject | null)[] | null }) | null | undefined;
+
+/** A project page: the project plus up to 3 related projects (same category, not itself). */
+export type ProjectPage = { project: Project; related: Project[] };
+
+export function toProjectPage(raw: RawProjectPage): ProjectPage | null {
+  const project = toProject(raw);
+  if (!raw || !project) return null;
+  const related = toProjects(raw.related).filter((p) => p.slug !== project.slug && p.category === project.category);
+  return { project, related: related.slice(0, 3) };
+}
+
+export const toProjectSlugs = (raw: ({ slug?: string | null } | null)[] | null | undefined): string[] =>
+  (raw ?? []).map((r) => r?.slug ?? "").filter(Boolean);
+
 export const toProjects = (raw: (RawProject | null)[] | null | undefined): Project[] =>
   (raw ?? []).map(toProject).filter((p): p is Project => p !== null);
 
