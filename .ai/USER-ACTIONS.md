@@ -3,7 +3,7 @@
 Things only you can do, or that wait for your review. Work continues without them unless an item says **BLOCKING**.
 Newest items at the top of each section. Tick a box when done; Claude reads this file to pick up your answers.
 
-Last update: 2026-10-26
+Last update: 2026-10-27
 
 ## Blocking something
 
@@ -13,10 +13,15 @@ _(none right now)_
 
 - [ ] **Create the Vercel project** from GitHub repo `omnexaTechnology/ibbs` (you said you'd do this manually).
   - Until FEAT-001 is merged, `main` has no app, so the first production build fails — expected.
-  - Add the env vars from `.env.example` in Vercel → Settings → Environment Variables (Production + Preview): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_API_WRITE_TOKEN`, `SANITY_REVALIDATE_SECRET` (same values as your `.env.local`).
+  - Add these env vars in Vercel → Settings → Environment Variables (Production + Preview): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`. Copy the values from your `.env.local`. (Claude generated `SANITY_REVALIDATE_SECRET` there on 2026-10-26 because it was empty. Use the same value in the Sanity webhook.)
+  - **Do not add `SANITY_API_WRITE_TOKEN` to Vercel yet.** Nothing deployed uses it until the forms (FEAT-004) ship. Then add it to Production only. (Corrected 2026-10-27 after review F-07.)
   - Then check: PR #1 shows a Vercel preview link; `/en` and `/ar` open on it.
 - [ ] **Make the Sanity dataset private**: sanity.io/manage → project `zf4tpgl3` → Datasets → `production` → Private. It is public now (checked 2026-10-26). The code also hides leads on its own, but private is the safe setting.
-- [ ] **Sanity CORS origins and publish webhook** — exact steps in `docs/SANITY-SETUP.md` (on branch `feat/FEAT-002-sanity` until merged). Needs the Vercel domain, so do it after the Vercel project exists.
+- [ ] **Sanity dashboard steps** — exact clicks in `docs/SANITY-SETUP.md` (in the repo on branch `feat/FEAT-002-sanity` until merged). After the Vercel project exists:
+  - CORS origins, with "Allow credentials" on (needed to log in at `/studio`): add **exact addresses only**: `http://localhost:3000`, plus your production domain or the stable `<project>.vercel.app` address. **Never add a wildcard like `https://*-team.vercel.app`.** Anyone can create a matching vercel.app address and use a logged-in editor's session from it. Use the Studio on production or localhost, not on preview URLs. (Corrected 2026-10-27 after review F-04. The setup doc gets the same fix.)
+  - Publish webhook → `https://<your-domain>/api/revalidate`, signed with the `SANITY_REVALIDATE_SECRET` value; filter and projection are in the doc.
+- [ ] **Open `/studio` and log in** (http://localhost:3000/studio with `npm run dev`, or the Vercel URL). Check: the 6 seeded projects and 4 hero images are there; try the click-on-photo hotspot picker on a project.
+- [ ] **Fill Site settings in the Studio and publish**: real phones, emails, WhatsApp number, hours, address, map link and social links. It is empty on purpose, so nothing shows on the site until you fill it. **Leave the "lead notification emails" field empty for now.** As built, it would be published in every page's HTML (review blocker F-01). The fix moves it to a private place; this item will say when it's safe.
 - [ ] **Resend account** (for form emails, FEAT-004) under `melamrosy72@gmail.com`; put `RESEND_API_KEY` in `.env.local` and Vercel. Not needed until FEAT-004.
 
 ## To review when you have time
@@ -36,12 +41,18 @@ _(none right now)_
   | The page you're looking for doesn't exist or has moved. | الصفحة التي تبحث عنها غير موجودة أو تم نقلها. |
   | Back to home | العودة إلى الرئيسية |
 
+## Good to know (no action needed)
+
+- Sanity read token (Viewer) can technically read leads too — on the free plan tokens can't be limited per document type. It is only used on the server and no site query reads leads, so visitors can't get them. Leads are also stored under hidden IDs (`lead.…`) that anonymous users can't read even while the dataset is public — tested live on 2026-10-26.
+- Seeded gallery photos got generic alt text ("<project> – photo n"); edit in Studio if you want better descriptions.
+
 ## Questions with a default (Claude proceeds with the default unless you change it)
 
 | Item | Question | Default in use |
 |---|---|---|
 | FEAT-001 | Default language | English; `/` follows the browser language |
 | FEAT-002 | Are stats (120 projects, 85k m², 60 clients, 10 years), testimonials, client/partner logos real? | Hidden on the live site until you confirm real values |
+| FEAT-002 | Home page project panels: 4 "featured" or all 6? (review F-03) | All projects, as in the design (6 panels) |
 | FEAT-002 | Studio UI in Arabic for editors? | English Studio, Arabic content fields |
 | FEAT-003 | Is the design final? | Built from the 2026-10-26 export; later changes handled as new work |
 | FEAT-003 | Contact page map | Link to Google Maps from Site settings (no embedded map) |
