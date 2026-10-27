@@ -1,7 +1,7 @@
 import type * as THREE from "three";
 import type { Kit, KitOptions } from "./kit";
 import type { Materials } from "./materials";
-import type { Quality } from "./renderer";
+import type { Quality } from "./support";
 
 export type SceneStatus = "idle" | "loading" | "ready" | "unsupported" | "error" | "lost";
 

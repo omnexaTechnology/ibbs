@@ -15,6 +15,10 @@ const hasWebGL = vi.fn(() => true);
 vi.mock("./renderer", async (orig) => ({
   ...(await orig<typeof import("./renderer")>()),
   createRenderer: (...a: unknown[]) => createRenderer(...(a as [])),
+}));
+
+vi.mock("./support", async (orig) => ({
+  ...(await orig<typeof import("./support")>()),
   hasWebGL: () => hasWebGL(),
 }));
 
@@ -153,6 +157,17 @@ describe("<SceneRoot>", () => {
     expect(createRenderer).not.toHaveBeenCalled();
   });
 
+  it("B1-06: releaseWhenFar resets to loading so the next near starts from loading, not a stale ready", async () => {
+    renderWithIntl(<SceneRoot load={makeScene().load} label="Scene" fallback={<span>still</span>} releaseWhenFar />);
+    const status = () => screen.getByTestId("scene-root").getAttribute("data-scene-status");
+    act(() => io.fire(true));
+    await waitFor(() => expect(status()).toBe("ready"));
+    act(() => io.fire(false));
+    expect(status()).toBe("idle");
+    act(() => io.fire(true));
+    expect(status()).toBe("loading");
+  });
+
   it("disposes on unmount", async () => {
     const s = makeScene();
     const { unmount } = renderWithIntl(<SceneRoot load={s.load} label="Scene" />);
@@ -162,5 +177,20 @@ describe("<SceneRoot>", () => {
     unmount();
     expect(s.dispose).toHaveBeenCalledTimes(1);
     expect(fakeRenderer.forceContextLoss).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("B1-01: SceneRoot does not pull in Three", () => {
+  it("imports scene-root without loading three", async () => {
+    vi.resetModules();
+    vi.doMock("three", () => {
+      throw new Error("three imported by scene-root");
+    });
+    vi.doMock("./renderer", () => {
+      throw new Error("renderer imported by scene-root");
+    });
+    await expect(import("./scene-root")).resolves.toHaveProperty("SceneRoot");
+    vi.doUnmock("three");
+    vi.doUnmock("./renderer");
   });
 });

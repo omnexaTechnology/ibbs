@@ -2,10 +2,10 @@ import * as THREE from "three";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { DisposeBag, disposeMaterials, disposeScene } from "./dispose";
 import { createKit } from "./kit";
-import { legacyIntensity, legacyPointFactor } from "./light-compat";
+import { legacyIntensity, legacyPointFactor, legacyPointLight } from "./light-compat";
 import { MAX_DT, RenderLoop } from "./loop";
 import { createMaterials } from "./materials";
-import { qualityFor } from "./renderer";
+import { qualityFor } from "./support";
 import { walkLayout, layoutBuilder } from "./walk-layout";
 
 beforeAll(() => {
@@ -101,8 +101,18 @@ describe("quality (R1)", () => {
     expect(qualityFor({ coarsePointer: true, deviceMemory: 8, hardwareConcurrency: 8 })).toEqual({ dprCap: 1.5, shadows: true, lowEnd: false });
   });
   it("low-end devices get DPR 1 and no shadows", () => {
-    expect(qualityFor({ coarsePointer: false, deviceMemory: 4 })).toEqual({ dprCap: 1, shadows: false, lowEnd: true });
+    expect(qualityFor({ coarsePointer: false, deviceMemory: 2 })).toEqual({ dprCap: 1, shadows: false, lowEnd: true });
+    // B1-09: Chromium reports 4 for 4 to 7 GB devices; those are not low-end.
+    expect(qualityFor({ coarsePointer: false, deviceMemory: 4 }).lowEnd).toBe(false);
     expect(qualityFor({ coarsePointer: true, hardwareConcurrency: 4 }).shadows).toBe(false);
+  });
+});
+
+describe("legacyPointLight (B1-12)", () => {
+  it("uses no falloff when the design light had no range or no decay", () => {
+    expect(legacyPointLight(0xffffff, 1, 0, 2).decay).toBe(0);
+    expect(legacyPointLight(0xffffff, 1, 7, 0).decay).toBe(0);
+    expect(legacyPointLight(0xffffff, 1, 7, 2).decay).toBe(2);
   });
 });
 

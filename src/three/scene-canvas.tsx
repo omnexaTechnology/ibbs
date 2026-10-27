@@ -6,13 +6,15 @@ import { DisposeBag, disposeMaterials, disposeRenderer, disposeScene } from "./d
 import { createKit } from "./kit";
 import { RenderLoop } from "./loop";
 import { createMaterials } from "./materials";
-import { createRenderer, detectQuality, prefersReducedMotion } from "./renderer";
+import { createRenderer } from "./renderer";
+import { detectQuality, prefersReducedMotion } from "./support";
 import type { CameraOptions, SceneContext, SceneFactory, SceneHandle, SceneLoader, SceneModule, SceneStatus } from "./scene-types";
 
 export type SceneCanvasProps = {
   load: SceneLoader;
   label: string;
   exposure?: number;
+  toneMapping?: THREE.ToneMapping;
   alpha?: boolean;
   camera?: CameraOptions;
   /** Margin around the viewport inside which the scene keeps rendering (px). */
@@ -27,15 +29,26 @@ const resolveFactory = (m: SceneModule): SceneFactory => (typeof m === "function
  * The canvas and everything that touches WebGL. Loaded only in the browser through `next/dynamic` (see scene-root).
  * Lifecycle: create renderer -> load the scene module -> build -> render while visible -> dispose everything on unmount.
  */
-export default function SceneCanvas({ load, label, exposure, alpha, camera: cam, pauseMargin = 80, onStatus, className }: SceneCanvasProps) {
+export default function SceneCanvas({ load, label, exposure, toneMapping, alpha, camera: cam, pauseMargin = 80, onStatus, className }: SceneCanvasProps) {
   const ref = useRef<HTMLDivElement>(null);
-  // Props are read once per mount: a scene is built once and torn down on unmount.
-  const props = useRef({ load, exposure, alpha, cam, pauseMargin, onStatus });
+  // Scene props are read once per mount: a scene is built once and torn down on unmount.
+  const props = useRef({ load, exposure, toneMapping, alpha, cam, pauseMargin });
+  // But the status callback may change between renders, so keep the latest one (B1-13).
+  const statusRef = useRef(onStatus);
+  useEffect(() => {
+    statusRef.current = onStatus;
+  });
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  // And the accessible name follows the locale.
+  useEffect(() => {
+    canvasRef.current?.setAttribute("aria-label", label);
+  }, [label]);
 
   useEffect(() => {
     const host = ref.current;
     if (!host) return;
-    const { load, exposure, alpha, cam, pauseMargin, onStatus } = props.current;
+    const { load, exposure, toneMapping, alpha, cam, pauseMargin } = props.current;
+    const onStatus = (s: SceneStatus) => statusRef.current(s);
     // The canvas is created here, not by React: a context that was force-lost on cleanup cannot be reused, so every
     // mount (including React Strict Mode re-runs in development) needs a fresh element.
     const canvas = document.createElement("canvas");
@@ -43,6 +56,7 @@ export default function SceneCanvas({ load, label, exposure, alpha, camera: cam,
     canvas.setAttribute("role", "img");
     canvas.setAttribute("aria-label", label);
     canvas.dataset.testid = "scene-canvas";
+    canvasRef.current = canvas;
     host.appendChild(canvas);
     const bag = new DisposeBag();
     bag.add(() => canvas.remove());
@@ -54,7 +68,7 @@ export default function SceneCanvas({ load, label, exposure, alpha, camera: cam,
     });
 
     const quality = detectQuality();
-    const renderer = createRenderer(canvas, { alpha, exposure, quality });
+    const renderer = createRenderer(canvas, { alpha, exposure, toneMapping, quality });
     if (!renderer) {
       onStatus("unsupported");
       return () => bag.disposeAll();

@@ -5,7 +5,8 @@ import { useTranslations } from "next-intl";
 import { useCallback, useState, type ReactNode } from "react";
 import { useInView } from "@/hooks/use-in-view";
 import { cn } from "@/lib/utils";
-import { hasWebGL } from "./renderer";
+import { hasWebGL } from "./support";
+import type { ToneMapping } from "three";
 import type { CameraOptions, SceneLoader, SceneStatus } from "./scene-types";
 
 /**
@@ -23,6 +24,8 @@ export type SceneRootProps = {
   fallback?: ReactNode;
   className?: string;
   exposure?: number;
+  /** Default ACES; the design uses other mappings in some scenes. */
+  toneMapping?: ToneMapping;
   alpha?: boolean;
   camera?: CameraOptions;
   /** Start loading when the scene is within this distance of the viewport (default 300px). */
@@ -37,7 +40,7 @@ export type SceneRootProps = {
  * mounts near the viewport only, pauses off-screen and in hidden tabs, disposes everything on unmount, falls back to
  * a still image when WebGL is unavailable, and renders a final still frame under reduced motion.
  */
-export function SceneRoot({ load, label, fallback, className, exposure, alpha, camera, rootMargin = "300px", releaseWhenFar = false, onStatusChange }: SceneRootProps) {
+export function SceneRoot({ load, label, fallback, className, exposure, toneMapping, alpha, camera, rootMargin = "300px", releaseWhenFar = false, onStatusChange }: SceneRootProps) {
   const t = useTranslations();
   const [ref, near] = useInView<HTMLDivElement>({ rootMargin, once: !releaseWhenFar });
   const [canvasStatus, setCanvasStatus] = useState<SceneStatus>("loading");
@@ -45,6 +48,13 @@ export function SceneRoot({ load, label, fallback, className, exposure, alpha, c
   // `near` is only ever true in the browser, so reading WebGL support during render is safe for SSR.
   const unsupported = near && !hasWebGL();
   const status: SceneStatus = !near ? "idle" : unsupported ? "unsupported" : canvasStatus;
+
+  // A released canvas leaves its last status behind; the next canvas starts from "loading" (no blank frame, caption shown).
+  const [wasNear, setWasNear] = useState(near);
+  if (near !== wasNear) {
+    setWasNear(near);
+    if (!near) setCanvasStatus("loading");
+  }
 
   const onStatus = useCallback(
     (s: SceneStatus) => {
@@ -68,7 +78,7 @@ export function SceneRoot({ load, label, fallback, className, exposure, alpha, c
       ) : null}
       {near && !unsupported && status !== "lost" ? (
         <div className={cn("absolute inset-0 transition-opacity duration-700", !ready && "opacity-0")}>
-          <SceneCanvas load={load} label={label} exposure={exposure} alpha={alpha} camera={camera} onStatus={onStatus} />
+          <SceneCanvas load={load} label={label} exposure={exposure} toneMapping={toneMapping} alpha={alpha} camera={camera} onStatus={onStatus} />
         </div>
       ) : null}
       {status === "loading" ? (

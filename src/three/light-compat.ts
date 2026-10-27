@@ -29,6 +29,6 @@ export function legacyPointFactor(distance: number, decay: number, ref = 0.4): n
 
 /** A point light that matches the design's `new PointLight(color, intensity, distance, decay)`. */
 export function legacyPointLight(color: THREE.ColorRepresentation, designIntensity: number, distance: number, decay: number) {
-  const l = new THREE.PointLight(color, designIntensity * legacyPointFactor(distance, decay), distance, decay);
-  return l;
+  // r149: no range or no decay meant no falloff, so keep r186 from applying inverse-square (decay 0).
+  return new THREE.PointLight(color, designIntensity * legacyPointFactor(distance, decay), distance, distance > 0 && decay > 0 ? decay : 0);
 }
