@@ -50,6 +50,7 @@ _(none right now)_
 
 ## Good to know (no action needed)
 
+- The enquiry forms need JavaScript: a visitor with it turned off sees the form but cannot send (the submit button stays disabled). WhatsApp and phone links still work.
 - Sanity read token (Viewer) can technically read leads too — on the free plan tokens can't be limited per document type. It is only used on the server and no site query reads leads, so visitors can't get them. Leads are also stored under hidden IDs (`lead.…`) that anonymous users can't read even while the dataset is public — tested live on 2026-10-26.
 - **Don't run `npm run seed -- --force` on production** once Site settings are filled in, unless Claude asks. The script now protects Site settings and Lead routing, and `--force` on production refuses without `--yes`, but there is no reason for you to run it.
 - Seeded gallery photos got generic alt text ("<project> – photo n"); edit in Studio if you want better descriptions.
@@ -73,6 +74,8 @@ _(none right now)_
 | FEAT-004 | Phone number format in saved leads | Normalised (e.g. `+9665…` or `05…`), not exactly as typed |
 | FEAT-004 | "Space type" dropdown | Starts on "Select…" and is optional (the design had no placeholder) |
 | FEAT-004 | Saudi landlines (`011…`) and 9200 numbers in the phone field | Accepted (review F4-05). Say if only mobiles should be allowed |
+| FEAT-003 | Partner logos on the home page | The design's generic marks labelled "Partner logo" are shown. Send real logos, or say "hide" and they come off until approved |
+| FEAT-003 | Home stats (years, projects, …) | Hidden until the client confirms the numbers; then flip `confirmed` in `src/content/stats.ts` |
 | FEAT-005 | Domain, analytics, legal text, launch date | Unknown — needed before launch only. The privacy and terms pages hold draft text: **someone must approve it before launch** (FEAT-003 review R2-06) |
 
 ## Done
