@@ -11,6 +11,10 @@ _(none right now)_
 
 ## To do (accounts and dashboards)
 
+- [ ] **Vercel Firewall rate limit on the enquiry forms** (after the Vercel project exists; about 3 minutes). Project → Firewall → Configure → New rule "Rate limit lead submissions":
+  - If Request Path equals `/api/leads` AND Method equals `POST`
+  - Rate limit: 5 requests per 1 minute, keyed by IP; then Deny with 429
+  - Publish. (FEAT-004 T-003; without it the forms only have the honeypot and timing check against spam.)
 - [ ] **Create the Vercel project** from GitHub repo `omnexaTechnology/ibbs` (you said you'd do this manually).
   - Add these env vars in Vercel → Settings → Environment Variables (Production + Preview): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`. Copy the values from your `.env.local`. (Claude generated `SANITY_REVALIDATE_SECRET` there on 2026-10-26 because it was empty. Use the same value in the Sanity webhook.)
   - **Do not add `SANITY_API_WRITE_TOKEN` to Vercel yet.** Nothing deployed uses it until the forms (FEAT-004) ship. Then add it to Production only. (Corrected 2026-10-27 after review F-07.)
