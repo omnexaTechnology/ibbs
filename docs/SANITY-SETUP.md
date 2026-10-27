@@ -13,21 +13,24 @@ Copy `.env.example` to `.env.local` (it is git-ignored) and fill in:
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | `zf4tpgl3` (public) | Studio and site |
 | `NEXT_PUBLIC_SANITY_DATASET` | `production` (public) | Studio and site |
 | `SANITY_API_READ_TOKEN` | token with role **Viewer** (section 3) | the site, server only |
-| `SANITY_API_WRITE_TOKEN` | token with role **Editor** (section 3) | seed script now, lead creation in FEAT-004; server only |
+| `SANITY_API_WRITE_TOKEN` | token with role **Editor** (section 3) | seed script now (your computer only), lead creation in FEAT-004; server only |
 | `SANITY_REVALIDATE_SECRET` | any long random string you invent (section 4) | `POST /api/revalidate` |
 
-In **Vercel**: Project -> Settings -> Environment Variables, add the same five for **Production** and **Preview** (not "Development"). Redeploy afterwards. Never prefix a token with `NEXT_PUBLIC_`.
+In **Vercel**: Project -> Settings -> Environment Variables, add the first four for **Production** and **Preview** (not "Development"; the read token only to Preview if previews must show content). Redeploy afterwards. Never prefix a token with `NEXT_PUBLIC_`.
+
+**Do not add `SANITY_API_WRITE_TOKEN` to Vercel yet.** It is an Editor token for the whole dataset and nothing deployed uses it until the forms (FEAT-004) ship. Then add it to **Production only** (previews should not create real leads).
 
 The site still builds and runs with none of these set (it shows built-in defaults), so a missing variable never breaks a deploy; it only means no Sanity content.
 
 ## 2. CORS origins (needed for the Studio at /studio)
 
-sanity.io/manage -> project **zf4tpgl3** -> **API** -> **CORS origins** -> **Add CORS origin**. Add each of these with **Allow credentials** switched ON:
+sanity.io/manage -> project **zf4tpgl3** -> **API** -> **CORS origins** -> **Add CORS origin**. Add each of these as an **exact address** with **Allow credentials** switched ON:
 
 1. `http://localhost:3000`
 2. your production domain, e.g. `https://www.your-domain.com`
-3. the Vercel production URL, e.g. `https://ibbs.vercel.app`
-4. Vercel preview URLs. Previews have a different host for every branch, so either add each one you want to use the Studio on, or add a wildcard origin such as `https://*-your-team.vercel.app` (Sanity supports a `*` wildcard in the subdomain).
+3. the stable Vercel production address, e.g. `https://ibbs.vercel.app`
+
+**Never add a wildcard such as `https://*.vercel.app` or `https://*-your-team.vercel.app`.** Anyone can create a Vercel project whose address matches a wildcard, and with "Allow credentials" such a page could act with a logged-in editor's session (read leads, change content). Use the Studio on production or localhost only, not on preview URLs.
 
 Without the right origin the Studio at that address shows a "CORS origin not allowed" screen.
 
