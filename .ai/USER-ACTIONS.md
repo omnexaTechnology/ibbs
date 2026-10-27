@@ -71,6 +71,7 @@ _(none right now)_
 | FEAT-004 | Language of the "space type" in saved leads and emails | English label for every lead, so the sales team reads one language |
 | FEAT-004 | Phone number format in saved leads | Normalised (e.g. `+9665…` or `05…`), not exactly as typed |
 | FEAT-004 | "Space type" dropdown | Starts on "Select…" and is optional (the design had no placeholder) |
+| FEAT-004 | Saudi landlines (`011…`) and 9200 numbers in the phone field | Accepted (review F4-05). Say if only mobiles should be allowed |
 | FEAT-005 | Domain, analytics, legal text, launch date | Unknown — needed before launch only |
 
 ## Done
