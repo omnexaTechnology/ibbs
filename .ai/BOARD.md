@@ -13,12 +13,12 @@ Last update: 2026-10-27
 ## Ready
 | ID | Title | Depends on | Current step | Open items | Updated |
 |---|---|---|---|---|---|
-| FEAT-004 | Lead forms: contact, project request, call request | FEAT-001, FEAT-002 | implement (3 tasks, 2.5d); recipients via `getLeadRecipients()` | Resend account (user); defaults in USER-ACTIONS | 2026-10-27 |
 
 ## In Progress
 | ID | Title | Branches | Next | Updated |
 |---|---|---|---|---|
-| FEAT-003 | Pages: 7 views, animations and all 3D | `feat/FEAT-003-pages` (local, worktree `../ibss-web-feat003`) | T-001, T-002 DONE; Opus batch-1 review running; then rebase onto FEAT-002 head and continue T-003.. | 2026-10-27 |
+| FEAT-003 | Pages: 7 views, animations and all 3D | `feat/FEAT-003-pages` (local, worktree `../ibss-web-feat003`) | T-001, T-002 done; rebased onto FEAT-002 head (232 unit pass). Running: Opus batch-1 review, T-003 project page then T-009 contact/legal | 2026-10-27 |
+| FEAT-004 | Lead forms: contact, project request, call request | `feat/FEAT-004-forms` (local, worktree `../ibss-web-feat004`) | Running: T-001 endpoint, T-002 components (mocked Sanity/Resend). T-003 waits for FEAT-003 T-003/T-009 | 2026-10-27 |
 
 ## Review
 | ID | Title | Branches | Next | Updated |
