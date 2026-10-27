@@ -142,3 +142,145 @@ Live dataset access was **read-only**: `npm run verify:content` and one anonymou
 The content model, seed and query layer are carefully built. The seed is verifiably identical to the design (all 6 projects including Arabic and hotspots, all 4 hero slots), tokens stay server-only and out of the client bundle, and revalidation uses the API exactly as the installed Next 16 docs prescribe for webhooks. One blocker: the lead-notification recipients are part of the public `SiteSettings` contract and are serialised into every page (F-01). Fix it before the client fills Site settings, and certainly before merge. F-02 (silent degradation under ISR), F-03 (featured count vs design) and F-04 (credentialed wildcard CORS advice) should be fixed in the same pass. Dashboard steps (CORS, webhook, private dataset) and live Studio checks remain user actions.
 
 REVIEW STATUS: CHANGES_REQUIRED
+
+---
+
+## Re-review (2026-10-27)
+
+Scope: `git diff d481cc8..b6b31a2` (9 commits, 39 files), checked against the findings above and `fixes.md`. Inputs re-read:
+- the `review` skill and `AGENTS.md`;
+- `node_modules/next/dist/docs` (`incremental-static-regeneration.md`, `revalidateTag.md`);
+- the installed sources of `next-sanity/webhook` 13.4.0 (`dist/webhook/index.js`) and `@sanity/webhook` 4.0.4 (`dist/index.js`);
+- the `ConfigContext` type in `sanity` 6.20.0, and `@sanity/vision` 6.20.0.
+
+The live dataset was used **read-only**: `verify:content`, anonymous `curl` probes, and two read-token queries. Nothing was written. The seed and `verify:privacy` were not run. No token or secret value was printed.
+
+### R.1 Validation
+
+| Check | Result |
+|---|---|
+| `npm run lint` | Clean |
+| `npm run typecheck` | Clean |
+| `npm test` | 18 files / 163 tests passed |
+| `npm run schema:validate` | 0 errors, 0 warnings |
+| `npm run typegen` (drift check, then `git checkout`) | The regenerated `src/sanity/types.ts` is identical to the committed file (7 queries, 21 types). `--force` is a valid `sanity schemas extract` flag in `@sanity/cli` 8.24 ("Overwrite an existing schema file"). `schema.json` is git-ignored. |
+| `npm run build` (`.env.local`) | Success, 16/16 pages. `/api/revalidate` is dynamic; the locale pages are SSG. |
+| `npm run build` with Sanity env unset (`.env.local` moved aside, restored afterwards) | Success, 16/16 pages. No page HTML contains the project ID or a `wa.me` link, so the defaults are used. |
+| E2E against `next start` (port 3100, `E2E_REUSE=1`) | **75 passed**, including the 3 new `lead-privacy` tests |
+| `npm run verify:content` | 12/12 PASS (home = 6 projects in design order; boardroom related = `exec-hq,cowork`; 6 slugs) |
+| Build-output scan (values read from `.env.local` in-process: read token, write token, revalidate secret) | **0 secret values** in `.next/static` (651 files) and `.next/server` (1176 files).<br>**0** `leadRouting` / `leadNotificationEmails` / `private.lead` / `recipients` in page outputs (98 html/rsc/meta/segment files).<br>`leadRouting` appears only in the Studio chunk `2-kpe68fie4qi.js` (schema and desk names) and in server chunks.<br>The `recipients` hit in `3ugp1t1u7rvqm.js` is an unrelated library word list (`message-check-recipients`). |
+| Anonymous probes on **api** and **apicdn** (no token) | Nothing about the routing document is readable:<br>• `count(*[_type=="leadRouting"])` = 0<br>• `*[_id=="private.leadRouting"]` = [] and `*[_id in path("private.**")]` = []<br>• the same with `perspective=raw`, `drafts` and `previewDrafts` = []<br>• `GET /data/doc/production/private.leadRouting` → `omitted: permission` on both hosts; in a combined request with `siteSettings`, only `siteSettings` comes back<br>• `GET /data/export/production` → 26 documents, none of type `leadRouting` or `lead`<br>• `GET /data/history/.../documents/private.leadRouting?time=…` → `documents: []`; history transactions → 401<br>Control: `count(*[_type=="project"])` = 6. |
+| Read token, `perspective: "published"` | `private.leadRouting` is visible (`_type: leadRouting`, `recipients: null`), so `getLeadRecipients()` will work for FEAT-004. The 6 projects still store `featured` (true/true/true/false/true/false). 0 leads, 0 drafts. |
+| Webhook probe (local prod server; signatures computed with the real secret via `@sanity/webhook.encodeSignatureHeader`) | **Accepted (200):** fresh (3.0 s); **the same request replayed** (inside the window); +4 min future; signed `lead` (`revalidated:false`); signed `leadRouting` (`revalidated:true`).<br>**Rejected (401):** 6 min old; 2023; +6 min future; tampered body; no header; `garbage`; `t=now,v1=abc` (6 ms, no wait); `t=now,t=old,v1=<oldSig>`; `t=now, <old header>`; leading space + old; `t=0<old>`; two header lines (fresh+old and old+fresh).<br>**400:** signed malformed JSON. |
+
+`.next` was removed afterwards. The working tree is clean apart from this file.
+
+### R.2 Per-finding verdict
+
+| ID | Verdict | Evidence |
+|---|---|---|
+| F-01 BLOCKER | **Resolved** | **Data path:** the field is gone from `SiteSettings`, `SITE_SETTINGS_QUERY`, the view model and the schema. `toSiteSettings` builds an explicit object, so stray fields are not copied (unit-tested). The client components `Header`, `Footer` and `WhatsAppButton` receive only `SiteSettings`. `generateMetadata` uses translations only. The app has no JSON-LD, and `/api/[...path]` returns a 404.<br>**Server-only read:** `getLeadRecipients` is in `src/sanity/lead-routing.ts` with `import "server-only"`. Nothing imports it yet (FEAT-004). It is tagged `leadRouting`, and that tag is in `SANITY_TAGS`, so the webhook revalidates it (probe: 200 `revalidated:true`). The setup-doc webhook filter includes it.<br>**Anonymous access:** the dotted ID was verified private by type, ID, path, every perspective, `/data/doc`, export and history, on both `api` and `apicdn` (R.1).<br>**Pages:** HTML and RSC are clean (e2e + scan). |
+| F-02 MEDIUM | **Resolved, with a caveat (R-04)** | When Sanity is configured and the read fails, it throws. When it is not configured, it returns the defaults without calling Sanity (unit tests). The no-env build passes. The Next 16 docs (`incremental-static-regeneration.md`, "Handling uncaught exceptions") say: "If an error is thrown while attempting to revalidate data, the last successfully generated data will continue to be served". That is true for the hourly background revalidation, but **not** right after a webhook (R-04). |
+| F-03 MEDIUM | **Resolved; deviation justified** | `HOME_QUERY` → `projects`, ordered, `[0...6]`, no featured filter. The seed, view model, tests and `verify:content` agree (live: 6 projects in design order). `featured` stays as a `hidden` + `deprecated` schema field. The 6 production documents still store it (read-only check), and no query or type reads it. Keeping it avoids an "unknown field" notice; removing the stored values would need a production patch. Acceptable. |
+| F-04 MEDIUM | **Resolved** | `docs/SANITY-SETUP.md` §2 and `.ai/USER-ACTIONS.md` list exact origins only and forbid wildcards in plain words. |
+| F-05 LOW | **Resolved** | **Order and window:** the check runs before `parseBody`. A missing or malformed `t=` → 401. The window is ±5 min.<br>**Same `t` as the library:** the route reads the same header string as `next-sanity` (`req.headers.get`). `@sanity/webhook` matches the trimmed header against `^t=(\d+)[, ]+v1=([^, ]+)$`. It then requires the **untrimmed** header to equal `t=${parseInt(t)},v1=${sig}` exactly.<br>**No bypass:** a header with a second `t=`, whitespace, leading zeros, or a combined duplicate header cannot pass the signature check. The only header that can pass starts with `t=<the signed t>`, which is exactly what the route's regex reads. A huge `t` becomes a far-future number or Infinity through `Number` → 401. All of these cases were probed (R.1).<br>**Remaining:** the signature compare is still not constant-time (it is inside the library); accepted as theoretical. Replay inside the window is still possible (R-05). |
+| F-06 LOW | **Resolved** | `parseBody(req, secret)`. In the source, the 3 s wait runs only when `validSignature !== false`, so unsigned or wrongly signed requests do not hold the function (probe: 4–15 ms). |
+| F-07 LOW | **Partly**: USER-ACTIONS is correct, the setup guide is wrong | See **R-01**. |
+| F-08 NOTE | **Done** | `.ai/decisions/2026-10-27-lead-privacy.md` is accurate, except that the "build-output scan" listed as a guard is a manual step (R-07). |
+| F-09 NOTE | Open, for FEAT-003 | Unchanged, as planned. |
+| F-10 NOTE | **Resolved** | `alt` has `rule.custom(requireBothLocales).warning()`, and the description is softened. |
+| F-11 NOTE | **Resolved** | `^.category` and `^._id` in a sub-query inside the `[0]{…}` projection refer to the projected project, as intended (live: boardroom/exec → `exec-hq, cowork`, itself excluded, design order). Ordering happens before `[0...3]`. `PROJECT_SLUGS_QUERY` returns the slugs in order. Both are tagged `project`, and the view model re-filters defensively. Payload size: R-08. |
+| F-12 NOTE | **Partly (code done, live checks pending)** | **Leads:** `liveEdit: true` on `lead` only changes the Studio: it patches the published ID directly, and `lead.<uuid>` is a published ID (no `drafts.`/`versions.` prefix). A server-side `create()` in FEAT-004 is unaffected.<br>**Vision:** the filter is type-correct for sanity 6.20 (`tools: ComposableOption<Tool[], ConfigContext>`, `ConfigContext.currentUser.roles: Role[]`), and the vision tool's default `name` is `"vision"`. It only hides the tool in the UI (R-06).<br>**Pending:** the live Studio checks are still a user action. |
+| F-13 NOTE | Types in sync (verified); automation still open | — |
+
+### R.3 New findings
+
+#### R-01 — MEDIUM — The setup guide's "first four" variables are the wrong four
+- **Evidence:**
+  - In the `docs/SANITY-SETUP.md` §1 table, the order is PROJECT_ID, DATASET, READ_TOKEN, **WRITE_TOKEN**, REVALIDATE_SECRET.
+  - The text below says "add the **first four** for Production and Preview". Read literally, that puts the Editor write token on Vercel (Production and Preview) and leaves out `SANITY_REVALIDATE_SECRET`.
+  - The next paragraph then says "Do not add `SANITY_API_WRITE_TOKEN` to Vercel yet".
+  - The parenthesis "(the read token only to Preview if previews must show content)" is also hard to follow for a non-technical reader.
+  - `.ai/USER-ACTIONS.md` names the four correctly.
+- **Why it matters:** The client follows this guide. Read one way, it re-creates F-07: a dataset-wide Editor token in every preview build. Read the other way, the webhook always answers 401, and publishes take up to an hour to appear.
+- **Fix:**
+  - Name the four explicitly: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`.
+  - Say "Production and Preview" plainly, or put the Preview detail in its own sentence.
+
+#### R-02 — LOW — The FEAT-004 and FEAT-003 work items still describe the old contracts
+- **Evidence:**
+  - `.ai/work/FEAT-004-lead-forms/impact.md:6,13`: "reads `siteSettings.leadNotificationEmails`".
+  - `.ai/work/FEAT-004-lead-forms/spec.md:11` (D2): "lead notification emails set in Sanity Site settings".
+  - `.ai/work/FEAT-004-lead-forms/tasks/T-001.md:19`: "settings recipients".
+  - `.ai/work/FEAT-003-pages-port/impact.md:15`: a `featuredProjects` query.
+  - `.ai/work/FEAT-003-pages-port/tasks/T-007.md:16`: "from Sanity featured projects".
+- **Why it matters:** The next implementer works from these files. Following FEAT-004 literally would put the recipients back into `siteSettings` and re-open F-01. `fixes.md` mentions FEAT-003, but nothing points FEAT-004 to `getLeadRecipients()`.
+- **Fix:**
+  - FEAT-004 (D2, impact, T-001): "recipients come from `getLeadRecipients()` (private `leadRouting`, server only); fallback `LEAD_FALLBACK_EMAIL`".
+  - FEAT-003: `getHomeContent().projects`, `getProjectBySlug()` → `{ project, related }`, and `getProjectSlugs()`.
+
+#### R-03 — LOW — `seed --force` still replaces `siteSettings`, which will hold the client's real contact data
+- **Evidence:**
+  - `scripts/seed/run-seed.ts:65` skips only `LEAD_ROUTING_ID` under `--force`.
+  - `siteSettings` is replaced (`createOrReplace`) with the near-empty seed version.
+  - The default dataset is `production`, and there is no confirmation step.
+  - This behaviour is older than this pass (it was documented as "discards Studio edits"), but the fix protected the recipients and not the contact data.
+- **Why it matters:** Once the client fills in Site settings, a single `--force` run (e.g. to reset a project's images) wipes the live phones, WhatsApp, address and social links from every page.
+- **Fix:**
+  - Exclude `siteSettings` from `--force` the same way as `leadRouting` (it holds no design content), or add a `--only=projects,hero` scope.
+  - Optionally require `--yes-production` when the dataset is `production`.
+
+#### R-04 — LOW — After a webhook, a failed Sanity read now shows an error page instead of stale content
+- **Evidence:**
+  - The route calls `revalidateTag(type, { expire: 0 })`. `revalidateTag.md` says: "`{ expire: 0 }`: Stale content is never served, so the next request is a blocking revalidate/cache miss."
+  - With F-02, `getSiteSettings` (and the `content.ts` fetchers) throw when the read fails.
+  - There is no `error.tsx` under `src/app/[locale]`, so that visitor gets Next's default error page.
+  - The ISR "last good page" guarantee quoted in `fixes.md` covers only background (time-based) revalidation.
+  - Also, with `.env.local` present, every page fails under `next dev` when offline.
+- **Why it matters:**
+  - The window is narrow: a Sanity failure has to happen in the seconds after a publish, and the next request retries.
+  - It is still better than silently caching empty contact data for an hour.
+  - But it is a visible error on a marketing site, and `fixes.md` and the code comment overstate the guarantee.
+- **Fix:**
+  - FEAT-003 adds `src/app/[locale]/error.tsx` (localized, with a retry button).
+  - Optionally use a small `expire` (e.g. `{ expire: 60 }`), so a failed blocking refresh can fall back to stale content.
+  - Make the comment in `site-settings.ts` accurate.
+
+#### R-05 — NOTE — Replay is limited to the 5-minute window, not removed
+- **Evidence:** the probe shows that an identical signed request is accepted again inside the window.
+- **Impact:** each replay costs about 3 s of function time and forces a refetch. This is acceptable for the threat, because an attacker needs a captured signed request.
+- **Optional:** keep a small in-memory set of recently seen `v1` values per instance and reject repeats.
+
+#### R-06 — NOTE — The Vision restriction is a UI convenience, not a security boundary; some Studio behaviour is unverified live
+- Hiding Vision does not stop an editor's session from querying the API, and editors already see Leads in the desk. That is fine, but it should not be described as protection.
+- Add these to the F-12 live checklist; they can only be checked after someone logs in:
+  - Opening, editing and publishing **Lead routing (private)**, which has a `private.` document ID, in the desk.
+  - Whether the GROQ webhook fires when `private.leadRouting` is published. If it doesn't, recipients still refresh within the 1 h safety net, which is acceptable.
+  - Vision is hidden for an Editor and visible for an Administrator.
+
+#### R-07 — NOTE — Small doc inaccuracies
+- `docs/SECURITY.md`, "Build output check", still says the revalidate secret "could not be checked". This re-review checked it: 0 hits.
+- The lead-privacy decision record lists a "build-output scan" among the guards. It is a manual step, not an automated test.
+- `.env.example` and `SANITY-SETUP.md` promise the site "builds and runs with none of these set". That is still true today, but `content.ts` throws `SanityNotConfiguredError`. FEAT-003 pages must guard against it, or the no-env build (and a fresh preview without env) breaks.
+- The `SINGLETON_TYPES` comment ("fixed document ID = type name") is no longer true for `leadRouting`.
+
+#### R-08 — NOTE — Related projects carry the full project payload
+- `PROJECT_BY_SLUG_QUERY.related` projects the full `${PROJECT}` for up to 3 projects: gallery, hotspots, and challenge/solution in both languages. A related card needs only title, slug, category and cover. FEAT-003 can trim it to a card projection.
+- `RELATED_PROJECT_LIMIT` is exported, but `toProjectPage` hard-codes `slice(0, 3)`.
+
+### R.4 Needs the user
+- The same dashboard steps as before: exact CORS origins, the webhook with `leadRouting` in its filter, and a private dataset. Also the live Studio checks in R-06/F-12.
+- When adding Vercel env vars, follow `.ai/USER-ACTIONS.md` (its list is correct), not the "first four" sentence in `docs/SANITY-SETUP.md`, until R-01 is fixed.
+- Don't run `npm run seed -- --force` once Site settings has been filled in (R-03).
+
+### R.5 Summary
+All earlier findings are fixed or deliberately deferred. The blocker F-01 is fixed properly:
+- The recipients live in a dotted-ID document that could not be read anonymously by any route tried, on `api` or `apicdn`.
+- Only a server-only function reads them.
+- No page, RSC payload or build artefact contains them.
+
+The webhook replay check cannot be bypassed: the library's exact header match forces both parsers to read the same `t`.
+
+No blockers remain. Fix R-01 (the wrong "first four" in the setup guide) before the client follows that guide, and R-02 before FEAT-004 starts. This review does not by itself establish that a production deployment is safe.
+
+REVIEW STATUS: READY_FOR_HUMAN_REVIEW
