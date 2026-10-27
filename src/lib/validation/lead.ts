@@ -28,31 +28,55 @@ export const SPACE_TYPE_KEYS = Object.keys(SPACE_TYPE_LABELS_EN) as [SpaceTypeKe
 export const ERROR_KEYS = ["nameRequired", "phoneRequired", "phoneInvalid", "emailInvalid", "emailOrMessage", "tooLong", "invalid"] as const;
 export type ErrorKey = (typeof ERROR_KEYS)[number];
 
-/** Server-side body limit (characters). A real submission is well under 10 KB. */
-export const MAX_BODY_CHARS = 20_000;
+/** Server-side body limit in BYTES (UTF-8). A real submission is well under 20 KB. */
+export const MAX_BODY_BYTES = 20_000;
 /** A human needs longer than this to fill a form; faster = bot (AC-003). */
 export const MIN_FILL_MS = 2_000;
+
+/** Honeypot field name: deliberately not a real-world field name, so password managers do not autofill it (F4-07). */
+export const HONEYPOT_FIELD = "hp_extra";
 
 const ARABIC_INDIC = "٠١٢٣٤٥٦٧٨٩";
 const EASTERN_ARABIC_INDIC = "۰۱۲۳۴۵۶۷۸۹";
 
-/** ASCII digits (also from Arabic-Indic), optional leading +; spaces, dashes, dots, brackets removed; "00" becomes "+". */
-export function normalizePhone(input: string): string {
-  const ascii = input
+/** Arabic-Indic, Eastern Arabic-Indic and full-width digits become ASCII digits. */
+export function normalizeDigits(input: string): string {
+  return input
+    .normalize("NFKC") // full-width digits/plus, NBSP and similar compatibility forms
     .replace(/[٠-٩]/g, (d) => String(ARABIC_INDIC.indexOf(d)))
     .replace(/[۰-۹]/g, (d) => String(EASTERN_ARABIC_INDIC.indexOf(d)));
-  const cleaned = ascii.replace(/[\s\-().‎‏]/g, "");
-  return cleaned.startsWith("00") ? `+${cleaned.slice(2)}` : cleaned;
 }
 
-// Saudi mobile: 05xxxxxxxx, 5xxxxxxxx, 9665xxxxxxxx, +9665xxxxxxxx.  International: + and 7-15 digits (E.164).
+/**
+ * ASCII digits and an optional leading +. Removes spaces (incl. NBSP), dashes, dots, brackets and all
+ * invisible format/bidi marks (LRM/RLM, U+202A-202E, U+2066-2069, ...). "00" becomes "+", and the
+ * trunk 0 after the Saudi country code is dropped ("+966 05..." -> "+9665...").
+ */
+export function normalizePhone(input: string): string {
+  const cleaned = normalizeDigits(input).replace(/[\s\p{Cf}\p{Pd}−().]/gu, "");
+  const intl = cleaned.startsWith("00") ? `+${cleaned.slice(2)}` : cleaned;
+  return intl.replace(/^(\+?966)0(?=\d)/, "$1");
+}
+
+// Saudi mobile: 05xxxxxxxx, 5xxxxxxxx, 9665xxxxxxxx, +9665xxxxxxxx.
 const SAUDI_MOBILE = /^(?:\+?966|0)?5\d{8}$/;
+// Saudi landline: 01x xxxxxxx (011 Riyadh, 012 Jeddah, 013, 014, 016, 017), also with 966 / +966.
+const SAUDI_LANDLINE = /^(?:\+?966|0)1[1-467]\d{7}$/;
+// Unified numbers: 9200xxxxx and 800xxxxxxx.
+const SAUDI_UNIFIED = /^(?:9200\d{5}|800\d{7})$/;
 const INTERNATIONAL = /^\+[1-9]\d{6,14}$/;
 
 export function isValidPhone(input: string): boolean {
   const n = normalizePhone(input);
-  return SAUDI_MOBILE.test(n) || INTERNATIONAL.test(n);
+  if (SAUDI_MOBILE.test(n) || SAUDI_LANDLINE.test(n) || SAUDI_UNIFIED.test(n)) return true;
+  // Anything claiming to be Saudi (+966...) must follow the Saudi rules above, not the generic E.164 rule.
+  if (n.startsWith("+966")) return false;
+  return INTERNATIONAL.test(n);
 }
+
+/** Only a same-site path is accepted for the "sent from" line (F4-08); anything else is dropped. */
+const PATH = /^\/[\w\-/%.~]{0,199}$/;
+export const toPagePath = (input: string | undefined) => (input && PATH.test(input) ? input : undefined);
 
 const optionalText = (max: number) =>
   z
@@ -66,7 +90,7 @@ export const leadSchema = z
   .object({
     formType: z.enum(FORM_TYPES),
     locale: z.enum(LOCALES),
-    pageUrl: optionalText(500),
+    pageUrl: optionalText(500).transform(toPagePath),
     name: optionalText(120),
     company: optionalText(160),
     email: z
@@ -88,10 +112,10 @@ export const leadSchema = z
       .optional()
       .transform((v) => v || undefined)
       .pipe(z.enum(SPACE_TYPE_KEYS).optional()),
-    area: optionalText(20),
+    area: optionalText(20).transform((v) => (v ? normalizeDigits(v) : v)),
     message: optionalText(5000),
     /** Honeypot: real visitors never see or fill it. */
-    website: z.string().max(500).optional(),
+    hp_extra: z.string().max(500).optional(),
     /** Milliseconds between rendering the form and submitting it (measured in the browser). */
     elapsedMs: z.number().finite().nonnegative().optional(),
   })

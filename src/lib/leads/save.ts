@@ -4,29 +4,34 @@ import { apiVersion, dataset, isSanityConfigured, projectId } from "@/sanity/env
 import { leadDocumentId } from "@/sanity/lead-id";
 import { SPACE_TYPE_LABELS_EN, type LeadInput } from "@/lib/validation/lead";
 
+/** Max wait per Sanity call. The create runs in parallel with the email, so both share one ~8 s window. */
+export const SAVE_TIMEOUT_MS = 8_000;
+/** The flag patch runs last and only matters for the Studio hint, so it gets less time. */
+export const PATCH_TIMEOUT_MS = 3_000;
+
 /**
  * Sanity write client (REQ-009): server only, token from SANITY_API_WRITE_TOKEN (no NEXT_PUBLIC_
  * prefix). Created per call so a missing token fails that call, not the module import.
  */
-function createWriteClient() {
+function createWriteClient(timeout: number) {
   const token = process.env.SANITY_API_WRITE_TOKEN;
   if (!isSanityConfigured || !token) throw new Error("Sanity write access is not configured.");
-  return createClient({ projectId, dataset, apiVersion, useCdn: false, token });
+  return createClient({ projectId, dataset, apiVersion, useCdn: false, token, timeout });
 }
 
 /** A lead as stored and as emailed (space type already turned into its English label). */
-export type LeadRecord = Omit<LeadInput, "website" | "elapsedMs" | "spaceType"> & { spaceType?: string };
+export type LeadRecord = Omit<LeadInput, "hp_extra" | "elapsedMs" | "spaceType"> & { spaceType?: string };
 
 export function toLeadRecord(input: LeadInput): LeadRecord {
-  const { website, elapsedMs, spaceType, ...rest } = input;
-  void website;
+  const { hp_extra, elapsedMs, spaceType, ...rest } = input;
+  void hp_extra;
   void elapsedMs;
   return { ...rest, spaceType: spaceType ? SPACE_TYPE_LABELS_EN[spaceType] : undefined };
 }
 
 /** Step 1 of REQ-008: create the `lead.<uuid>` document (dotted ID = private). Returns its ID. */
 export async function saveLead(record: LeadRecord, now: Date = new Date()): Promise<string> {
-  const doc = await createWriteClient().create(
+  const doc = await createWriteClient(SAVE_TIMEOUT_MS).create(
     {
       _id: leadDocumentId(),
       _type: "lead",
@@ -51,5 +56,5 @@ export async function saveLead(record: LeadRecord, now: Date = new Date()): Prom
 
 /** Step 3 of REQ-008: record that the notification email went out. */
 export async function markEmailDelivered(id: string): Promise<void> {
-  await createWriteClient().patch(id).set({ emailDelivered: true }).commit({ visibility: "async" });
+  await createWriteClient(PATCH_TIMEOUT_MS).patch(id).set({ emailDelivered: true }).commit({ visibility: "async" });
 }

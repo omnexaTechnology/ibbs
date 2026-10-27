@@ -8,6 +8,16 @@ describe("phone validation (BR-002)", () => {
   it.each(["", "123", "0401234567", "abc", "0501234", "+1234567890123456"])("rejects %j", (p) => {
     expect(isValidPhone(p)).toBe(false);
   });
+  it.each(["‪+966 50 123 4567‬", "＋966501234567", "011 234 5678", "0112345678", "966112345678", "920012345", "+966 05 0123 4567"])("accepts %j", (p) => {
+    expect(isValidPhone(p)).toBe(true);
+  });
+  it.each(["0096650123", "+96650123", "+9660"])("rejects %j", (p) => {
+    expect(isValidPhone(p)).toBe(false);
+  });
+  it("drops the trunk 0 after +966", () => {
+    expect(normalizePhone("+966 05 0123 4567")).toBe("+966501234567");
+    expect(normalizePhone("00966 050 123 4567")).toBe("+966501234567");
+  });
   it("normalizes to digits with a leading +", () => {
     expect(normalizePhone("+966 (50) 123-4567")).toBe("+966501234567");
     expect(normalizePhone("0044 20 7946 0958")).toBe("+442079460958");
