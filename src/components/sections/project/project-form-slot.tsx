@@ -1,16 +1,12 @@
 import type { Locale } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
-import { ButtonLink } from "@/components/ui/button-link";
+import { ProjectForm } from "@/components/forms/project-form";
+import { whatsappHref } from "@/lib/contact";
 import { Stripes } from "@/components/ui/section-heading";
+import type { SiteSettings } from "@/types/site-settings";
 
-/**
- * FEAT-004 MOUNT POINT: the "discuss a project like this" form of the project page.
- *
- * FEAT-004 replaces the body of `<div data-slot="project-form">` with the project request form (it receives
- * the project's slug so a lead can reference the project). Until then the region shows a link to the
- * contact page, so the sidebar is never an empty box. Keep the heading and the `data-slot` attribute.
- */
-export async function ProjectFormSlot({ locale, projectSlug }: { locale: Locale; projectSlug: string }) {
+/** "Discuss a project like this" form. The lead's pageUrl (/locale/projects/slug) carries the project reference. */
+export async function ProjectFormSlot({ locale, projectSlug, settings }: { locale: Locale; projectSlug: string; settings: SiteSettings }) {
   const t = await getTranslations({ locale, namespace: "projectDetail" });
   return (
     <section
@@ -26,9 +22,7 @@ export async function ProjectFormSlot({ locale, projectSlug }: { locale: Locale;
         {t("pdFormTitle")}
       </h2>
       <div data-slot="project-form" data-project-slug={projectSlug} className="mt-4">
-        <ButtonLink href="/contact" className="w-full justify-between">
-          {t("contactNow")}
-        </ButtonLink>
+        <ProjectForm whatsappHref={whatsappHref(settings, locale)} />
       </div>
     </section>
   );

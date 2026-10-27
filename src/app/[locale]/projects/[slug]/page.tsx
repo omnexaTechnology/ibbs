@@ -16,6 +16,7 @@ import { projectCategories } from "@/content/taxonomy";
 import { routing } from "@/i18n/routing";
 import { alternatesFor } from "@/lib/seo";
 import { localize } from "@/lib/contact";
+import { getSiteSettings } from "@/lib/site-settings";
 import { getProjectBySlug, getProjectSlugs } from "@/sanity/content";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -51,10 +52,11 @@ export default async function ProjectPage({ params }: Props) {
   if (!page) notFound();
   const { project, related } = page;
 
-  const [nav, t, tc] = await Promise.all([
+  const [nav, t, tc, settings] = await Promise.all([
     getTranslations({ locale, namespace: "nav" }),
     getTranslations({ locale, namespace: "projectDetail" }),
     getTranslations({ locale, namespace: "common" }),
+    getSiteSettings(),
   ]);
   const title = localize(project.title, locale);
   const sector = projectCategories.find((c) => c.key === project.category);
@@ -94,7 +96,7 @@ export default async function ProjectPage({ params }: Props) {
           </div>
           <aside className="flex flex-col gap-6 lg:sticky lg:top-28" aria-label={t("factsLabel")}>
             <ProjectFacts project={project} />
-            <ProjectFormSlot locale={locale} projectSlug={project.slug} />
+            <ProjectFormSlot locale={locale} projectSlug={project.slug} settings={settings} />
           </aside>
         </div>
       </section>

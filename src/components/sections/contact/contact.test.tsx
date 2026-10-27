@@ -78,11 +78,11 @@ describe("contact blocks with data from the site settings", () => {
     expect(screen.getByTestId("contact-whatsapp").getAttribute("href")).toMatch(/^https:\/\/wa\.me\/966500000000\?text=/);
   });
 
-  it("the form slot is an empty, named region for FEAT-004", async () => {
+  it("the form slot holds the contact form (method=post)", async () => {
     renderWithIntl(<ContactFormSection settings={await emptySettings()} />);
     const slot = screen.getByTestId("contact-form-slot");
     expect(slot).toHaveAttribute("data-slot", "contact-form");
-    expect(slot).toBeEmptyDOMElement();
+    expect(slot.querySelector("form")).toHaveAttribute("method", "post");
     expect(screen.queryByTestId("social-links")).toBeNull();
   });
 });
