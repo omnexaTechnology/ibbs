@@ -368,9 +368,6 @@
     "slideOf": "Slide {current} of {total}",
     "goToSlide": "Go to slide {n}",
     "slides": "Slides",
-    "viewerLabel": "Image viewer",
-    "sceneLabel": "Interactive 3D view",
-    "sceneFallback": "Still image of the 3D scene",
-    "sceneUnavailable": "The interactive 3D view is unavailable on this device"
+    "viewerLabel": "Image viewer"
   }
 }

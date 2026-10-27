@@ -368,9 +368,6 @@
     "slideOf": "الشريحة {current} من {total}",
     "goToSlide": "الانتقال إلى الشريحة {n}",
     "slides": "الشرائح",
-    "viewerLabel": "عارض الصور",
-    "sceneLabel": "عرض ثلاثي الأبعاد تفاعلي",
-    "sceneFallback": "صورة ثابتة للمشهد ثلاثي الأبعاد",
-    "sceneUnavailable": "العرض التفاعلي ثلاثي الأبعاد غير متاح على هذا الجهاز"
+    "viewerLabel": "عارض الصور"
   }
 }
