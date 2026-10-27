@@ -58,6 +58,17 @@ describe("getSiteSettings with Sanity (FEAT-002 T-004)", () => {
     await expect(getSiteSettings()).rejects.toThrow("network down");
   });
 
+  it("R-04: in next dev only, a failed read falls back to the defaults with a warning", async () => {
+    sanityFetch.mockRejectedValue(new Error("offline"));
+    vi.stubEnv("NODE_ENV", "development");
+    const getSiteSettings = await load(true);
+    expect((await getSiteSettings()).phones).toEqual([]);
+    expect(console.warn).toHaveBeenCalled();
+    vi.stubEnv("NODE_ENV", "production");
+    await expect(getSiteSettings()).rejects.toThrow("offline");
+    vi.unstubAllEnvs();
+  });
+
   it("F-02: not configured -> defaults, even if the fetch would fail", async () => {
     sanityFetch.mockRejectedValue(new Error("must not be called"));
     const getSiteSettings = await load(false);

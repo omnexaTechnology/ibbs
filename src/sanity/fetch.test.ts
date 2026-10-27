@@ -114,3 +114,19 @@ describe("content API", () => {
     }
   });
 });
+
+describe("content API without Sanity configuration (R-07)", () => {
+  it("returns empty results and never calls Sanity, so pages build without env vars", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SANITY_PROJECT_ID", "");
+    const c = await import("./content");
+    expect(await c.getProjects()).toEqual([]);
+    expect(await c.getProjectBySlug("x")).toBeNull();
+    expect(await c.getProjectSlugs()).toEqual([]);
+    expect(await c.getHeroSlides()).toHaveLength(4);
+    const home = await c.getHomeContent();
+    expect(home.projects).toEqual([]);
+    expect(home.hero.every((s) => s.image === null)).toBe(true);
+    expect(fetchMock).not.toHaveBeenCalled();
+    expect(createClientMock).not.toHaveBeenCalled();
+  });
+});

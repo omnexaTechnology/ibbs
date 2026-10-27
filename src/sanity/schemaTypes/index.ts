@@ -22,7 +22,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   heroSlideImage,
 ];
 
-/** Document types that exist exactly once (fixed document ID = type name). */
+/** Document types that exist exactly once (fixed document ID = type name; `leadRouting` uses `private.leadRouting`, see lead-id.ts). */
 export const SINGLETON_TYPES = ["heroSlides", "siteSettings", "leadRouting"] as const;
 
 /** Document types the Studio must not offer in the "create new" menu. */

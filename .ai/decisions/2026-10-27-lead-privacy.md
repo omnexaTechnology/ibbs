@@ -9,7 +9,7 @@ Source: FEAT-002 Opus review (F-01, F-08), decided by the implementer under "wor
    - The notification recipients live in their own document, type `leadRouting`, fixed ID `private.leadRouting` (also dotted). They were removed from `siteSettings`, whose object is passed to client components and printed in every page.
    - The only reader is the server-only `getLeadRecipients()` in `src/sanity/lead-routing.ts` (FEAT-004). Page queries stay in `src/sanity/queries.ts` and must not mention leads or recipients.
 2. **The `production` dataset becomes private** (user action in `.ai/USER-ACTIONS.md`, still pending). The site keeps using the **Viewer** read token, server only.
-3. **Guards:** a unit test fails if any page query string mentions `lead`, `recipient` or `private.`; a unit test pins the keys the layout passes to client components; an e2e test and a build-output scan check that no page or RSC payload contains `leadNotificationEmails`, `leadRouting` or recipients; `npm run verify:privacy` also checks the routing document is not anonymously readable.
+3. **Guards:** a unit test fails if any page query string mentions `lead`, `recipient` or `private.`; a unit test pins the keys the layout passes to client components; an e2e test checks, and `npm run scan:build` (a manual step after `npm run build`, not run in CI) scans the build output, that no page or RSC payload contains `leadNotificationEmails`, `leadRouting` or recipients; `npm run verify:privacy` also checks the routing document is not anonymously readable.
 
 ## Alternatives considered
 

@@ -35,7 +35,7 @@ Never put personal data in a document ID: Sanity keeps every ID ever written unt
 
 ## Build output check
 
-After `npm run build` with the real `.env.local`, all 651 files in `.next/static` (what browsers download) were searched for the variable names and for the actual values of the read and write tokens: no match. The names appear only in server bundles (`.next/server`), where the code reads `process.env.<NAME>`, and no token value is present there either (values are read at run time, not inlined). `SANITY_REVALIDATE_SECRET` was empty in `.env.local` at the time, so its value could not be checked.
+After `npm run build` with the real `.env.local`, all 651 files in `.next/static` (what browsers download) were searched for the variable names and for the actual values of the read and write tokens: no match. The names appear only in server bundles (`.next/server`), where the code reads `process.env.<NAME>`, and no token value is present there either (values are read at run time, not inlined). The revalidate secret and the lead recipient fields were checked the same way in the later review: no match. Repeat after every build that touches env or settings code with `npm run build && npm run scan:build` (a script, not part of CI yet).
 
 ## The Studio
 

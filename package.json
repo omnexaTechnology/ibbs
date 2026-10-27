@@ -15,6 +15,7 @@
     "typegen": "sanity schemas extract --path schema.json --force && sanity typegen generate",
     "seed": "tsx --env-file-if-exists=.env.local scripts/seed.ts",
     "sanity": "node --env-file-if-exists=.env.local node_modules/@sanity/cli/bin/run.js",
+    "scan:build": "tsx --env-file-if-exists=.env.local scripts/scan-build.ts",
     "verify:content": "tsx --env-file-if-exists=.env.local scripts/verify-sanity.ts content",
     "verify:privacy": "tsx --env-file-if-exists=.env.local scripts/verify-sanity.ts privacy"
   },
