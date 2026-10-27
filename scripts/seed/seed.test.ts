@@ -148,16 +148,19 @@ describe("runSeed idempotency (T-005)", () => {
     await runSeed(f.store, { readFile, sha1 });
     f.documents.get("project-exec-hq")!.year = 1999;
     const report = await runSeed(f.store, { readFile, sha1, force: true });
-    expect(report.replaced).toBe(8);
+    expect(report.replaced).toBe(7);
     expect(f.documents.get("project-exec-hq")!.year).toBe(2025);
   });
 
-  it("--force never wipes the lead recipients", async () => {
+  it("--force never wipes the lead recipients or the filled-in site settings (R-03)", async () => {
     const f = fakeStore();
     await runSeed(f.store, { readFile, sha1 });
     f.documents.get("private.leadRouting")!.recipients = ["someone@example.com"];
-    await runSeed(f.store, { readFile, sha1, force: true });
+    f.documents.get("siteSettings")!.website = "https://client.example";
+    const report = await runSeed(f.store, { readFile, sha1, force: true });
     expect(f.documents.get("private.leadRouting")!.recipients).toEqual(["someone@example.com"]);
+    expect(f.documents.get("siteSettings")!.website).toBe("https://client.example");
+    expect(report.replaced).toBe(7);
   });
 
   it("design data is the one the seed uses", () => {

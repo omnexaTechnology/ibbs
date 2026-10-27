@@ -1,6 +1,9 @@
 import { LEAD_ROUTING_ID } from "../../src/sanity/lead-id";
 import { buildDocuments, imageFileNames, type SeedData, DEFAULT_SEED_DATA } from "./build-documents";
 
+/** Documents `--force` never replaces: the client owns their content after the first fill-in (review R-03). */
+export const FORCE_PROTECTED_IDS: readonly string[] = ["siteSettings", LEAD_ROUTING_ID];
+
 /** The few Sanity operations the seed needs (a fake implements this in tests). */
 export interface SeedStore {
   /** Returns the asset document ID if an image with this SHA-1 is already in the dataset. */
@@ -61,8 +64,9 @@ export async function runSeed(store: SeedStore, options: SeedOptions): Promise<S
 
   for (const doc of docs) {
     report.byType[doc._type] = (report.byType[doc._type] ?? 0) + 1;
-    // --force resets design content only: it must never wipe the private lead recipients.
-    if (options.force && doc._id !== LEAD_ROUTING_ID) {
+    // --force resets design content only (projects, hero). Site settings and lead routing are
+    // client-edited once filled in, so they are only ever created, never replaced.
+    if (options.force && !FORCE_PROTECTED_IDS.includes(doc._id)) {
       await store.createOrReplace(doc);
       report.replaced++;
       log(`replaced       ${doc._id}`);

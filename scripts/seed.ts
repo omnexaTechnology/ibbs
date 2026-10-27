@@ -1,10 +1,14 @@
 /**
  * Seeds the Sanity dataset with the design content (FEAT-002 REQ-009):
- * 6 projects, the 4 hero images and an EMPTY site settings document (only the WhatsApp message).
+ * 6 projects, the 4 hero images, an EMPTY site settings document (only the WhatsApp message) and an
+ * empty private lead routing document.
  *
  *   npm run seed                  create what is missing (safe to re-run; never overwrites edits)
  *   npm run seed -- --dry-run     list what would happen, needs no token and touches nothing
- *   npm run seed -- --force       overwrite the seeded documents with the design content
+ *   npm run seed -- --force       overwrite the PROJECTS and HERO images with the design content.
+ *                                 Never replaces Site settings or Lead routing (client-edited content).
+ *                                 On the production dataset it also needs --yes (it discards Studio
+ *                                 edits to projects and hero images).
  *
  * Needs NEXT_PUBLIC_SANITY_PROJECT_ID, NEXT_PUBLIC_SANITY_DATASET and SANITY_API_WRITE_TOKEN
  * (role Editor) in .env.local. Token values are never printed.
@@ -24,6 +28,7 @@ async function main() {
   const args = new Set(process.argv.slice(2));
   const dryRun = args.has("--dry-run");
   const force = args.has("--force");
+  const yes = args.has("--yes");
 
   if (dryRun) {
     const docs = buildDocuments((f) => `image-dryrun-${f}`);
@@ -37,6 +42,11 @@ async function main() {
   const token = process.env.SANITY_API_WRITE_TOKEN;
   if (!projectId || !token) {
     console.error("Missing NEXT_PUBLIC_SANITY_PROJECT_ID or SANITY_API_WRITE_TOKEN (set them in .env.local).");
+    process.exit(1);
+  }
+
+  if (force && dataset === "production" && !yes) {
+    console.error('Refusing to run --force on the "production" dataset without --yes: it discards Studio edits to projects and hero images. Run `npm run seed -- --dry-run` first, then add --yes.');
     process.exit(1);
   }
 

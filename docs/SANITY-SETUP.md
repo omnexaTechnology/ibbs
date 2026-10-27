@@ -88,7 +88,7 @@ Leads are protected either way, see `docs/SECURITY.md`.
 
 - Safe to re-run: it only creates what is missing and never overwrites edits made in the Studio. Images are matched by content hash, so nothing is uploaded twice.
 - `npm run seed -- --dry-run` shows what it would do and needs no token.
-- `npm run seed -- --force` overwrites the seeded documents with the design content (this **discards** Studio edits to them; use only to reset). It never touches Lead routing, so the recipients survive.
+- `npm run seed -- --force` overwrites the **projects and hero images** with the design content (this **discards** Studio edits to them; use only to reset). It never replaces **Site settings** or **Lead routing**, so contact details and recipients survive. On the `production` dataset it refuses to run unless you also add `--yes`: `npm run seed -- --force --yes`.
 - Needs `NEXT_PUBLIC_SANITY_PROJECT_ID` and `SANITY_API_WRITE_TOKEN` in `.env.local`.
 
 Run history (dataset `production`): 2026-10-26 first run created 18 image assets + 8 documents; second run created nothing. 2026-10-27 (review F-01): created the empty `private.leadRouting` document, everything else already existed.
