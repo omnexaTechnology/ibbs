@@ -27,3 +27,4 @@ User: create the Vercel project; do the dashboard steps. Claude: finish the FEAT
 - FEAT-004 T-003 done (e920027): contact + project forms wired; branch now stacked on FEAT-003 (c975ed5). Call form not rendered yet — goes in the home quick-call block once home (FEAT-003 T-005/T-007) and FEAT-004 are on one branch. Opus review of R2 fixes + T-003 running.
 - FEAT-004: review-3 READY; minor fixes R3-01/02/05/07 done (6e9a545). R3-06 (single clock) skipped: both ends are epoch ms, works as is. Feature code-complete; waits for FEAT-003 PR (stacked).
 - FEAT-003: T-005 home 1 + T-004 projects list done (273 unit, 87 e2e). Opus review running. Left: T-006, T-007, T-008, T-010.
+- FEAT-003 review-batch3 (T-004/T-005): FIX_REQUIRED — 2 major (projects list missing from static HTML; ?category= ignored after first load), 6 minor, 8 nit, plus visual gaps vs design (hero fan/dots, "Organizations we work with" section, projects hero button, mobile tabs). Fix agent running.
