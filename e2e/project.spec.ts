@@ -48,7 +48,7 @@ test.describe("REQ-009: project page", () => {
     await expect(lb).toHaveCount(0);
   });
 
-  test("AR: right-to-left page, translated copy and mirrored hotspots", async ({ page }) => {
+  test("AR: right-to-left page, translated copy and hotspots NOT mirrored (the image is not flipped either)", async ({ page }) => {
     await page.goto(`/en/projects/${SLUG}`);
     const en = await page.getByTestId("hotspot").evaluateAll((els) => els.map((e) => Number(e.getAttribute("data-x"))));
 
@@ -58,7 +58,7 @@ test.describe("REQ-009: project page", () => {
     await expect(page.getByRole("heading", { name: "تفاصيل المشروع" })).toBeVisible();
     const ar = await page.getByTestId("hotspot").evaluateAll((els) => els.map((e) => Number(e.getAttribute("data-x"))));
     expect(ar).toHaveLength(en.length);
-    ar.forEach((x, i) => expect(x + en[i]).toBeCloseTo(100, 5));
+    expect(ar).toEqual(en);
     // Nothing overflows horizontally.
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);

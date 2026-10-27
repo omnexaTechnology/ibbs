@@ -37,7 +37,7 @@ Every page looks and behaves like the approved design in both languages, with co
 
 ## Business rules
 - **BR-001** Reduced motion: no auto-advance, no scroll-scrubbed animation, 3D shows its final state without animation.
-- **BR-002** RTL mirrors carousels, hotspot x-positions (`100 - x`) and scroll directions.
+- **BR-002** RTL mirrors carousels, hotspot x-positions (`100 - x`, only for images that are themselves mirrored, e.g. the hero; unflipped images such as the project detail keep authored x) and scroll directions.
 - **BR-004** Address and working hours always come from `SiteSettings` (Sanity), never from the message keys `locCity`, `pdH1`/`pdH2`, `tbc`, which hold design placeholders (FEAT-001 re-review N-04).
 - **BR-003** Placeholder content (stats note, `[Client name]`, sample testimonials) is not shown on the live site unless the client provides real values.
 

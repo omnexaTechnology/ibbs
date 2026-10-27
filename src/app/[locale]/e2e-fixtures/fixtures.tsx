@@ -22,7 +22,7 @@ export function Fixtures({ dir }: { dir: "ltr" | "rtl" }) {
         <Counter to={120} suffix="+" className="text-4xl" />
       </p>
       <Accordion items={[{ id: "a", question: "Q1", answer: "A1" }, { id: "b", question: "Q2", answer: "A2" }]} />
-      <HotspotImage aspect={2} dir={dir} hotspots={[{ x: 20, y: 40, title: "Pin" }]} className="bg-cyan/30">
+      <HotspotImage aspect={2} dir={dir} mirror={dir === "rtl"} hotspots={[{ x: 20, y: 40, title: "Pin" }]} className="bg-cyan/30">
         <div />
       </HotspotImage>
       <SceneRoot

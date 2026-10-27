@@ -42,9 +42,19 @@ describe("<HotspotImage>", () => {
     expect(pins[1]).toHaveAttribute("data-side", "l");
   });
 
-  it("mirrors the pins in RTL and flips the tooltip side with them", () => {
+  it("RTL alone (dir) does not move the pins or flip the image", () => {
     render(
       <HotspotImage aspect={1.5} hotspots={spots} dir="rtl">
+        <div />
+      </HotspotImage>,
+    );
+    expect(screen.getAllByTestId("hotspot")[0].style.left).toBe("20%");
+    expect(screen.queryByTestId("hotspot-mirror")).toBeNull();
+  });
+
+  it("mirror flips the image and the pins together and flips the tooltip side", () => {
+    render(
+      <HotspotImage aspect={1.5} hotspots={spots} dir="rtl" mirror>
         <div />
       </HotspotImage>,
     );
@@ -54,6 +64,22 @@ describe("<HotspotImage>", () => {
     expect(pins[1].style.left).toBe("20%");
     expect(pins[1]).toHaveAttribute("data-side", "r");
     expect(screen.getAllByRole("tooltip", { hidden: true })[0]).toHaveAttribute("dir", "rtl");
+    expect(screen.getByTestId("hotspot-mirror").className).toContain("-scale-x-100");
+  });
+
+  it("gives every instance its own tooltip ids (B1-05)", () => {
+    render(
+      <>
+        <HotspotImage aspect={1} hotspots={spots}>
+          <div />
+        </HotspotImage>
+        <HotspotImage aspect={1} hotspots={spots}>
+          <div />
+        </HotspotImage>
+      </>,
+    );
+    const ids = screen.getAllByRole("tooltip", { hidden: true }).map((t) => t.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   it("makes each pin a focusable button described by its tooltip (keyboard access)", () => {
