@@ -27,7 +27,7 @@ _(none right now)_
   - the Vision tool shows for you (Administrator) but not for an Editor account;
   - on a lead, the "Handled" box saves without a Publish step, and delete works. Ask Claude to create one test lead if there are none yet.
 - [ ] **Fill Site settings in the Studio and publish**: real phones, emails, WhatsApp number, hours, address, map link and social links. It is empty on purpose, so nothing shows on the site until you fill it. The "who receives new enquiries by email" addresses are **not** in Site settings any more (review F-01). They go in the separate **Lead routing (private)** entry in the Studio menu: hidden from the public and from every web page. Fill it in there (empty is fine until the forms ship in FEAT-004).
-- [ ] **Resend account** (for form emails, FEAT-004) under `melamrosy72@gmail.com`; put `RESEND_API_KEY` in `.env.local` and Vercel. Not needed until FEAT-004.
+- [ ] **Resend account** (for form emails, FEAT-004) under `melamrosy72@gmail.com`; put `RESEND_API_KEY` in `.env.local` and Vercel. Not needed until FEAT-004 ships. The code is ready (2026-10-27): it also reads `LEAD_FALLBACK_EMAIL` (set to `melamrosy72@gmail.com`) and `LEAD_FROM_EMAIL` (sender address). Until you verify a sending domain in Resend, the sender is `onboarding@resend.dev`, which can only deliver to the Resend account owner's inbox.
 
 ## To review when you have time
 
@@ -67,6 +67,9 @@ _(none right now)_
 | FEAT-004 | Required form fields | Name, phone, and email or message |
 | FEAT-004 | Spam protection | Honeypot + rate limit (no Turnstile) |
 | FEAT-004 | Confirmation email to the visitor | No |
+| FEAT-004 | Language of the "space type" in saved leads and emails | English label for every lead, so the sales team reads one language |
+| FEAT-004 | Phone number format in saved leads | Normalised (e.g. `+9665…` or `05…`), not exactly as typed |
+| FEAT-004 | "Space type" dropdown | Starts on "Select…" and is optional (the design had no placeholder) |
 | FEAT-005 | Domain, analytics, legal text, launch date | Unknown — needed before launch only |
 
 ## Done
