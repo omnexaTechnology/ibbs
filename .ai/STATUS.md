@@ -20,3 +20,7 @@ None blocking the build. User actions (Vercel project + env, Sanity CORS/webhook
 
 ## Next recommended action
 User: create the Vercel project; do the dashboard steps. Claude: finish the FEAT-003 batch-1 review, rebase FEAT-003 onto FEAT-002, continue T-003..T-009, start FEAT-004.
+
+## 2026-10-27 evening
+- FEAT-003: batch-1 fixes done; re-review READY (0 blocker/major, 6 minor, 4 nit). Now: minor follow-ups, then T-005 (home 1) and T-004 (projects list).
+- FEAT-004: fixes done; re-review FIX_REQUIRED (1 major R2-01 timer before hydration, 2 minor timeouts). Fix agent running; T-003 (wire forms into pages) after.
