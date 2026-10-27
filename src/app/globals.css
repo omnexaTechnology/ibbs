@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "../styles/page-transition.css";
 @import "../styles/custom-cursor.css";
+@import "../styles/ui.css";
 
 /* Dark mode = `.dark` class on <html> (next-themes, attribute="class"). */
 @custom-variant dark (&:is(.dark, .dark *));

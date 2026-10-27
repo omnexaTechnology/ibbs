@@ -355,5 +355,22 @@
     "body": "We could not load this page right now. Please try again in a moment.",
     "retry": "Try again",
     "home": "Back to home"
+  },
+  "ui": {
+    "prev": "Previous",
+    "next": "Next",
+    "close": "Close",
+    "prevImage": "Previous image",
+    "nextImage": "Next image",
+    "closeLightbox": "Close image viewer",
+    "imageCount": "{current} / {total}",
+    "carousel": "Carousel",
+    "slideOf": "Slide {current} of {total}",
+    "goToSlide": "Go to slide {n}",
+    "slides": "Slides",
+    "viewerLabel": "Image viewer",
+    "sceneLabel": "Interactive 3D view",
+    "sceneFallback": "Still image of the 3D scene",
+    "sceneUnavailable": "The interactive 3D view is unavailable on this device"
   }
 }

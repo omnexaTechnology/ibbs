@@ -8,6 +8,7 @@ import { Header } from "@/components/layout/header";
 import { PageTransitionProvider } from "@/components/layout/page-transition";
 import { WhatsAppButton } from "@/components/layout/whatsapp-button";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { GsapRefresh } from "@/components/ui/gsap-refresh";
 import { fontClassFor } from "@/lib/fonts";
 import { getSiteSettings } from "@/lib/site-settings";
 import { getDirection, routing } from "@/i18n/routing";
@@ -50,6 +51,7 @@ export default async function LocaleLayout({ children, params }: Props) {
               <Footer settings={settings} />
               <WhatsAppButton settings={settings} />
               <CustomCursor />
+              <GsapRefresh />
             </PageTransitionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
