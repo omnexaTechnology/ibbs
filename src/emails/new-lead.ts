@@ -5,8 +5,8 @@ const FORM_LABEL = { contact: "Contact form", project: "Project request", call: 
 const escapeHtml = (s: string) =>
   s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 
-/** One line, no control characters (safe for a subject line). */
-const oneLine = (s: string) => s.replace(/[\r\n\t]+/g, " ").trim();
+/** One line, no control or bidi/format characters (safe for a subject line). */
+const oneLine = (s: string) => s.replace(/[\p{Cc}\p{Cf}\u2028\u2029]+/gu, " ").trim();
 
 /**
  * Notification email for the sales team. Plain HTML string on purpose: one table with inline

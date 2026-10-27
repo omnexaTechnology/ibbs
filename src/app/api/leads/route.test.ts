@@ -21,7 +21,7 @@ vi.mock("resend", () => ({
 const valid = {
   formType: "contact",
   locale: "en",
-  pageUrl: "https://example.test/en/contact",
+  pageUrl: "/en/contact",
   name: "Sara Test",
   email: "sara@example.test",
   phone: "0501234567",
@@ -29,7 +29,7 @@ const valid = {
   spaceType: "mosque",
   area: "1200",
   message: "Need 40 desks <b>soon</b>",
-  website: "",
+  hp_extra: "",
   elapsedMs: 8000,
 };
 
@@ -69,8 +69,8 @@ describe("POST /api/leads", () => {
     const doc = create.mock.calls[0][0];
     expect(doc._id).toMatch(/^lead\.[0-9a-f-]{36}$/);
     expect(doc).toMatchObject({ _type: "lead", formType: "contact", name: "Sara Test", phone: "0501234567", locale: "en", spaceType: "Mosque", emailDelivered: false });
-    expect(doc.pageUrl).toBe("https://example.test/en/contact");
-    expect(doc).not.toHaveProperty("website");
+    expect(doc.pageUrl).toBe("/en/contact");
+    expect(doc).not.toHaveProperty("hp_extra");
     expect(doc).not.toHaveProperty("elapsedMs");
 
     const mail = send.mock.calls[0][0];
@@ -123,7 +123,7 @@ describe("POST /api/leads", () => {
   });
 
   it("honeypot filled: fake success, nothing stored or sent (AC-003)", async () => {
-    const res = await post({ ...valid, website: "http://spam.test" });
+    const res = await post({ ...valid, hp_extra: "http://spam.test" });
     expect(res.status).toBe(200);
     expect(await res.json()).toEqual({ ok: true });
     expect(create).not.toHaveBeenCalled();
@@ -131,7 +131,7 @@ describe("POST /api/leads", () => {
   });
 
   it("honeypot wins even when the rest of the payload is invalid", async () => {
-    const res = await post({ website: "x" });
+    const res = await post({ hp_extra: "x" });
     expect(res.status).toBe(200);
     expect(create).not.toHaveBeenCalled();
   });
@@ -183,6 +183,41 @@ describe("POST /api/leads", () => {
     expect((await post(big)).status).toBe(413);
     expect((await post(valid, { headers: { "content-length": "999999" } })).status).toBe(413);
     expect(create).not.toHaveBeenCalled();
+  });
+
+  it("oversized chunked body (no Content-Length) is cut off while reading: 413", async () => {
+    const { POST } = await import("./route");
+    const big = new TextEncoder().encode(JSON.stringify({ ...valid, message: "x".repeat(30_000) }));
+    const body = new ReadableStream({ start: (c) => (c.enqueue(big), c.close()) });
+    const res = await POST(new Request("http://localhost/api/leads", { method: "POST", body, headers: { "content-type": "application/json" }, duplex: "half" } as RequestInit));
+    expect(res.status).toBe(413);
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it("non-JSON content type: 415, nothing stored (F4-03)", async () => {
+    const res = await post(valid, { headers: { "content-type": "text/plain" } });
+    expect(res.status).toBe(415);
+    expect(create).not.toHaveBeenCalled();
+    expect(send).not.toHaveBeenCalled();
+  });
+
+  it("pageUrl keeps only a same-site path; full URLs and junk are dropped (F4-08)", async () => {
+    await post({ ...valid, pageUrl: "https://evil.test/en/contact" });
+    expect(create.mock.calls[0][0].pageUrl).toBeUndefined();
+  });
+
+  it("recipients read failure falls back to LEAD_FALLBACK_EMAIL and logs recipients-fallback without data", async () => {
+    getLeadRecipients.mockRejectedValue(new Error("sanity down for Sara Test"));
+    expect((await post(valid)).status).toBe(200);
+    expect(send.mock.calls[0][0].to).toEqual(["fallback@owner.test"]);
+    const logged = JSON.stringify(errorSpy.mock.calls);
+    expect(logged).toContain("recipients-fallback");
+    expect(logged).not.toContain("Sara");
+  });
+
+  it("control and bidi characters in the name never reach the subject (F4-10)", async () => {
+    await post({ ...valid, name: "A‮bank" });
+    expect(send.mock.calls[0][0].subject).not.toMatch(/[‮]/);
   });
 
   it("message longer than the field limit (but under the body limit) is rejected", async () => {

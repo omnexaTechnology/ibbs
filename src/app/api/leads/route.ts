@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { markEmailDelivered, saveLead, toLeadRecord } from "@/lib/leads/save";
 import { notifyLead } from "@/lib/leads/notify";
-import { MAX_BODY_CHARS, MIN_FILL_MS, leadSchema, toFieldErrors, type LeadResponse } from "@/lib/validation/lead";
+import { HONEYPOT_FIELD, MAX_BODY_BYTES, MIN_FILL_MS, leadSchema, toFieldErrors, type LeadResponse } from "@/lib/validation/lead";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,11 +17,25 @@ function logFailure(step: "sanity-save" | "email" | "sanity-patch", error: unkno
 }
 
 export async function POST(request: Request): Promise<Response> {
-  // 1. Size limit, before parsing anything.
-  const declared = Number(request.headers.get("content-length") ?? 0);
-  if (declared > MAX_BODY_CHARS) return respond({ ok: false, error: "too_large" }, 413);
-  const text = await request.text();
-  if (text.length > MAX_BODY_CHARS) return respond({ ok: false, error: "too_large" }, 413);
+  // 0. JSON only: a non-JSON type is not a "simple" cross-site request, so browsers preflight it (F4-03).
+  if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return respond({ ok: false, error: "invalid", fields: {} }, 415);
+
+  // 1. Size limit, enforced while reading the body (F4-04), before parsing anything.
+  if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) return respond({ ok: false, error: "too_large" }, 413);
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  if (request.body) {
+    const reader = request.body.getReader();
+    for (let r = await reader.read(); !r.done; r = await reader.read()) {
+      total += r.value.byteLength;
+      if (total > MAX_BODY_BYTES) {
+        await reader.cancel();
+        return respond({ ok: false, error: "too_large" }, 413);
+      }
+      chunks.push(r.value);
+    }
+  }
+  const text = Buffer.concat(chunks).toString("utf8");
 
   let raw: unknown;
   try {
@@ -32,7 +46,7 @@ export async function POST(request: Request): Promise<Response> {
   if (typeof raw !== "object" || raw === null || Array.isArray(raw)) return respond({ ok: false, error: "invalid", fields: {} }, 400);
 
   // 2. Honeypot: a bot gets a fake success and nothing is stored or sent (AC-003).
-  const honeypot = (raw as Record<string, unknown>).website;
+  const honeypot = (raw as Record<string, unknown>)[HONEYPOT_FIELD];
   if (typeof honeypot === "string" && honeypot.trim() !== "") return respond({ ok: true }, 200);
 
   // 3. Same schema as the browser.
