@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 type Props = {
   href: string;
   variant?: "primary" | "ghost";
-  /** External URL (opens in a new tab) instead of an app route. */
+  /** Plain anchor instead of an app route: http(s) URLs open in a new tab, mailto:/tel: stay in place. */
   external?: boolean;
   children: ReactNode;
   className?: string;
@@ -36,7 +36,7 @@ export function ButtonLink({ href, variant = "primary", external, children, clas
   );
   if (external) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className={classes} data-testid={rest["data-testid"]}>
+      <a href={href} {...(/^https?:/.test(href) ? { target: "_blank", rel: "noopener noreferrer" } : {})} className={classes} data-testid={rest["data-testid"]}>
         {children}
         {arrow}
       </a>
