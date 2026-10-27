@@ -24,3 +24,4 @@ User: create the Vercel project; do the dashboard steps. Claude: finish the FEAT
 ## 2026-10-27 evening
 - FEAT-003: batch-1 fixes done; re-review READY (0 blocker/major, 6 minor, 4 nit). Now: minor follow-ups, then T-005 (home 1) and T-004 (projects list).
 - FEAT-004: fixes done; re-review FIX_REQUIRED (1 major R2-01 timer before hydration, 2 minor timeouts). Fix agent running; T-003 (wire forms into pages) after.
+- FEAT-004 T-003 done (e920027): contact + project forms wired; branch now stacked on FEAT-003 (c975ed5). Call form not rendered yet — goes in the home quick-call block once home (FEAT-003 T-005/T-007) and FEAT-004 are on one branch. Opus review of R2 fixes + T-003 running.
