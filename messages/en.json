@@ -42,7 +42,8 @@
     "hoursFri": "Fri – Sat",
     "closed": "Closed",
     "waBig": "Discuss Your Project",
-    "waBigSub": "Fastest way to reach our team"
+    "waBigSub": "Fastest way to reach our team",
+    "ctDirectLabel": "Contact details"
   },
   "forms": {
     "phName": "Enter your name",
@@ -179,7 +180,10 @@
     "galSub": "Use the arrows or thumbnails to browse, and select any image to enlarge it.",
     "similarTitle": "Planning a similar project?",
     "similarSub": "Share your space and requirements, and our team will discuss the right furnishing and fit-out solutions with you.",
-    "contactNow": "Get in Touch"
+    "contactNow": "Get in Touch",
+    "relatedEyebrow": "More like this",
+    "relatedTitle": "Related projects",
+    "factsLabel": "Project facts"
   },
   "projects": {
     "pjSearch": "Search projects",
@@ -368,6 +372,7 @@
     "slideOf": "Slide {current} of {total}",
     "goToSlide": "Go to slide {n}",
     "slides": "Slides",
-    "viewerLabel": "Image viewer"
+    "viewerLabel": "Image viewer",
+    "breadcrumb": "Breadcrumb"
   }
 }
