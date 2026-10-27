@@ -6,7 +6,7 @@ Last update: 2026-10-27
 - FEAT-001 (foundation): PR #1, CI green, reviewed. Waiting for the user's merge and Vercel project.
 - FEAT-002 (Sanity): PR #2 stacked on #1. Review found a blocker (lead recipients serialised into every page); fixed by moving them to the private `private.leadRouting` document read only by `getLeadRecipients()`. Re-review READY_FOR_HUMAN_REVIEW; follow-ups done. Validation: lint, tsc, 167 unit, schema validate, both builds, 75 e2e, verify:content, scan:build.
 - FEAT-003 (pages): T-001 UI primitives and T-002 3D core done in worktree `../ibss-web-feat003` (196 unit, 76 e2e on port 3200). The design uses Three r149, the site r186; color/light compatibility shims added, side-by-side parity under review.
-- FEAT-004 (forms): ready; starts once FEAT-003 is rebased (both touch the contact page).
+- FEAT-004 (forms): T-001 endpoint + T-002 components in progress in worktree `../ibss-web-feat004` (port 3300, no env, no production writes). T-003 wiring waits for FEAT-003 pages.
 - FEAT-005: Discovery.
 
 ## Blockers
