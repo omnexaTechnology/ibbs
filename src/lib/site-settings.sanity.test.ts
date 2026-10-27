@@ -52,12 +52,17 @@ describe("getSiteSettings with Sanity (FEAT-002 T-004)", () => {
     expect(s.whatsapp.message.en).toContain("IBSS");
   });
 
-  it("when Sanity is unreachable, falls back to the defaults instead of throwing", async () => {
+  it("F-02: configured but Sanity fails -> throws (build fails loudly, ISR keeps the last good page)", async () => {
     sanityFetch.mockRejectedValue(new Error("network down"));
     const getSiteSettings = await load(true);
-    const s = await getSiteSettings();
-    expect(s.emails).toEqual([]);
-    expect(console.warn).toHaveBeenCalled();
+    await expect(getSiteSettings()).rejects.toThrow("network down");
+  });
+
+  it("F-02: not configured -> defaults, even if the fetch would fail", async () => {
+    sanityFetch.mockRejectedValue(new Error("must not be called"));
+    const getSiteSettings = await load(false);
+    expect((await getSiteSettings()).emails).toEqual([]);
+    expect(sanityFetch).not.toHaveBeenCalled();
   });
 
   it("F-01: only display fields reach the client components, even if Sanity returns more", async () => {

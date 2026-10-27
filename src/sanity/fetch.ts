@@ -9,7 +9,7 @@ export const SAFETY_REVALIDATE_SECONDS = 3600;
 /**
  * The one way pages read Sanity. Every query carries cache tags (the document types it depends
  * on); `POST /api/revalidate` invalidates them when an editor publishes (REQ-008).
- * Throws when Sanity is not configured or unreachable: callers that must not fail use a fallback.
+ * Throws when Sanity is not configured or unreachable: getSiteSettings rethrows too once Sanity is configured (F-02): no silent empty pages.
  */
 export async function sanityFetch<const Query extends string>({
   query,
