@@ -1,26 +1,22 @@
 # Status
 
-Last update: 2026-10-26
+Last update: 2026-10-27
 
 ## Overall
-Workspace bootstrapped; FEAT-001 (app foundation) is implemented on local branch `feat/FEAT-001-app-foundation` (6 tasks, all validated locally: lint, tsc, 60 unit tests, build, 40 Playwright e2e). Not pushed. FEAT-002..004 plans approved, not started. FEAT-005 stays in Discovery until launch details are known.
-
-## Active
-Discovery batch 1 answered (2026-10-26): Omnexa Learn stack; Sanity edits projects + hero images only; leads emailed + saved in Sanity; all 3D kept.
-
-Discovery batch 2 answered (2026-10-26): contact + social links editable in Sanity Site settings; hero = replace the 4 images only (advanced later); Sanity project on Omnexa's account; lead emails go to addresses set in Site settings.
+- FEAT-001 (foundation): PR #1, CI green, reviewed. Waiting for the user's merge and Vercel project.
+- FEAT-002 (Sanity): PR #2 stacked on #1. Review found a blocker (lead recipients serialised into every page); fixed by moving them to the private `private.leadRouting` document read only by `getLeadRecipients()`. Re-review READY_FOR_HUMAN_REVIEW; follow-ups done. Validation: lint, tsc, 167 unit, schema validate, both builds, 75 e2e, verify:content, scan:build.
+- FEAT-003 (pages): T-001 UI primitives and T-002 3D core done in worktree `../ibss-web-feat003` (196 unit, 76 e2e on port 3200). The design uses Three r149, the site r186; color/light compatibility shims added, side-by-side parity under review.
+- FEAT-004 (forms): ready; starts once FEAT-003 is rebased (both touch the contact page).
+- FEAT-005: Discovery.
 
 ## Blockers
-- FEAT-001/T-006 (partial): pushing the branch to GitHub (`omnexaTechnology/ibbs`) and confirming the Vercel preview URL (REQ-013, AC-005) and the first CI run need permission to push; nothing was pushed or deployed.
+None blocking the build. User actions (Vercel project + env, Sanity CORS/webhook/private dataset, live Studio checks, Resend) are in USER-ACTIONS.md.
 
 ## Risks
-- Detailed plan (~23 dev-days) is well above the 10–14 days quoted to the user earlier; mostly the 3D walk-through and other scenes.
-- 3D scenes (Three.js) are the largest and least predictable part, especially mobile performance.
-- Much of the design's content is placeholder (stats, client names, testimonials, contacts, logos).
-- The design may keep changing in Claude Design during the build.
+- Detailed plan (~23 dev-days) is well above the 10–14 days quoted earlier; mostly the 3D scenes.
+- Three r149 → r186 lighting differences: every scene must be compared with the design.
+- Much of the design's content is placeholder (stats, client names, testimonials, logos).
+- Parallel agents share the machine: e2e ports are split (3100 main, 3200 feat003 worktree).
 
 ## Next recommended action
-Review FEAT-001 (branch `feat/FEAT-001-app-foundation`), then allow the first push to `omnexaTechnology/ibbs` and check CI + the Vercel preview. Then start FEAT-002 (needs Sanity token for project `zf4tpgl3`, Resend account, lead fallback inbox).
-
-## FEAT-002 (2026-10-26)
-Implemented on local branch `feat/FEAT-002-sanity` (6 tasks, one commit each): embedded Studio at /studio, schemas, desk, query layer + typegen, site settings from Sanity, signed revalidate webhook, seed (run twice against production: 18 assets + 8 documents, no duplicates), lead privacy proven on the public dataset. Validation: lint, tsc, 131 unit tests, build with and without env, 72 e2e. BLOCKED on the user: CORS origins, webhook creation, private dataset, Studio login check, `SANITY_REVALIDATE_SECRET` is empty in .env.local. See docs/SANITY-SETUP.md.
+User: review/merge PR #1 then PR #2; do the dashboard steps. Claude: finish the FEAT-003 batch-1 review, rebase FEAT-003 onto FEAT-002, continue T-003..T-009, start FEAT-004.

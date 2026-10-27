@@ -19,13 +19,19 @@ _(none right now)_
 - [ ] **Make the Sanity dataset private**: sanity.io/manage → project `zf4tpgl3` → Datasets → `production` → Private. It is public now (checked 2026-10-26). The code also hides leads on its own, but private is the safe setting.
 - [ ] **Sanity dashboard steps** — exact clicks in `docs/SANITY-SETUP.md` (in the repo on branch `feat/FEAT-002-sanity` until merged). After the Vercel project exists:
   - CORS origins, with "Allow credentials" on (needed to log in at `/studio`): add **exact addresses only**: `http://localhost:3000`, plus your production domain or the stable `<project>.vercel.app` address. **Never add a wildcard like `https://*-team.vercel.app`.** Anyone can create a matching vercel.app address and use a logged-in editor's session from it. Use the Studio on production or localhost, not on preview URLs. (Corrected 2026-10-27 after review F-04. The setup doc gets the same fix.)
-  - Publish webhook → `https://<your-domain>/api/revalidate`, signed with the `SANITY_REVALIDATE_SECRET` value; filter and projection are in the doc.
-- [ ] **Open `/studio` and log in** (http://localhost:3000/studio with `npm run dev`, or the Vercel URL). Check: the 6 seeded projects and 4 hero images are there; try the click-on-photo hotspot picker on a project.
+  - Publish webhook → `https://<your-domain>/api/revalidate`, signed with the `SANITY_REVALIDATE_SECRET` value. Copy the filter and projection from the doc: the filter now includes `leadRouting`.
+- [ ] **Open `/studio` and log in** (http://localhost:3000/studio with `npm run dev`, or the Vercel URL). Check:
+  - the 6 seeded projects and 4 hero images are there;
+  - the click-on-photo hotspot picker places dots on a project;
+  - "Lead routing (private)" opens, saves and publishes, and publishing it triggers the webhook (Sanity → API → Webhooks → Attempts);
+  - the Vision tool shows for you (Administrator) but not for an Editor account;
+  - on a lead, the "Handled" box saves without a Publish step, and delete works. Ask Claude to create one test lead if there are none yet.
 - [ ] **Fill Site settings in the Studio and publish**: real phones, emails, WhatsApp number, hours, address, map link and social links. It is empty on purpose, so nothing shows on the site until you fill it. The "who receives new enquiries by email" addresses are **not** in Site settings any more (review F-01). They go in the separate **Lead routing (private)** entry in the Studio menu: hidden from the public and from every web page. Fill it in there (empty is fine until the forms ship in FEAT-004).
 - [ ] **Resend account** (for form emails, FEAT-004) under `melamrosy72@gmail.com`; put `RESEND_API_KEY` in `.env.local` and Vercel. Not needed until FEAT-004.
 
 ## To review when you have time
 
+- [ ] **PR #2 — FEAT-002 Sanity + Studio**: https://github.com/omnexaTechnology/ibbs/pull/2. It is stacked on PR #1, so merge #1 first; #2 then points at `main`. Opus review found 1 blocker (lead emails in page HTML), now fixed; the re-review passed. Details are in `.ai/work/FEAT-002-sanity-content-model/review.md`.
 - [ ] **PR #1 — FEAT-001 app foundation**: https://github.com/omnexaTechnology/ibbs/pull/1 — CI green, Opus review + re-review passed. Merge when the Vercel preview looks right. (Claude keeps building the next items on top of this branch, so merging is not urgent.)
 - [ ] **Arabic phrases written by Claude, not taken from the design** (`messages/ar.json`). Change any you'd phrase differently:
   | English | Arabic |
@@ -44,6 +50,7 @@ _(none right now)_
 ## Good to know (no action needed)
 
 - Sanity read token (Viewer) can technically read leads too — on the free plan tokens can't be limited per document type. It is only used on the server and no site query reads leads, so visitors can't get them. Leads are also stored under hidden IDs (`lead.…`) that anonymous users can't read even while the dataset is public — tested live on 2026-10-26.
+- **Don't run `npm run seed -- --force` on production** once Site settings are filled in, unless Claude asks. The script now protects Site settings and Lead routing, and `--force` on production refuses without `--yes`, but there is no reason for you to run it.
 - Seeded gallery photos got generic alt text ("<project> – photo n"); edit in Studio if you want better descriptions.
 
 ## Questions with a default (Claude proceeds with the default unless you change it)

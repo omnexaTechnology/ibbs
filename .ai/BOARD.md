@@ -1,7 +1,7 @@
 # Board
 
 Workspace: `ibss-web` (IBSS Innovations Furniture — Next.js + Sanity)
-Last update: 2026-10-26 (FEAT-002 implemented locally)
+Last update: 2026-10-27
 
 ## Inbox
 
@@ -13,18 +13,18 @@ Last update: 2026-10-26 (FEAT-002 implemented locally)
 ## Ready
 | ID | Title | Depends on | Current step | Open items | Updated |
 |---|---|---|---|---|---|
-| FEAT-003 | Pages: 7 views, animations and all 3D | FEAT-001, FEAT-002 | implement (10 tasks, 12d) | Non-blocking: design final?, map embed, related projects | 2026-10-26 |
-| FEAT-004 | Lead forms: contact, project request, call request | FEAT-001, FEAT-002 | implement (3 tasks, 2.5d) | Non-blocking: required fields, spam, fallback inbox | 2026-10-26 |
+| FEAT-004 | Lead forms: contact, project request, call request | FEAT-001, FEAT-002 | implement (3 tasks, 2.5d); recipients via `getLeadRecipients()` | Resend account (user); defaults in USER-ACTIONS | 2026-10-27 |
 
 ## In Progress
 | ID | Title | Branches | Next | Updated |
 |---|---|---|---|---|
-| FEAT-002 | Sanity: projects, hero images, site settings, leads + Studio + seed | `feat/FEAT-002-sanity` (local, branched from `feat/FEAT-001-app-foundation`, not pushed) | T-002, T-003, T-005, T-006 DONE; T-001 and T-004 code done but BLOCKED on user actions in docs/SANITY-SETUP.md (CORS, private dataset, webhook, Studio login check, fill SANITY_REVALIDATE_SECRET). Next: review; push after FEAT-001 is merged | 2026-10-26 |
+| FEAT-003 | Pages: 7 views, animations and all 3D | `feat/FEAT-003-pages` (local, worktree `../ibss-web-feat003`) | T-001, T-002 DONE; Opus batch-1 review running; then rebase onto FEAT-002 head and continue T-003.. | 2026-10-27 |
 
 ## Review
 | ID | Title | Branches | Next | Updated |
 |---|---|---|---|---|
-| FEAT-001 | App foundation: Next.js, EN/AR + RTL, theme, layout shell | `feat/FEAT-001-app-foundation` → PR #1 (omnexaTechnology/ibbs) | Opus review + re-review passed (READY_FOR_HUMAN_REVIEW); waiting: CI run, Vercel preview (user creates the project), Arabic string check, user merge | 2026-10-26 |
+| FEAT-001 | App foundation: Next.js, EN/AR + RTL, theme, layout shell | `feat/FEAT-001-app-foundation` → PR #1 | Review + re-review passed; CI green; waiting: Vercel preview (user creates the project), Arabic strings, user merge | 2026-10-26 |
+| FEAT-002 | Sanity: projects, hero images, site settings, lead routing, leads + Studio + seed | `feat/FEAT-002-sanity` → PR #2 (stacked on #1) | Review → fixes → re-review READY_FOR_HUMAN_REVIEW; follow-ups R-01..R-04, R-07 done. Waiting: dashboard steps + live Studio checks (USER-ACTIONS), user merge | 2026-10-27 |
 
 ## Done
 
