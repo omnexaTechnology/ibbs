@@ -9,6 +9,7 @@ import { ProjectsExplorer } from "@/components/sections/projects/projects-explor
 import { ProjectsExplorerFromUrl } from "@/components/sections/projects/projects-explorer-from-url";
 import { ProjectsFloor } from "@/components/sections/projects/projects-floor";
 import { routing } from "@/i18n/routing";
+import { alternatesFor } from "@/lib/seo";
 import { getProjects } from "@/sanity/content";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
   const [t, tc] = await Promise.all([getTranslations({ locale, namespace: "projects" }), getTranslations({ locale, namespace: "common" })]);
-  return { title: `${t("projH1a")} ${t("projH1b")} | ${tc("brand")}`, description: t("projLead") };
+  return { title: `${t("projH1a")} ${t("projH1b")} | ${tc("brand")}`, description: t("projLead"), alternates: alternatesFor(locale, "/projects") };
 }
 
 export default async function ProjectsPage({ params }: Props) {

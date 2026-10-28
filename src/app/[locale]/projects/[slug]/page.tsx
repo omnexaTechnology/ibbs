@@ -14,6 +14,7 @@ import { sizedImageUrl } from "@/components/ui/sanity-image";
 import { Reveal } from "@/components/ui/reveal";
 import { projectCategories } from "@/content/taxonomy";
 import { routing } from "@/i18n/routing";
+import { alternatesFor } from "@/lib/seo";
 import { localize } from "@/lib/contact";
 import { getProjectBySlug, getProjectSlugs } from "@/sanity/content";
 
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${title} | ${brand}`,
     description,
     openGraph: { title, description, images: [{ url: sizedImageUrl(project.cover.src, 1200) }] },
-    alternates: { languages: Object.fromEntries(routing.locales.map((l) => [l, `/${l}/projects/${slug}`])) },
+    alternates: alternatesFor(locale, `/projects/${slug}`),
   };
 }
 

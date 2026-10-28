@@ -9,6 +9,7 @@ import { ContactWhatsApp } from "@/components/sections/contact/contact-whatsapp"
 import { PageHero } from "@/components/sections/page-hero";
 import { ButtonLink } from "@/components/ui/button-link";
 import { routing } from "@/i18n/routing";
+import { alternatesFor } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     getTranslations({ locale, namespace: "nav" }),
     getTranslations({ locale, namespace: "common" }),
   ]);
-  return { title: `${tn("navContact")} | ${tc("brand")}`, description: t("ctLead") };
+  return { title: `${tn("navContact")} | ${tc("brand")}`, description: t("ctLead"), alternates: alternatesFor(locale, "/contact") };
 }
 
 export default async function ContactPage({ params }: Props) {

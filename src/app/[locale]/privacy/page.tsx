@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LegalPage } from "@/components/sections/legal/legal-page";
 import { getLegalDoc } from "@/content/legal";
 import { routing } from "@/i18n/routing";
+import { alternatesFor } from "@/lib/seo";
 import { getSiteSettings } from "@/lib/site-settings";
 
 type Props = { params: Promise<{ locale: string }> };
@@ -14,7 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!hasLocale(routing.locales, locale)) return {};
   const brand = (await getTranslations({ locale, namespace: "common" }))("brand");
   const doc = getLegalDoc(locale, "privacy");
-  return { title: `${doc.title} | ${brand}`, description: doc.lead };
+  return { title: `${doc.title} | ${brand}`, description: doc.lead, alternates: alternatesFor(locale, "/privacy") };
 }
 
 export default async function Page({ params }: Props) {

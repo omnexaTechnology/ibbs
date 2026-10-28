@@ -11,6 +11,7 @@ import { Clients } from "@/components/sections/home/clients";
 import { PageHero } from "@/components/sections/page-hero";
 import { ButtonLink } from "@/components/ui/button-link";
 import { routing } from "@/i18n/routing";
+import { alternatesFor } from "@/lib/seo";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
   const [t, tc] = await Promise.all([getTranslations({ locale, namespace: "about" }), getTranslations({ locale, namespace: "common" })]);
-  return { title: `${t("aboutH1a")} ${t("aboutH1b")} | ${tc("brand")}`, description: t("aboutLead") };
+  return { title: `${t("aboutH1a")} ${t("aboutH1b")} | ${tc("brand")}`, description: t("aboutLead"), alternates: alternatesFor(locale, "/about") };
 }
 
 export default async function AboutPage({ params }: Props) {
