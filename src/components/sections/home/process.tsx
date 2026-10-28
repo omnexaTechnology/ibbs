@@ -80,7 +80,7 @@ export function Process({ locale }: { locale: "en" | "ar" }) {
                   i === stage ? "bg-navy text-cream dark:bg-cream dark:text-navy" : i < stage ? "text-fg hover:bg-navy/[0.06]" : "text-muted hover:bg-navy/[0.06]",
                 )}
               >
-                <span className={cn("text-[11px] font-semibold", i === stage ? "opacity-55" : i < stage ? "text-link" : "opacity-55")}>0{i + 1}</span>
+                <span className={cn("text-[11px] font-semibold", i === stage && "opacity-55", i < stage && "text-link")}>0{i + 1}</span>
                 {localize(s.tab, locale)}
               </button>
             ))}

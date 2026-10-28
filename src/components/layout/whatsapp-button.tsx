@@ -15,7 +15,7 @@ export function WhatsAppButton({ settings }: { settings: SiteSettings }) {
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={t("waChat")}
+      aria-label={t("waTip")}
       data-testid="whatsapp-button"
       className="group fixed bottom-7 end-7 z-[60] grid size-[62px] place-items-center rounded-full bg-green text-navy shadow-[0_18px_40px_-12px_rgba(var(--green-rgb),0.7)] transition-transform duration-[400ms] hover:rotate-[-6deg] hover:scale-110 hover:text-navy"
     >

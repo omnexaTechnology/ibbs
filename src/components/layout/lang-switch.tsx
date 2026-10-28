@@ -25,7 +25,7 @@ export function LangSwitch({ className }: { className?: string }) {
       locale={target}
       scroll={false}
       className={cn("whitespace-nowrap", className)}
-      aria-label={t("switchLang")}
+      aria-label={`${t("switchLang")}: EN العربية`}
       hrefLang={target}
       data-testid="lang-switch"
       onClick={(e) => {
@@ -35,13 +35,13 @@ export function LangSwitch({ className }: { className?: string }) {
         router.push(`${pathname}${search}`, { locale: target, scroll: false });
       }}
     >
-      <span className={locale === "en" ? "font-semibold text-link" : "opacity-55"} lang="en">
+      <span className={locale === "en" ? "font-semibold text-link" : "text-muted"} lang="en">
         EN
       </span>
       <span className="opacity-55" aria-hidden="true">
         |
       </span>
-      <span className={locale === "ar" ? "font-semibold text-link" : "opacity-55"} lang="ar">
+      <span className={locale === "ar" ? "font-semibold text-link" : "text-muted"} lang="ar">
         العربية
       </span>
     </PlainLink>

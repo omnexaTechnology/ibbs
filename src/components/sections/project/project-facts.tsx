@@ -37,14 +37,14 @@ export function ProjectFacts({ project }: { project: Project }) {
       <dl>
         {rows.map((r) =>
           r ? (
-            <div key={r.key} className="flex items-center gap-3.5 border-b border-line py-3.5 last:border-b-0" data-testid={`fact-${r.key}`}>
-              <span className="grid size-10 flex-none place-items-center rounded-xl bg-fg/5 text-blue dark:text-cyan [&>svg]:size-[18px]" aria-hidden="true">
-                {r.icon}
-              </span>
-              <div>
-                <dt className="text-[12.5px] text-muted">{r.label}</dt>
-                <dd className="mt-0.5 text-base font-semibold">{r.value}</dd>
-              </div>
+            <div key={r.key} className="grid grid-cols-[40px_1fr] items-center gap-x-3.5 border-b border-line py-3.5 last:border-b-0" data-testid={`fact-${r.key}`}>
+              <dt className="contents">
+                <span className="col-start-1 row-span-2 grid size-10 place-items-center rounded-xl bg-fg/5 text-blue dark:text-cyan [&>svg]:size-[18px]" aria-hidden="true">
+                  {r.icon}
+                </span>
+                <span className="col-start-2 row-start-1 text-[12.5px] text-muted">{r.label}</span>
+              </dt>
+              <dd className="col-start-2 row-start-2 mt-0.5 text-base font-semibold">{r.value}</dd>
             </div>
           ) : null,
         )}
