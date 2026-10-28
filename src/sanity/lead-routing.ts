@@ -10,8 +10,11 @@ import { SANITY_TAGS } from "./queries";
  */
 export const LEAD_RECIPIENTS_QUERY = defineQuery(`*[_id == "private.leadRouting"][0].recipients`);
 
+/** A hanging Sanity must not eat the time the fallback email needs (R2-02). */
+export const RECIPIENTS_TIMEOUT_MS = 3_000;
+
 /** Trimmed, non-empty addresses. Throws when Sanity is not configured or unreachable (the caller decides the fallback). */
 export async function getLeadRecipients(): Promise<string[]> {
-  const raw = await sanityFetch({ query: LEAD_RECIPIENTS_QUERY, tags: [SANITY_TAGS.leadRouting] });
+  const raw = await sanityFetch({ query: LEAD_RECIPIENTS_QUERY, tags: [SANITY_TAGS.leadRouting], signal: AbortSignal.timeout(RECIPIENTS_TIMEOUT_MS) });
   return (raw ?? []).map((e) => e.trim()).filter(Boolean);
 }

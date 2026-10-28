@@ -7,6 +7,7 @@ for (const locale of ["en", "ar"] as const) {
       await expect(page.locator("html")).toHaveAttribute("dir", locale === "ar" ? "rtl" : "ltr");
       await expect(page.getByTestId("page-title")).toBeVisible();
       await expect(page.getByTestId("contact-form-slot")).toHaveAttribute("data-slot", "contact-form");
+      await expect(page.getByTestId("contact-form")).toHaveAttribute("method", "post");
 
       // Site settings feed the footer and the contact page alike: whatever the footer shows (production settings are
       // empty until the client fills them in Studio), the contact page shows the same phones, and hides blocks that are empty.

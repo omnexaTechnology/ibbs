@@ -49,7 +49,7 @@
     "phName": "Enter your name",
     "phPhone": "Enter your phone",
     "phCo": "Company or organisation",
-    "fInvalid": "Please complete the required fields marked with *.",
+    "fInvalid": "Please correct the highlighted fields.",
     "fFailed": "We couldn’t send your request. Please try again, or contact us by phone or email.",
     "quickDone": "Thank you — our team will call you shortly.",
     "sendQuick": "Request a call",
@@ -68,7 +68,29 @@
     "sendWa": "Discuss Your Project",
     "okTitle": "Request received",
     "okBody": "Thank you. Our team will contact you to discuss your project.",
-    "okAgain": "Send Another Request"
+    "okAgain": "Send Another Request",
+    "errors": {
+      "nameRequired": "Please enter your name.",
+      "phoneRequired": "Please enter your mobile number.",
+      "phoneInvalid": "Enter a valid number, e.g. 05xxxxxxxx or +9665xxxxxxxx.",
+      "emailInvalid": "Please enter a valid email address.",
+      "emailOrMessage": "Please enter your email or the project details.",
+      "tooLong": "This text is too long.",
+      "invalid": "This value is not valid."
+    },
+    "spaceTypes": {
+      "hq": "Complete company headquarters",
+      "offices": "Administrative & executive offices",
+      "meeting": "Meeting rooms",
+      "medical": "Medical centre",
+      "school": "School",
+      "university": "University",
+      "mosque": "Mosque",
+      "other": "Other"
+    },
+    "fSelect": "Select…",
+    "callTitle": "Prefer a call?",
+    "callHint": "Leave your number and we will call you."
   },
   "nav": {
     "mobCall": "Call us",

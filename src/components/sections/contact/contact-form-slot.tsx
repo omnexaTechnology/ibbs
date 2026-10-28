@@ -1,20 +1,18 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
+import { ContactForm } from "@/components/forms/contact-form";
 import { SocialLinks } from "@/components/layout/social-links";
+import { whatsappHref } from "@/lib/contact";
 import { Stripes } from "@/components/ui/section-heading";
 import type { SiteSettings } from "@/types/site-settings";
 
-/**
- * Navy intro panel + FEAT-004 MOUNT POINT for the contact form.
- *
- * FEAT-004 renders the contact form inside `<div data-slot="contact-form">` (give it its own card styling:
- * the slot is unstyled). While the slot is empty it is hidden and the panel takes the full width.
- */
+/** Navy intro panel + the contact form card (`data-slot="contact-form"`). */
 export function ContactFormSection({ settings }: { settings: SiteSettings }) {
   const t = useTranslations("forms");
   const tc = useTranslations("contact");
+  const locale = useLocale();
   return (
     <div
-      className="mb-16 grid items-start lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:has-[[data-slot=contact-form]:empty]:grid-cols-1"
+      className="mb-16 grid items-start lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]"
       data-testid="contact-form-section"
     >
       <section className="relative isolate overflow-hidden rounded-3xl bg-navy px-[clamp(28px,4vw,56px)] pb-[52px] pt-14 text-cream">
@@ -31,7 +29,9 @@ export function ContactFormSection({ settings }: { settings: SiteSettings }) {
           iconClassName="size-[17px]"
         />
       </section>
-      <div data-slot="contact-form" data-testid="contact-form-slot" className="empty:hidden" />
+      <div data-slot="contact-form" data-testid="contact-form-slot" className="rounded-3xl border border-line bg-surface p-[clamp(24px,3vw,44px)]">
+        <ContactForm whatsappHref={whatsappHref(settings, locale)} />
+      </div>
     </div>
   );
 }
