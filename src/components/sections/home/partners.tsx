@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
+import { SHOW_PLACEHOLDER_LOGOS } from "@/content/placeholders";
 import { cn } from "@/lib/utils";
 
 /** Generic partner marks from the design (SVG paths, 32x32). Real logos replace them once approved (FEAT-005). */
@@ -16,6 +17,7 @@ const MARKS = [
 
 /** Partners strip (REQ-002): a seamless loop of logo marks. The second copy is hidden from assistive tech. */
 export async function Partners({ locale }: { locale: Locale }) {
+  if (!SHOW_PLACEHOLDER_LOGOS) return null;
   const t = await getTranslations({ locale, namespace: "home" });
   return (
     <section aria-labelledby="partners-h" className="py-[clamp(36px,4.5vw,56px)] text-center" data-testid="home-partners">

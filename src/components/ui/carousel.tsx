@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState, type KeyboardEvent, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight } from "react-bootstrap-icons";
 import { useInView } from "@/hooks/use-in-view";
@@ -68,6 +68,12 @@ type Props = {
   autoAdvance?: boolean;
   showArrows?: boolean;
   showDots?: boolean;
+  /** Hero thumbnail fan: the other slides as small cards that jump to their slide (design `.hx4`). */
+  thumbs?: { node: ReactNode; label: string }[];
+  /** Pill-shaped dots (active one stretched) instead of ring dots. */
+  pill?: boolean;
+  /** Thin progress bar that fills during each auto-advance interval. */
+  showProgress?: boolean;
   /** "01 / 04" counter at the bottom start. */
   showCount?: boolean;
   defaultIndex?: number;
@@ -80,7 +86,7 @@ type Props = {
  * Keyboard: arrows (visual direction, so reversed in RTL), Home, End. Dots and arrows are real buttons.
  * Auto-advance pauses on hover and focus, and never runs under reduced motion.
  */
-export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = true, showArrows = true, showDots = true, showCount = false, defaultIndex, onIndexChange, className }: Props) {
+export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = true, showArrows = true, showDots = true, showCount = false, thumbs, pill = false, showProgress = false, defaultIndex, onIndexChange, className }: Props) {
   const t = useTranslations("ui");
   const [hover, setHover] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -111,7 +117,7 @@ export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = tr
       aria-label={label}
       tabIndex={0}
       dir={dir}
-      className={cn("relative touch-pan-y", className)}
+      className={cn("relative touch-pan-y", thumbs && "ui-fan", pill && "ui-car-pill", className)}
       data-testid="carousel"
       onKeyDown={onKeyDown}
       onMouseEnter={() => setHover(true)}
@@ -153,10 +159,25 @@ export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = tr
         </>
       ) : null}
 
+      {thumbs && count > 1
+        ? thumbs.map((th, j) => {
+            const k = (j - c.index + count) % count;
+            return (
+              <button key={j} type="button" className="ui-fan-c" data-k={k} style={{ "--k": k } as CSSProperties} aria-label={th.label} tabIndex={k === 0 ? -1 : 0} onClick={() => c.goTo(j)}>
+                {th.node}
+                <span className="ui-fan-cap" aria-hidden="true">
+                  <i />
+                  {th.label}
+                </span>
+              </button>
+            );
+          })
+        : null}
+
       {(showDots || showCount) && count > 1 ? (
         <div className="absolute inset-x-0 bottom-7 z-[7] flex items-center justify-center" dir="ltr">
           {showCount ? (
-            <span className="absolute start-8 text-[15px] font-semibold text-cream tabular-nums" aria-hidden="true">
+            <span className="absolute start-[max(32px,calc((100%-1280px)/2+32px))] text-[15px] max-[900px]:hidden font-semibold text-cream tabular-nums" aria-hidden="true">
               {String(c.index + 1).padStart(2, "0")} <i className="not-italic text-cream/55">/ {String(count).padStart(2, "0")}</i>
             </span>
           ) : null}
@@ -167,6 +188,11 @@ export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = tr
                   <span />
                 </button>
               ))}
+            </div>
+          ) : null}
+          {showProgress && c.running ? (
+            <div className="ui-car-prog end-[max(32px,calc((100%-1280px)/2+32px))] max-[900px]:hidden" aria-hidden="true">
+              <span key={c.index} style={{ "--prog-ms": `${interval ?? CAROUSEL.interval}ms`, animationPlayState: hover || focus ? "paused" : "running" } as CSSProperties} />
             </div>
           ) : null}
         </div>

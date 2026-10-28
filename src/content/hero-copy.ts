@@ -63,3 +63,10 @@ export const heroCopy: HeroCopy[] = [
     hotspots: [],
   },
 ];
+
+/**
+ * Show the hotspot pins on the home hero (REQ-001)? The design's final markup has none, so this is the one switch:
+ * `false` removes them everywhere. Pins are always hidden at <= 900 px (design rule) and when an editor replaced the
+ * slide image with one that has other proportions than the design photo (the positions only fit the design photo).
+ */
+export const SHOW_HERO_PINS = true;

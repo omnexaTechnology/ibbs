@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { NextIntlClientProvider, createTranslator } from "next-intl";
 import type { ReactElement } from "react";
 import ar from "../../../../messages/ar.json";
@@ -28,7 +28,7 @@ vi.mock("@/i18n/navigation", () => ({
 import { AboutIntro } from "./about-intro";
 import { Hero } from "./hero";
 import { Partners } from "./partners";
-import { Sectors } from "./sectors";
+import { Clients } from "./clients";
 import { Stats } from "./stats";
 
 const show = (ui: ReactElement, locale: Locale) =>
@@ -45,6 +45,8 @@ describe("home hero (REQ-001)", () => {
     expect(screen.getAllByTestId("hotspot-image")).toHaveLength(4);
     expect(screen.getAllByTestId("hotspot")).toHaveLength(9);
     expect(screen.getByRole("heading", { level: 1, name: /Spaces Designed Around Your Business/ })).toBeInTheDocument();
+    expect(screen.getAllByRole("heading", { level: 1, hidden: true })).toHaveLength(1); // R3-09
+    expect(screen.getAllByRole("button", { hidden: true }).filter((b) => b.classList.contains("ui-fan-c"))).toHaveLength(4); // thumbnail fan
   });
 
   it("B1-03/BR-002: mirrors the image and the pins together in Arabic, neither in English", async () => {
@@ -74,16 +76,20 @@ describe("home sections", () => {
   });
 
   it("partners: the looped copy is hidden from assistive tech", async () => {
-    show(await Partners({ locale: "en" }), "en");
+    show((await Partners({ locale: "en" }))!, "en");
     expect(screen.getAllByRole("listitem")).toHaveLength(8);
     expect(document.querySelectorAll('[aria-hidden="true"][role="presentation"]')).toHaveLength(8);
   });
 
-  it("sectors link to the filtered project list in both languages", async () => {
-    show(await Sectors({ locale: "ar" }), "ar");
-    const links = screen.getAllByTestId("sector-link");
-    expect(links).toHaveLength(6);
-    expect(links[0]).toHaveAttribute("href", "/projects?category=hq");
-    expect(links[0]).toHaveTextContent("الشركات");
+  it("clients: sector tabs switch two rows of logo placeholders; the looped copy is hidden from assistive tech", () => {
+    show(<Clients locale="ar" />, "ar");
+    const tabs = screen.getAllByTestId("client-tab");
+    expect(tabs).toHaveLength(6);
+    expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    expect(screen.getAllByTestId("client-card")).toHaveLength(16);
+    fireEvent.click(tabs[5]);
+    expect(tabs[5]).toHaveAttribute("aria-selected", "true");
+    expect(screen.getAllByTestId("client-card")[0]).toHaveTextContent("جامع كبير");
+    expect(document.querySelectorAll('[aria-hidden="true"][role="presentation"]')).toHaveLength(16);
   });
 });

@@ -44,10 +44,12 @@ type Props = {
   /** The image element, filling the box (e.g. `<Image fill className="object-cover" ... />`). */
   children: ReactNode;
   className?: string;
+  /** Extra classes for the pin layer (e.g. hide it at small widths; hidden pins also leave the tab order). */
+  layerClassName?: string;
 };
 
 /** Image with pulsing pins that open a glass tooltip on hover or keyboard focus. */
-export function HotspotImage({ aspect, hotspots, dir = "ltr", mirror = false, children, className }: Props) {
+export function HotspotImage({ aspect, hotspots, dir = "ltr", mirror = false, children, className, layerClassName }: Props) {
   const uid = useId();
   const pinDir: Direction = mirror ? "rtl" : "ltr";
   return (
@@ -59,7 +61,7 @@ export function HotspotImage({ aspect, hotspots, dir = "ltr", mirror = false, ch
       ) : (
         children
       )}
-      <div className="ui-hs-layer">
+      <div className={cn("ui-hs-layer", layerClassName)}>
         {hotspots.map((h, i) => {
           const x = mirrorX(h.x, pinDir);
           const id = `${uid}-hs-tip-${i}`;

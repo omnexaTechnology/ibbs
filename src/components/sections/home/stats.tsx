@@ -15,11 +15,11 @@ export async function Stats({ locale, items = stats }: { locale: Locale; items?:
     <div className="mx-auto mt-[72px] max-w-[1280px] px-8 max-sm:px-4" data-testid="home-stats">
       <dl className="grid overflow-hidden rounded-[28px] bg-navy p-3 text-cream max-sm:!grid-cols-2 dark:border dark:border-cream/10 dark:bg-night-2" style={{ gridTemplateColumns: `repeat(${Math.min(shown.length, 4)}, minmax(0, 1fr))` }}>
         {shown.map((s) => (
-          <div key={s.key} className="flex flex-col items-center gap-3 px-4 py-11 text-center">
-            <dd className="order-first text-[clamp(44px,6vw,88px)] leading-none font-bold tracking-[-0.04em]">
+          <div key={s.key} className="flex flex-col-reverse items-center gap-3 px-4 py-11 text-center">
+            <dt className="max-w-[180px] text-[15px] text-cream/75">{t(s.label)}</dt>
+            <dd className="text-[clamp(44px,6vw,88px)] leading-none font-bold tracking-[-0.04em]">
               <Counter to={s.value} suffix={s.suffix === "unit" ? t("kSqm") : "+"} />
             </dd>
-            <dt className="max-w-[180px] text-[15px] text-cream/75">{t(s.label)}</dt>
           </div>
         ))}
       </dl>
