@@ -77,6 +77,7 @@ _(none right now)_
 | FEAT-003 | Partner and client logos (home partners strip, "Organizations we work with") | The design's placeholder marks are shown. Send real logos, or say "hide": one switch, `SHOW_PLACEHOLDER_LOGOS` in `src/content/placeholders.ts` |
 | FEAT-003 | Dots (hotspots) on the home hero photos | Shown on screens wider than 900px (the spec asks for them; the design has none). Say "drop" to match the design: `SHOW_HERO_PINS` in `src/content/hero-copy.ts` |
 | FEAT-003 | Home stats (years, projects, …) | Hidden until the client confirms the numbers; then flip `confirmed` in `src/content/stats.ts` |
+| FEAT-003 | Home "materials" picker and testimonials | Not built: the approved demo's home page doesn't show them (the data sits unused in the design file). Say if you want them added |
 | FEAT-005 | Domain, analytics, legal text, launch date | Unknown — needed before launch only. The privacy and terms pages hold draft text: **someone must approve it before launch** (FEAT-003 review R2-06) |
 
 ## Done
