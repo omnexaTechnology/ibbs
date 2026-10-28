@@ -17,3 +17,9 @@ Duplicates: none. Overlap: FEAT-002 defines the schemas, FEAT-003 consumes them;
 Effort estimate given to the user on 2026-10-26: 10–14 working days total (6–9 with heavy AI help). Revised after impact + plan (2026-10-26): 25 tasks, ~23 dev-days for FEAT-001..004 (FEAT-005 not yet planned) — see each `plan.md`.
 
 Status (2026-10-26): FEAT-001..004 have spec, impact and plan; plans await user approval. FEAT-005 is in Discovery.
+
+## Lean runs (user rule, 2026-10-28)
+1. One Opus review per feature, not per batch. Small fix rounds: the lead checks the diff and targeted tests; no re-review agent.
+2. Agents run lint, tsc, unit tests, and only the e2e specs for files they touched. Full Playwright suite, `E2E_FIXTURES=1` build and screenshots: once, in the final pass (e.g. FEAT-003 T-010).
+3. Grep `design-reference/Main.dc.html` by section class / function name; never read the whole file.
+4. Fix blockers and majors right away; minors and nits go to one list for the final pass.
