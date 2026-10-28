@@ -156,7 +156,7 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
           {t("pjNone")}
         </p>
       ) : (
-        <ul className="grid grid-cols-4 gap-5 max-lg:grid-cols-2 max-[600px]:grid-cols-1" data-testid="projects-grid">
+        <ul className="grid grid-cols-4 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1" data-testid="projects-grid">
           {shown.map((p, i) => {
             const title = localize(p.title, locale);
             const sector = sectorOf(p);

@@ -44,9 +44,9 @@ for (const locale of ["en", "ar"] as const) {
       await page.locator('.ui-fan-c[data-k="2"]').click();
       await expect(slides.nth(2)).toHaveAttribute("data-active", "true");
       const box = page.getByTestId("mode-box");
-      await box.getByRole("button", { name: /dark/i }).click();
+      await box.getByRole("button").nth(1).click();
       await expect(page.locator("html")).toHaveClass(/dark/);
-      await box.getByRole("button", { name: /light/i }).click();
+      await box.getByRole("button").nth(0).click();
       await expect(page.locator("html")).not.toHaveClass(/dark/);
     });
 
