@@ -60,3 +60,12 @@ describe("contact helpers", () => {
     ]);
   });
 });
+
+describe("safeHttpUrl", () => {
+  it("keeps http(s) links and drops everything else", async () => {
+    const { safeHttpUrl } = await import("./contact");
+    expect(safeHttpUrl(" https://example.com/a?b=1 ")).toBe("https://example.com/a?b=1");
+    expect(safeHttpUrl("http://example.com")).toBe("http://example.com");
+    for (const bad of ["", "javascript:alert(1)", "ftp://x.y", "example.com", "https://a b"]) expect(safeHttpUrl(bad)).toBe("");
+  });
+});

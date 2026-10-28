@@ -42,7 +42,8 @@
     "hoursFri": "Fri – Sat",
     "closed": "Closed",
     "waBig": "Discuss Your Project",
-    "waBigSub": "Fastest way to reach our team"
+    "waBigSub": "Fastest way to reach our team",
+    "ctDirectLabel": "Contact details"
   },
   "forms": {
     "phName": "Enter your name",
@@ -105,7 +106,8 @@
     "readMore2": "Read more",
     "days": "days",
     "sample": "Sample",
-    "enlarge": "Enlarge image"
+    "enlarge": "Enlarge image",
+    "contents": "Contents"
   },
   "scenes": {
     "pj3dL": "Open-plan office floor in 3D. Drag or use the arrow keys to rotate.",
@@ -179,7 +181,10 @@
     "galSub": "Use the arrows or thumbnails to browse, and select any image to enlarge it.",
     "similarTitle": "Planning a similar project?",
     "similarSub": "Share your space and requirements, and our team will discuss the right furnishing and fit-out solutions with you.",
-    "contactNow": "Get in Touch"
+    "contactNow": "Get in Touch",
+    "relatedEyebrow": "More like this",
+    "relatedTitle": "Related projects",
+    "factsLabel": "Project facts"
   },
   "projects": {
     "pjSearch": "Search projects",
@@ -190,6 +195,8 @@
     "pjTypeL": "Project type",
     "pjAllTypes": "All project types",
     "pjNone": "No projects match your search yet.",
+    "pjPages": "Pages",
+    "pjCount": "{n, plural, one {# project} other {# projects}}",
     "pkOv": "Overview",
     "pkScope": "Scope",
     "pkGal": "Gallery",
@@ -227,7 +234,32 @@
     "goalD": "Workplaces that support teams, operations and professional identity.",
     "matEyebrow": "Materials & finishes",
     "matTitle": "A curated palette of finishes",
-    "matSub": "Select a finish to see where and how we use it across a workplace."
+    "matSub": "Select a finish to see where and how we use it across a workplace.",
+    "tabsL": "Vision, mission and strengths",
+    "tabVisionEye": "Our vision",
+    "tabVisionT": "A leading reference in integrated furnishing",
+    "tabVisionL1": "Sustainable value",
+    "tabVisionL2": "Quality & innovation",
+    "tabVisionL3": "Excellence in execution",
+    "tabMissionEye": "Our mission",
+    "tabMissionT": "Comfortable workspaces, high standards",
+    "tabMissionL1": "Comfortable workspaces",
+    "tabMissionL2": "High-quality standards",
+    "tabMissionL3": "Innovative designs",
+    "tabStrengthK": "Strengths",
+    "tabStrengthEye": "Our strengths",
+    "tabStrengthT": "Built to deliver at any scale",
+    "tabStrengthL1": "Specialised design & execution team",
+    "tabStrengthL2": "Large-scale project capability",
+    "tabStrengthL3": "On-time delivery & after-sales service",
+    "abStep1": "Floor",
+    "abStep2": "Walls & glazing",
+    "abStep3": "Reception counter",
+    "abStep4": "Brand wall",
+    "abStep5": "Waiting area",
+    "abStep6": "Boardroom glass",
+    "abStep7": "Meeting table",
+    "abStep8": "Lounge"
   },
   "home": {
     "fwPill": "Our specialities",
@@ -284,6 +316,10 @@
     "ourStory": "About IBSS Innovations",
     "ptStripT": "Growth Partners",
     "partnerLogo": "Partner logo",
+    "abAlt1": "Workstations with walnut privacy screens",
+    "abAlt2": "Curved lounge seating",
+    "abAlt3": "Executive desk in light oak",
+    "abAlt4": "Boardroom table with black chairs",
     "ab1Badge": "Companies · Offices · Healthcare · Education · Mosques",
     "ab1T1": "Our work reflects",
     "ab1Hl": "our approach.",
@@ -355,5 +391,20 @@
     "body": "We could not load this page right now. Please try again in a moment.",
     "retry": "Try again",
     "home": "Back to home"
+  },
+  "ui": {
+    "prev": "Previous",
+    "next": "Next",
+    "close": "Close",
+    "prevImage": "Previous image",
+    "nextImage": "Next image",
+    "closeLightbox": "Close image viewer",
+    "imageCount": "{current} / {total}",
+    "carousel": "Carousel",
+    "slideOf": "Slide {current} of {total}",
+    "goToSlide": "Go to slide {n}",
+    "slides": "Slides",
+    "viewerLabel": "Image viewer",
+    "breadcrumb": "Breadcrumb"
   }
 }

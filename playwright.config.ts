@@ -23,5 +23,7 @@ export default defineConfig({
     // Never silently reuse a stale server unless asked to (E2E_REUSE=1, e.g. an already running `next start`).
     reuseExistingServer: process.env.E2E_REUSE === "1",
     timeout: 300_000,
+    // Builds the test-only fixture pages (src/app/[locale]/e2e-fixtures); a normal build answers 404 there.
+    env: { E2E_FIXTURES: "1" },
   },
 });

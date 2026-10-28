@@ -1,10 +1,26 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { PagePlaceholder } from "@/components/layout/page-placeholder";
-import type { Locale } from "@/i18n/routing";
+import { LegalPage } from "@/components/sections/legal/legal-page";
+import { getLegalDoc } from "@/content/legal";
+import { routing } from "@/i18n/routing";
+import { alternatesFor } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/site-settings";
 
-export default async function PrivacyPage({ params }: { params: Promise<{ locale: Locale }> }) {
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) return {};
+  const brand = (await getTranslations({ locale, namespace: "common" }))("brand");
+  const doc = getLegalDoc(locale, "privacy");
+  return { title: `${doc.title} | ${brand}`, description: doc.lead, alternates: alternatesFor(locale, "/privacy") };
+}
+
+export default async function Page({ params }: Props) {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const t = await getTranslations("footer");
-  return <PagePlaceholder title={t("privacy")} />;
+  return <LegalPage doc={getLegalDoc(locale, "privacy")} settings={await getSiteSettings()} />;
 }

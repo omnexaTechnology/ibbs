@@ -34,3 +34,9 @@ export function socialLinks(settings: SiteSettings): { platform: SocialPlatform;
     return url ? [{ platform, url }] : [];
   });
 }
+
+/** The URL if it is http(s), else "" (editor-entered links are only ever rendered as http(s) hrefs). */
+export function safeHttpUrl(url: string): string {
+  const trimmed = url.trim();
+  return /^https?:\/\/\S+$/i.test(trimmed) ? trimmed : "";
+}

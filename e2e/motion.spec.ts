@@ -12,10 +12,9 @@ test.describe("page transition and cursor (motion allowed)", () => {
     await page.getByRole("navigation", { name: "Main", exact: true }).getByRole("link", { name: "About Us" }).click();
 
     await expect(overlay).toBeVisible();
-    await expect(overlay).toContainText("About Us");
-    // Swap happens only after the curtains close (~1.15s): the URL is still the old one.
-    await page.waitForTimeout(500);
+    // Swap happens only after the curtains close (~1.15s): the URL is still the old one (R3-16: no fixed wait).
     await expect(page).toHaveURL(/\/en$/);
+    await expect(overlay).toContainText("About Us");
 
     await expect(page).toHaveURL(/\/en\/about$/, { timeout: 3000 });
     // Page is at the top once swapped, then the curtains open and the overlay is removed (~2.4s total).

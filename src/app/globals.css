@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 @import "../styles/page-transition.css";
 @import "../styles/custom-cursor.css";
+@import "../styles/ui.css";
 
 /* Dark mode = `.dark` class on <html> (next-themes, attribute="class"). */
 @custom-variant dark (&:is(.dark, .dark *));
@@ -35,7 +36,7 @@
   --text: var(--navy);
   --muted: rgba(var(--navy-rgb), 0.72);
   --line: rgba(var(--navy-rgb), 0.14);
-  --link: var(--blue);
+  --link: #2a66ab; /* AA (4.5:1) on the cream and section backgrounds */
   --btn: var(--navy);
   --btnText: var(--cream);
   --glass: rgba(var(--cream-rgb), 0.72);
