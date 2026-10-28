@@ -206,3 +206,72 @@
   .ui-cl-trk [aria-hidden="true"] { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .ui-fan-c { transition: none; } }
+
+/* ---- Home: Design Process (design `.p3`): pinned by CSS sticky, the scroll drives the scene ---------------------------- */
+.ui-p3 { height: 420vh; position: relative; }
+.ui-p3-grid { position: sticky; top: 0; height: 100vh; overflow: hidden; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.ui-p3-l { padding: 80px clamp(24px, 4vw, 72px); display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.ui-p3-r { position: relative; overflow: hidden; background: var(--navy); min-height: 600px; }
+.ui-p3-txt > * { animation: ui-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.ui-p3-txt > :nth-child(2) { animation-delay: 0.1s; }
+.ui-p3 canvas:focus-visible { outline: 2px solid var(--cyan); outline-offset: -4px; }
+@media (max-width: 1024px) {
+  .ui-p3 { height: 360vh; }
+  .ui-p3-grid { height: 100svh; grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 54%) minmax(0, 46%); }
+  .ui-p3-r { order: -1; min-height: 0; }
+  .ui-p3-l { padding: 22px 20px 18px; overflow: hidden; }
+}
+.ui-p3[data-pinned="false"] { height: auto; }
+.ui-p3[data-pinned="false"] .ui-p3-grid { position: relative; height: auto; min-height: min(100vh, 900px); }
+@media (max-width: 1024px) { .ui-p3[data-pinned="false"] .ui-p3-grid { grid-template-rows: auto auto; } .ui-p3[data-pinned="false"] .ui-p3-r { min-height: 340px; } }
+@media (prefers-reduced-motion: reduce) {
+  .ui-p3 { height: auto; }
+  .ui-p3-grid { position: relative; height: auto; min-height: min(100vh, 900px); }
+  .ui-p3-txt > * { animation: none; }
+}
+
+/* ---- Home: office walk-through (design `.wk`) ----------------------------------------------------------------------- */
+.ui-wk { position: relative; height: 540vh; background: #e6e1d7; }
+.ui-wk-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.ui-wk-stage { position: absolute; inset: 0; overflow: hidden; background: #e6e1d7; isolation: isolate; }
+.ui-wk-stage.on { position: fixed; inset: 0; z-index: 1000; }
+.ui-wk-stage canvas { touch-action: pan-y; }
+html.wk-lock, html.wk-lock body { overflow: hidden; }
+.ui-wk canvas:focus-visible { outline: 2px solid var(--cyan); outline-offset: -4px; }
+.ui-wk-marks { position: absolute; inset: 0; z-index: 3; pointer-events: none; direction: ltr; }
+.wk-mk { position: absolute; left: 0; top: 0; width: 30px; height: 30px; margin: -15px 0 0 -15px; border: 0; padding: 0; background: none; cursor: pointer; pointer-events: auto; visibility: hidden; opacity: 0; transition: opacity 0.35s ease; }
+.wk-mk span { position: absolute; inset: 7px; border-radius: 50%; background: var(--blue); border: 2px solid var(--white, #fff); box-shadow: 0 0 0 5px rgba(var(--blue-rgb), 0.28), 0 4px 12px rgba(0, 0, 0, 0.25); transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.3s; }
+.wk-mk:hover span, .wk-mk:focus-visible span { transform: scale(1.25); box-shadow: 0 0 0 8px rgba(var(--blue-rgb), 0.32), 0 4px 12px rgba(0, 0, 0, 0.25); }
+.wk-mk.on span { background: var(--cyan); transform: scale(1.2); }
+.wk-mk:focus-visible { outline: 2px solid var(--white, #fff); outline-offset: 2px; border-radius: 50%; }
+.ui-wk-tip { position: absolute; left: 0; top: 0; z-index: 3; pointer-events: none; opacity: 0; background: var(--navy); color: var(--cream); font-size: 12.5px; font-weight: 600; padding: 6px 10px; border-radius: 8px; white-space: nowrap; transition: opacity 0.15s; }
+.ui-wk-acts { position: absolute; top: calc(clamp(70px, 9vh, 96px) + 8px); inset-inline-end: 16px; z-index: 4; display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.ui-wk-now { position: absolute; bottom: 16px; inset-inline-start: 16px; z-index: 4; background: rgba(var(--cream-rgb), 0.92); backdrop-filter: blur(10px); padding: 10px 16px 12px; border-radius: 14px; min-width: 180px; color: var(--navy); }
+.ui-wk-now > span { display: block; font-size: 10.5px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--blue); }
+[dir="rtl"] .ui-wk-now > span { letter-spacing: 0; font-size: 12px; }
+.ui-wk-now b { display: block; font-size: 17px; font-weight: 600; margin-top: 2px; }
+.ui-wk-bar { display: block; height: 2px; background: rgba(var(--navy-rgb), 0.14); margin-top: 8px; overflow: hidden; }
+.ui-wk-bar span { display: block; height: 100%; background: var(--blue); transform: scaleX(var(--wk-p, 0)); transform-origin: left; }
+[dir="rtl"] .ui-wk-bar span { transform-origin: right; }
+.ui-wk-guide { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 3; margin: 0; max-width: min(560px, calc(100% - 420px)); font-size: 12px; line-height: 1.5; color: var(--cream); background: rgba(var(--night-rgb), 0.55); backdrop-filter: blur(8px); padding: 7px 14px; border-radius: 999px; text-align: center; }
+.ui-wk-top { position: absolute; top: 16px; inset-inline: 16px; z-index: 3; display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.ui-wk-help { position: absolute; bottom: 16px; inset-inline-start: 16px; z-index: 3; max-width: min(700px, calc(100% - 32px)); font-size: 12.5px; color: var(--cream); background: rgba(var(--night-rgb), 0.68); backdrop-filter: blur(8px); padding: 8px 14px; border-radius: 12px; line-height: 1.5; margin: 0; }
+.ui-wk-info { position: absolute; inset-inline-end: 16px; bottom: 16px; z-index: 4; width: min(340px, calc(100% - 32px)); background: #fff; color: var(--navy); border-radius: 18px; padding: 20px 22px; box-shadow: 0 24px 60px -24px rgba(0, 0, 0, 0.45); animation: ui-up 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+@media (max-width: 720px) {
+  .ui-wk { height: 440vh; }
+  .ui-wk-pin { height: 100svh; }
+  .ui-wk-acts { top: 80px; inset-inline: 10px; }
+  .ui-wk-now { bottom: 10px; inset-inline-start: 10px; min-width: 150px; }
+  .ui-wk-guide { display: none; }
+  .wk-mk { width: 40px; height: 40px; margin: -20px 0 0 -20px; }
+  .wk-mk span { inset: 11px; }
+  .ui-wk-info { bottom: 96px; inset-inline: 10px; width: auto; }
+  .ui-wk-top { flex-direction: column-reverse; align-items: stretch; inset-inline: 10px; top: 10px; }
+  .ui-wk-help { inset-inline: 10px; bottom: 10px; font-size: 11.5px; }
+}
+.ui-wk[data-pinned="false"] { height: auto; }
+.ui-wk[data-pinned="false"] .ui-wk-pin { position: relative; height: 80vh; }
+@media (prefers-reduced-motion: reduce) {
+  .ui-wk { height: auto; }
+  .ui-wk-pin { position: relative; height: 86vh; }
+}

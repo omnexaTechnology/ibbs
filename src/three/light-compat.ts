@@ -17,13 +17,15 @@ export const legacyIntensity = (designIntensity: number) => designIntensity * LE
 /**
  * Multiplier from the design intensity of a point/spot light (with `distance` > 0 and `decay`) to the r186 intensity.
  * Animated lights multiply their per-frame design intensity by this once.
+ * `newDecay` is the decay the r186 light is created with, when it differs from the design's (B1-10: a lower decay such as
+ * 0.75 with `ref` 0.5 keeps a lamp within ~2x of the design curve near the shade instead of ~14x too hot).
  */
-export function legacyPointFactor(distance: number, decay: number, ref = 0.4): number {
+export function legacyPointFactor(distance: number, decay: number, ref = 0.4, newDecay = decay): number {
   // No range (distance 0): the design falloff was constant, so only the PI scale applies (use decay 0).
   if (distance <= 0) return LEGACY_LIGHT_SCALE;
   const d0 = ref * distance;
   const oldFalloff = Math.pow(1 - ref, decay);
-  const newFalloff = (1 / Math.max(Math.pow(d0, decay), 0.01)) * Math.pow(1 - Math.pow(ref, 4), 2);
+  const newFalloff = (1 / Math.max(Math.pow(d0, newDecay), 0.01)) * Math.pow(1 - Math.pow(ref, 4), 2);
   return (LEGACY_LIGHT_SCALE * oldFalloff) / newFalloff;
 }
 

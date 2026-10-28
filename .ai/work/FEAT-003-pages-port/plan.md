@@ -10,7 +10,7 @@ Inputs: `spec.md`, `impact.md`. Tasks in `tasks/`. Estimate: 12 day(s).
 | T-003 | Project detail page | T-001, FEAT-002/T-003 | 1.0 | DONE |
 | T-004 | Projects list page with 3D floor | T-002, T-003 | 1.0 | DONE |
 | T-005 | Home 1: hero, partners, about intro, stats, sectors | T-001, FEAT-002/T-003 | 1.0 | DONE |
-| T-006 | Home 2: process carousel + 3D, office walk-through | T-002, T-005 | 2.0 | PENDING |
+| T-006 | Home 2: process carousel + 3D, office walk-through | T-002, T-005 | 2.0 | DONE |
 | T-007 | Home 3: projects accordion, materials, testimonials, FAQ, clients, CTA 3D | T-002, T-005 | 1.5 | PENDING |
 | T-008 | About page with 3D build | T-002, T-001 | 1.0 | PENDING |
 | T-009 | Contact and legal pages | T-001, FEAT-002/T-004 | 0.5 | DONE |

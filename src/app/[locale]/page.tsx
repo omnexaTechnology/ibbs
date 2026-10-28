@@ -4,6 +4,8 @@ import { Hero } from "@/components/sections/home/hero";
 import { Kinetic } from "@/components/sections/home/kinetic";
 import { Partners } from "@/components/sections/home/partners";
 import { Clients } from "@/components/sections/home/clients";
+import { Process } from "@/components/sections/home/process";
+import { Walk } from "@/components/sections/home/walk";
 import type { Locale } from "@/i18n/routing";
 import { getHomeContent } from "@/sanity/content";
 
@@ -17,6 +19,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       <Partners locale={locale} />
       <Kinetic />
       <AboutIntro locale={locale} />
+      <Process locale={locale} />
+      <Walk locale={locale} />
       <Clients locale={locale} />
     </>
   );

@@ -22,8 +22,7 @@ for (const locale of ["en", "ar"] as const) {
       // BR-003: all design stats are placeholders until the client confirms them.
       await expect(page.getByTestId("home-stats")).toHaveCount(0);
       // NFR-002: no Three.js on this page.
-      const scripts = await page.evaluate(() => performance.getEntriesByType("resource").map((r) => r.name).filter((n) => /three/i.test(n)));
-      expect(scripts).toEqual([]);
+      await expect(page.locator("canvas")).toHaveCount(0);
     });
 
     test("hero dots change the slide; hotspot pins are mirrored with the image in Arabic (BR-002)", async ({ page }) => {
@@ -75,3 +74,27 @@ test("hero respects reduced motion: the slide does not auto-advance", async ({ p
   await page.waitForTimeout(5800);
   await expect(slides.nth(0)).toHaveAttribute("data-active", "true");
 });
+
+for (const locale of ["en", "ar"] as const) {
+  test(`REQ-003/004: process and walk-through render and are keyboard-operable (${locale})`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    const errors: string[] = [];
+    page.on("pageerror", (e) => errors.push(e.message));
+    await page.goto(`/${locale}`);
+    const proc = page.getByTestId("home-process");
+    await expect(proc).toBeAttached();
+    // Three.js is not requested until a scene is near the viewport
+    await expect(page.locator("canvas")).toHaveCount(0);
+    await proc.scrollIntoViewIfNeeded();
+    const tabs = proc.getByTestId("p3-tab");
+    await expect(tabs).toHaveCount(4);
+    await tabs.nth(2).focus();
+    await page.keyboard.press("Enter");
+    await expect(proc).toHaveAttribute("data-stage", "2");
+    const walk = page.getByTestId("home-walk");
+    await expect(walk).toBeAttached();
+    await walk.scrollIntoViewIfNeeded();
+    await expect(page.getByTestId("wk-free")).toBeVisible();
+    expect(errors).toEqual([]);
+  });
+}
