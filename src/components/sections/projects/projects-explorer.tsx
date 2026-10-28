@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, GeoAlt, Search } from "react-bootstrap-icons";
 import { SanityPicture } from "@/components/ui/sanity-image";
@@ -41,22 +40,24 @@ export function pageSequence(total: number, current: number): number[] {
   return seq;
 }
 
-const isCategory = (v: string | null): v is ProjectCategoryKey => !!v && (PROJECT_CATEGORY_KEYS as readonly string[]).includes(v);
-
 const fieldCls = "h-12 min-w-0 rounded-full border border-transparent bg-transparent px-4 text-[15px] text-fg outline-none focus-visible:border-blue";
 
 /** Project list with category tabs (counts), type / city selects, search and pagination (REQ-008). `?category=` pre-selects a tab. */
-export function ProjectsExplorer({ projects, locale }: { projects: Project[]; locale: string }) {
+export function ProjectsExplorer({ projects, locale, category = "all" }: { projects: Project[]; locale: string; category?: Filters["category"] }) {
   const t = useTranslations("projects");
   const th = useTranslations("home");
   const tc = useTranslations("common");
   const tu = useTranslations("ui");
-  const param = useSearchParams().get("category");
-  const [category, setCategory] = useState<Filters["category"]>(isCategory(param) ? param : "all");
   const [type, setType] = useState("all");
   const [city, setCity] = useState("all");
   const [q, setQ] = useState("");
   const [page, setPage] = useState(0);
+  // The URL owns the category (footer links change it while this page stays mounted); a change resets the page.
+  const [seenCategory, setSeenCategory] = useState(category);
+  if (seenCategory !== category) {
+    setSeenCategory(category);
+    setPage(0);
+  }
 
   const cities = useMemo(() => {
     const seen = new Map<string, string>();
@@ -76,8 +77,7 @@ export function ProjectsExplorer({ projects, locale }: { projects: Project[]; lo
   };
 
   const pickCategory = (k: Filters["category"]) => {
-    reset(() => setCategory(k));
-    // keep the deep link in sync without a navigation
+    // Next syncs useSearchParams with replaceState, which feeds `category` back in as a prop
     const url = new URL(window.location.href);
     if (k === "all") url.searchParams.delete("category");
     else url.searchParams.set("category", k);

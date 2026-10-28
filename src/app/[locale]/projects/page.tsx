@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Suspense } from "react";
 import { PageHero } from "@/components/sections/page-hero";
 import { ProjectsExplorer } from "@/components/sections/projects/projects-explorer";
+import { ProjectsExplorerFromUrl } from "@/components/sections/projects/projects-explorer-from-url";
 import { ProjectsFloor } from "@/components/sections/projects/projects-floor";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { routing } from "@/i18n/routing";
@@ -42,8 +43,9 @@ export default async function ProjectsPage({ params }: Props) {
             </span>
           }
         />
-        <Suspense>
-          <ProjectsExplorer projects={projects} locale={locale} />
+        {/* The fallback is the full "All" list, so it is in the static HTML (R3-01). */}
+        <Suspense fallback={<ProjectsExplorer projects={projects} locale={locale} />}>
+          <ProjectsExplorerFromUrl projects={projects} locale={locale} />
         </Suspense>
       </section>
     </>

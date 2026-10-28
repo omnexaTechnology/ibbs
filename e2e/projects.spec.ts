@@ -47,6 +47,21 @@ for (const locale of ["en", "ar"] as const) {
       await expect(page).toHaveURL(/category=school/);
     });
 
+    test("R3-02: a footer category link clicked while on /projects switches the tab and list", async ({ page }) => {
+      await page.goto(`/${locale}/projects?category=exec`);
+      await expect(page.getByTestId("tab-exec")).toHaveAttribute("aria-pressed", "true");
+      await page.locator('footer a[href*="category=school"]').first().click();
+      await expect(page).toHaveURL(/category=school/);
+      await expect(page.getByTestId("tab-school")).toHaveAttribute("aria-pressed", "true");
+      await expect(page.getByTestId("tab-exec")).toHaveAttribute("aria-pressed", "false");
+    });
+
+    test("R3-01: the server HTML already contains the project cards", async ({ request }) => {
+      const html = await (await request.get(`/${locale}/projects`)).text();
+      expect(html.match(/data-testid="project-card"/g)?.length ?? 0).toBeGreaterThan(0);
+      expect(html).toMatch(/href="\/[a-z]{2}\/projects\/[^"]+"/);
+    });
+
     test("a card opens the project page", async ({ page }) => {
       await page.goto(`/${locale}/projects`);
       await page.getByTestId("project-card").first().click();

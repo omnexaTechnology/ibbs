@@ -15,6 +15,7 @@ vi.mock("@/i18n/navigation", () => ({
 }));
 
 import { filterProjects, pageSequence, ProjectsExplorer, PAGE_SIZE } from "./projects-explorer";
+import { ProjectsExplorerFromUrl } from "./projects-explorer-from-url";
 
 const img = { src: "https://cdn.sanity.io/x.jpg", width: 10, height: 10, lqip: null, objectPosition: "50% 50%", alt: { en: "", ar: "" } };
 const make = (i: number, o: Partial<Project> = {}): Project => ({
@@ -87,12 +88,12 @@ describe("<ProjectsExplorer>", () => {
 
   it("?category= pre-selects the tab; unknown values are ignored", () => {
     search = "category=mosque";
-    const a = renderWithIntl(<ProjectsExplorer projects={all} locale="en" />);
+    const a = renderWithIntl(<ProjectsExplorerFromUrl projects={all} locale="en" />);
     expect(screen.getByTestId("tab-mosque")).toHaveAttribute("aria-pressed", "true");
     expect(screen.getAllByTestId("project-card")).toHaveLength(1);
     a.unmount();
     search = "category=<script>";
-    renderWithIntl(<ProjectsExplorer projects={all} locale="en" />);
+    renderWithIntl(<ProjectsExplorerFromUrl projects={all} locale="en" />);
     expect(screen.getByTestId("tab-all")).toHaveAttribute("aria-pressed", "true");
   });
 
@@ -101,5 +102,16 @@ describe("<ProjectsExplorer>", () => {
     renderWithIntl(<ProjectsExplorer projects={all} locale="ar" />, "ar");
     expect(screen.getByTestId("tab-mosque")).toHaveTextContent("المساجد");
     expect(screen.getAllByTestId("project-card")[0]).toHaveTextContent("مشروع 1");
+  });
+});
+
+describe("R3-02: the category follows the prop after mount", () => {
+  it("re-selecting a tab through the prop switches the list and resets the page", () => {
+    search = "";
+    const { rerender } = renderWithIntl(<ProjectsExplorer projects={all} locale="en" />);
+    fireEvent.click(screen.getByRole("button", { name: "2" }));
+    rerender(<ProjectsExplorer projects={all} locale="en" category="mosque" />);
+    expect(screen.getByTestId("tab-mosque")).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getAllByTestId("project-card")).toHaveLength(1);
   });
 });
