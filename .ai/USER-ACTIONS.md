@@ -16,6 +16,7 @@ _(none right now)_
   - Rate limit: 5 requests per 1 minute, keyed by IP; then Deny with 429
   - Publish. (FEAT-004 T-003; without it the forms only have the honeypot and timing check against spam.)
 - [ ] **Create the Vercel project** from GitHub repo `omnexaTechnology/ibbs` (you said you'd do this manually).
+  - Also add `NEXT_PUBLIC_SITE_URL` = the real site address (e.g. `https://ibss.example`) once the domain is known. Until then search-engine links use the Vercel address.
   - Add these env vars in Vercel → Settings → Environment Variables (Production + Preview): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`. Copy the values from your `.env.local`. (Claude generated `SANITY_REVALIDATE_SECRET` there on 2026-10-26 because it was empty. Use the same value in the Sanity webhook.)
   - **Do not add `SANITY_API_WRITE_TOKEN` to Vercel yet.** Nothing deployed uses it until the forms (FEAT-004) ship. Then add it to Production only. (Corrected 2026-10-27 after review F-07.)
   - Then check: PR #1 shows a Vercel preview link; `/en` and `/ar` open on it.
@@ -34,6 +35,11 @@ _(none right now)_
 
 ## To review when you have time
 
+- [ ] **FEAT-003 checks on the Vercel preview** (after the FEAT-003 PR is open and the Vercel project exists; about 20 minutes):
+  - Run Lighthouse (mobile) on `/en`, `/en/projects`, `/en/about`. Target: performance 90+. If `/en/projects` is under 90, tell Claude (fix R3-15 is ready to do).
+  - Open home, projects and about on a real phone: swipe the carousels, check the 3D scenes look right and the phone stays smooth.
+  - Compare the preview with https://ibss-demo.vercel.app side by side and note anything that looks off.
+  - In Studio, change the phone number in Site settings, publish, and check `/en/contact` shows it within a minute.
 - [ ] **Arabic phrases written by Claude, not taken from the design** (`messages/ar.json`). Change any you'd phrase differently:
   | English | Arabic |
   |---|---|
