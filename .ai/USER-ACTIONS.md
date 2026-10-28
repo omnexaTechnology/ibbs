@@ -74,7 +74,8 @@ _(none right now)_
 | FEAT-004 | Phone number format in saved leads | Normalised (e.g. `+9665…` or `05…`), not exactly as typed |
 | FEAT-004 | "Space type" dropdown | Starts on "Select…" and is optional (the design had no placeholder) |
 | FEAT-004 | Saudi landlines (`011…`) and 9200 numbers in the phone field | Accepted (review F4-05). Say if only mobiles should be allowed |
-| FEAT-003 | Partner logos on the home page | The design's generic marks labelled "Partner logo" are shown. Send real logos, or say "hide" and they come off until approved |
+| FEAT-003 | Partner and client logos (home partners strip, "Organizations we work with") | The design's placeholder marks are shown. Send real logos, or say "hide": one switch, `SHOW_PLACEHOLDER_LOGOS` in `src/content/placeholders.ts` |
+| FEAT-003 | Dots (hotspots) on the home hero photos | Shown on screens wider than 900px (the spec asks for them; the design has none). Say "drop" to match the design: `SHOW_HERO_PINS` in `src/content/hero-copy.ts` |
 | FEAT-003 | Home stats (years, projects, …) | Hidden until the client confirms the numbers; then flip `confirmed` in `src/content/stats.ts` |
 | FEAT-005 | Domain, analytics, legal text, launch date | Unknown — needed before launch only. The privacy and terms pages hold draft text: **someone must approve it before launch** (FEAT-003 review R2-06) |
 
