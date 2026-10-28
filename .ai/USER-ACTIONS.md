@@ -35,6 +35,8 @@ _(none right now)_
 
 ## To review when you have time
 
+- [ ] **PR #3 — FEAT-003 pages**: https://github.com/omnexaTechnology/ibbs/pull/3. Final Opus review passed after the one blocker was fixed. Merge it first.
+- [ ] **PR #4 — FEAT-004 lead forms**: https://github.com/omnexaTechnology/ibbs/pull/4. It is stacked on #3; after #3 is merged, it points at `main`. Before the forms go live: Resend, the Vercel env vars and the Firewall rule (all listed under "To do").
 - [ ] **FEAT-003 checks on the Vercel preview** (after the FEAT-003 PR is open and the Vercel project exists; about 20 minutes):
   - Run Lighthouse (mobile) on `/en`, `/en/projects`, `/en/about`. Target: performance 90+. If `/en/projects` is under 90, tell Claude (fix R3-15 is ready to do).
   - Open home, projects and about on a real phone: swipe the carousels, check the 3D scenes look right and the phone stays smooth.
@@ -84,6 +86,7 @@ _(none right now)_
 | FEAT-003 | Dots (hotspots) on the home hero photos | Shown on screens wider than 900px (the spec asks for them; the design has none). Say "drop" to match the design: `SHOW_HERO_PINS` in `src/content/hero-copy.ts` |
 | FEAT-003 | Home stats (years, projects, …) | Hidden until the client confirms the numbers; then flip `confirmed` in `src/content/stats.ts` |
 | FEAT-003 | Home "materials" picker and testimonials | Not built: the approved demo's home page doesn't show them (the data sits unused in the design file). Say if you want them added |
+| FEAT-004 | "Request a call" form | Built but not shown: the design defines it but places it on no page. Say where you want it (e.g. the home CTA) |
 | FEAT-005 | Domain, analytics, legal text, launch date | Unknown — needed before launch only. The privacy and terms pages hold draft text: **someone must approve it before launch** (FEAT-003 review R2-06) |
 
 ## Done
