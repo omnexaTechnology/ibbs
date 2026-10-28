@@ -98,3 +98,22 @@ for (const locale of ["en", "ar"] as const) {
     expect(errors).toEqual([]);
   });
 }
+
+for (const locale of ["en", "ar"] as const) {
+  test(`REQ-006: FAQ accordion works from the keyboard and the CTA renders (${locale})`, async ({ page }) => {
+    await page.goto(`/${locale}`);
+    const items = page.getByTestId("home-faq").getByRole("button");
+    await expect(items.first()).toHaveAttribute("aria-expanded", "true");
+    await items.first().scrollIntoViewIfNeeded();
+    await items.first().focus();
+    await page.keyboard.press("ArrowDown");
+    await expect(items.nth(1)).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(items.nth(1)).toHaveAttribute("aria-expanded", "true");
+    await expect(items.first()).toHaveAttribute("aria-expanded", "false");
+    const cta = page.getByTestId("home-cta");
+    await expect(cta.getByRole("link")).toHaveCount(2);
+    // the CTA 3D scene stays unloaded until it is near the viewport
+    await expect(page.locator("canvas")).toHaveCount(0);
+  });
+}
