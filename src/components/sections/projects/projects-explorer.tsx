@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, GeoAlt, Search } from "react-bootstrap-icons";
 import { SanityPicture } from "@/components/ui/sanity-image";
 import { PROJECT_CATEGORY_KEYS, projectCategories, scopeItems, type ProjectCategoryKey } from "@/content/taxonomy";
 import { Link } from "@/i18n/navigation";
+import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { localize } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/sanity/view-models";
@@ -52,6 +53,8 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
   const [city, setCity] = useState("all");
   const [q, setQ] = useState("");
   const [page, setPage] = useState(0);
+  const root = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
   // The URL owns the category (footer links change it while this page stays mounted); a change resets the page.
   const [seenCategory, setSeenCategory] = useState(category);
   if (seenCategory !== category) {
@@ -71,6 +74,11 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
   const pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
   const cur = Math.min(page, pages - 1);
   const shown = list.slice(cur * PAGE_SIZE, cur * PAGE_SIZE + PAGE_SIZE);
+  /** R3-08: a page change brings the top of the list into view (focus stays on the pressed button). */
+  const goPage = (n: number) => {
+    setPage(n);
+    root.current?.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
+  };
   const reset = (fn: () => void) => {
     fn();
     setPage(0);
@@ -89,7 +97,7 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
   ];
 
   return (
-    <div data-testid="projects-explorer">
+    <div ref={root} className="scroll-mt-28" data-testid="projects-explorer">
       <form role="search" onSubmit={(e) => e.preventDefault()} className="mb-6 flex flex-wrap items-center gap-2 rounded-[28px] border border-line bg-surface p-2">
         <label className="relative flex min-w-[170px] flex-1 items-center">
           <span className="sr-only">{t("pjTypeL")}</span>
@@ -124,7 +132,7 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
         </button>
       </form>
 
-      <div className="mb-8 flex flex-wrap gap-2.5" role="group" aria-label={t("pjT1")} data-testid="category-tabs">
+      <div className="mb-8 flex gap-2.5 overflow-x-auto pb-1.5 [scrollbar-width:none] md:flex-wrap md:overflow-visible [&::-webkit-scrollbar]:hidden" role="group" aria-label={t("pjT1")} data-testid="category-tabs">
         {tabs.map((tab) => (
           <button
             key={tab.key}
@@ -132,7 +140,7 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
             aria-pressed={category === tab.key}
             data-testid={`tab-${tab.key}`}
             onClick={() => pickCategory(tab.key)}
-            className={cn("inline-flex min-h-11 items-center gap-2 rounded-full border px-5 text-[15px] font-semibold transition-colors", category === tab.key ? "border-transparent bg-btn text-btn-text" : "border-line bg-surface text-fg hover:border-blue")}
+            className={cn("inline-flex min-h-11 flex-none items-center gap-2 whitespace-nowrap rounded-full border px-5 text-[15px] font-semibold transition-colors", category === tab.key ? "border-transparent bg-btn text-btn-text" : "border-line bg-surface text-fg hover:border-blue")}
           >
             {tab.label}
             <span className="rounded-full bg-fg/10 px-2 py-0.5 text-xs tabular-nums">{tab.count}</span>
@@ -141,33 +149,41 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
       </div>
 
       <p className="sr-only" role="status" data-testid="projects-status">
-        {list.length === 0 ? t("pjNone") : `${list.length}`}
+        {list.length === 0 ? t("pjNone") : t("pjCount", { n: list.length })}
       </p>
       {list.length === 0 ? (
         <p className="py-16 text-center text-lg text-muted" data-testid="projects-empty">
           {t("pjNone")}
         </p>
       ) : (
-        <ul className="grid grid-cols-4 gap-5 max-lg:grid-cols-2 max-sm:grid-cols-1" data-testid="projects-grid">
+        <ul className="grid grid-cols-4 gap-5 max-lg:grid-cols-2 max-[600px]:grid-cols-1" data-testid="projects-grid">
           {shown.map((p, i) => {
             const title = localize(p.title, locale);
             const sector = sectorOf(p);
             return (
               <li key={p.id}>
-                <Link href={`/projects/${p.slug}`} data-testid="project-card" className="group relative block aspect-[4/5] overflow-hidden rounded-[22px] bg-night text-cream no-underline">
-                  <SanityPicture image={p.cover} alt="" sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <span className="absolute inset-0 bg-gradient-to-t from-night/85 via-night/10 to-transparent" aria-hidden="true" />
-                  <span className="absolute start-4 top-4 text-sm font-semibold text-cream/80 tabular-nums" aria-hidden="true">
+                <Link href={`/projects/${p.slug}`} data-testid="project-card" className="ui-pjh group relative block aspect-[4/5] overflow-hidden rounded-[18px] bg-night text-cream no-underline shadow-[0_24px_50px_-24px_rgba(0,0,0,.7)] transition-shadow duration-500 hover:shadow-[0_0_0_2px_var(--cyan),0_24px_50px_-24px_rgba(0,0,0,.7)] max-sm:aspect-[4/3.3]">
+                  <SanityPicture image={p.cover} alt="" sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 100vw" className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.08]" />
+                  <span className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/10 to-transparent transition-colors duration-500 max-lg:via-night/10 lg:group-hover:from-night/90 lg:group-hover:via-night/25" aria-hidden="true" />
+                  <span className="absolute end-3 top-3 grid h-[30px] min-w-10 place-items-center rounded-full bg-white/90 px-2.5 text-xs font-semibold text-navy tabular-nums" aria-hidden="true">
                     {String(cur * PAGE_SIZE + i + 1).padStart(2, "0")}
                   </span>
-                  <span className="absolute inset-x-5 bottom-5 flex flex-col gap-1.5">
-                    <span className="flex flex-wrap gap-1.5 text-xs font-semibold">
-                      {sector ? <span className="rounded-full bg-cream/15 px-2.5 py-1 backdrop-blur">{localize(sector.label, locale)}</span> : null}
-                      {p.areaM2 !== null ? <span className="rounded-full bg-green/80 px-2.5 py-1 text-night">{p.areaM2} m²</span> : null}
+                  <span className="absolute inset-x-4 bottom-4 flex flex-col">
+                    <span className="ui-pjh-more">
+                      <span className="flex flex-col">
+                        <span className="mb-2.5 flex flex-wrap gap-1.5 text-[11.5px] font-semibold">
+                          {sector ? <span className="rounded-full bg-cream/15 px-2.5 py-1 backdrop-blur">{localize(sector.label, locale)}</span> : null}
+                          {p.areaM2 !== null ? <span className="rounded-full bg-blue px-2.5 py-1 text-white">{p.areaM2.toLocaleString("en-US")} m²</span> : null}
+                        </span>
+                      </span>
                     </span>
-                    <span className="text-xl leading-tight font-semibold">{title}</span>
-                    <span className="text-sm text-cream/80">{[localize(p.city, locale), p.year, p.durationDays !== null ? `${p.durationDays} ${tc("days")}` : null].filter(Boolean).join(" · ")}</span>
-                    <span className="text-sm font-semibold text-cyan">{th("viewDetails")}</span>
+                    <span className="text-[clamp(15px,1.25vw,19px)] leading-tight font-semibold">{title}</span>
+                    <span className="ui-pjh-more">
+                      <span className="flex flex-col">
+                        <span className="mt-2 text-[12.5px] text-cream/85">{[localize(p.city, locale), p.year, p.durationDays !== null ? `${p.durationDays} ${tc("days")}` : null].filter(Boolean).join(" · ")}</span>
+                        <span className="mt-2 text-sm font-semibold text-cyan">{th("viewDetails")}</span>
+                      </span>
+                    </span>
                   </span>
                 </Link>
               </li>
@@ -176,9 +192,9 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
         </ul>
       )}
 
-      {pages > 1 ? (
-        <nav aria-label={t("pjT1")} className="mt-12 flex items-center justify-center gap-2" data-testid="pager">
-          <button type="button" className="grid size-11 place-items-center rounded-full border border-line disabled:opacity-40" aria-label={tu("prev")} disabled={cur === 0} onClick={() => setPage(cur - 1)}>
+      {(
+        <nav aria-label={t("pjPages")} className="mt-12 flex items-center justify-center gap-2" data-testid="pager">
+          <button type="button" className="grid size-11 place-items-center rounded-full border border-line disabled:opacity-40" aria-label={tu("prev")} disabled={cur === 0} onClick={() => goPage(cur - 1)}>
             <ChevronLeft className="size-4 rtl:-scale-x-100" aria-hidden="true" />
           </button>
           {pageSequence(pages, cur).map((n, i) =>
@@ -187,16 +203,16 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
                 …
               </span>
             ) : (
-              <button key={n} type="button" aria-current={n === cur ? "page" : undefined} aria-label={String(n + 1)} onClick={() => setPage(n)} className={cn("grid size-11 place-items-center rounded-full border text-[15px] font-semibold tabular-nums", n === cur ? "border-transparent bg-btn text-btn-text" : "border-line hover:border-blue")}>
+              <button key={n} type="button" aria-current={n === cur ? "page" : undefined} aria-label={String(n + 1)} onClick={() => goPage(n)} className={cn("grid size-11 place-items-center rounded-full border text-[15px] font-semibold tabular-nums", n === cur ? "border-transparent bg-btn text-btn-text" : "border-line hover:border-blue")}>
                 {n + 1}
               </button>
             ),
           )}
-          <button type="button" className="grid size-11 place-items-center rounded-full border border-line disabled:opacity-40" aria-label={tu("next")} disabled={cur === pages - 1} onClick={() => setPage(cur + 1)}>
+          <button type="button" className="grid size-11 place-items-center rounded-full border border-line disabled:opacity-40" aria-label={tu("next")} disabled={cur === pages - 1} onClick={() => goPage(cur + 1)}>
             <ChevronRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
           </button>
         </nav>
-      ) : null}
+      )}
     </div>
   );
 }

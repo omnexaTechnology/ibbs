@@ -195,6 +195,8 @@
     "pjTypeL": "Project type",
     "pjAllTypes": "All project types",
     "pjNone": "No projects match your search yet.",
+    "pjPages": "Pages",
+    "pjCount": "{n, plural, one {# project} other {# projects}}",
     "pkOv": "Overview",
     "pkScope": "Scope",
     "pkGal": "Gallery",

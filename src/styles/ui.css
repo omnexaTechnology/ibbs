@@ -149,3 +149,15 @@
   .ui-mq-track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; }
   .ui-mq-dup { display: none; }
 }
+
+/* ---- Projects list card (design: number + title at rest; details on hover, always shown on touch / <= 1024px) ---- */
+.ui-pjh-more { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.35s; }
+.ui-pjh-more > * { min-height: 0; overflow: hidden; }
+.ui-pjh:hover .ui-pjh-more,
+.ui-pjh:focus-visible .ui-pjh-more { grid-template-rows: 1fr; opacity: 1; }
+@media (hover: none), (max-width: 1024px) {
+  .ui-pjh-more { grid-template-rows: 1fr; opacity: 1; }
+}
+
+/* R3-04: the scene canvas is focusable; the ring must sit inside the clipped box */
+.ui-scene canvas:focus-visible { outline-offset: -4px; }

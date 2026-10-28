@@ -18,7 +18,7 @@ for (const locale of ["en", "ar"] as const) {
         await expect(cards).toHaveCount(Math.min(8, total - 8));
         await page.getByTestId("pager").getByRole("button", { name: "1" }).click();
       } else {
-        await expect(page.getByTestId("pager")).toHaveCount(0);
+        await expect(page.getByTestId("pager")).toBeVisible(); // the design shows the pager even with one page
       }
       await expect(cards).toHaveCount(perPage);
 

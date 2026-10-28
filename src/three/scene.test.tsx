@@ -127,6 +127,13 @@ describe("SceneCanvas lifecycle (REQ-012)", () => {
     await waitFor(() => expect(first).toHaveBeenCalledWith("ready"));
     rerender(<SceneCanvas load={s.load} label="two" onStatus={second} />);
     expect(container.querySelector("canvas")).toHaveAttribute("aria-label", "two");
+    // the latest onStatus is the one called (B1-13a)
+    first.mockClear();
+    act(() => {
+      container.querySelector("canvas")!.dispatchEvent(new Event("webglcontextlost", { cancelable: true }));
+    });
+    expect(second).toHaveBeenCalledWith("lost");
+    expect(first).not.toHaveBeenCalled();
   });
 
   it("BR-001: reduced motion draws a still frame, not a loop", async () => {

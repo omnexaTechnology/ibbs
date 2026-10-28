@@ -107,6 +107,11 @@ const projectsFloor: SceneFactory = (ctx) => {
   };
   const move = (e: PointerEvent) => {
     if (!drag) return;
+    // R3-14: the button was released outside the canvas without capture: end the drag
+    if (e.buttons === 0 && e.pointerType === "mouse") {
+      up();
+      return;
+    }
     const dx = e.clientX - drag.x;
     if (!drag.moved && Math.abs(dx) > 4) {
       drag.moved = true;

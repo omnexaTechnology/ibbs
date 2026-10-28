@@ -3,6 +3,8 @@ import { fireEvent, screen } from "@testing-library/react";
 import { renderWithIntl } from "@/test/render";
 import type { Project } from "@/sanity/view-models";
 
+const scrollIntoView = vi.fn(); // jsdom has none
+Element.prototype.scrollIntoView = scrollIntoView;
 let search = "";
 vi.mock("next/navigation", () => ({ useSearchParams: () => new URLSearchParams(search) }));
 vi.mock("@/components/ui/sanity-image", () => ({ SanityPicture: () => null }));
@@ -69,6 +71,7 @@ describe("<ProjectsExplorer>", () => {
     expect(screen.getByTestId("tab-mosque")).toHaveTextContent("1");
     fireEvent.click(screen.getByRole("button", { name: "2" }));
     expect(screen.getAllByTestId("project-card")).toHaveLength(3);
+    expect(scrollIntoView).toHaveBeenCalled(); // R3-08
     expect(screen.getByRole("button", { name: "Previous" })).toBeEnabled();
     expect(screen.getByRole("button", { name: "Next" })).toBeDisabled();
   });
