@@ -52,3 +52,6 @@ Counts: blocker 1, major 0, minor 9.
 - No real-GPU test of the WebGL context count or memory across repeated navigations. The claim rests on reading the code and on the batch-3 dispose probe.
 - I did not check the walk free mode `position: fixed` against a transformed ancestor during a page transition at runtime. T-010 e2e covers entering free mode.
 - I did not check `VERCEL_PROJECT_PRODUCTION_URL` behaviour on a real Vercel deployment (no project exists yet).
+
+## Lead fix (2026-10-28)
+- F3-01 fixed: `goTo` scrolls the row with `scrollBy` (RTL-aware) instead of `scrollIntoView`; auto-advance runs only while the row is on screen (IntersectionObserver). e2e `home.spec.ts` "F3-01" checks the page stays at the top for 6.5 s at 390 px. Unit 287/287, home e2e 16/16. Minors stay deferred.

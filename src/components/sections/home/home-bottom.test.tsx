@@ -7,7 +7,10 @@ import { renderWithIntl } from "@/test/render";
 import type { Project } from "@/sanity/view-models";
 import type { Locale } from "@/i18n/routing";
 
-Element.prototype.scrollIntoView = vi.fn(); // jsdom has none
+import { mockIntersectionObserver } from "@/test/dom-mocks";
+
+mockIntersectionObserver();
+Element.prototype.scrollBy = vi.fn(); // jsdom has none
 vi.mock("next-intl/server", () => ({
   getTranslations: async ({ locale, namespace }: { locale: Locale; namespace: string }) =>
     createTranslator({ locale, messages: locale === "ar" ? ar : en, namespace } as never),

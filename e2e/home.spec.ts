@@ -117,3 +117,10 @@ for (const locale of ["en", "ar"] as const) {
     await expect(page.locator("canvas")).toHaveCount(0);
   });
 }
+
+test("F3-01: the featured row auto-advances without scrolling the page", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto("/en");
+  await page.waitForTimeout(6500); // longer than one auto-advance interval (5 s)
+  expect(await page.evaluate(() => window.scrollY)).toBe(0);
+});

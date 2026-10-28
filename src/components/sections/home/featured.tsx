@@ -38,8 +38,14 @@ export function Featured({ projects, locale }: { projects: Project[]; locale: "e
   const goTo = useCallback(
     (i: number) => {
       setOn(i);
-      const el = row.current?.children[i] as HTMLElement | undefined;
-      if (el && isRow()) el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", inline: "start", block: "nearest" });
+      const box = row.current;
+      const el = box?.children[i] as HTMLElement | undefined;
+      if (!box || !el || !isRow()) return;
+      // Scroll the row only: scrollIntoView would also scroll the page to this section (final review F3-01).
+      const rtl = getComputedStyle(box).direction === "rtl";
+      const r = box.getBoundingClientRect();
+      const cr = el.getBoundingClientRect();
+      box.scrollBy({ left: rtl ? cr.right - r.right : cr.left - r.left, behavior: reduced ? "auto" : "smooth" });
     },
     [reduced],
   );
@@ -60,10 +66,20 @@ export function Featured({ projects, locale }: { projects: Project[]; locale: "e
     setOn(best);
   };
 
+  // auto-advance only while the row is on screen
+  const visible = useRef(false);
+  useEffect(() => {
+    const box = row.current;
+    if (!box) return;
+    const io = new IntersectionObserver(([e]) => (visible.current = e.isIntersecting));
+    io.observe(box);
+    return () => io.disconnect();
+  }, [n]);
+
   useEffect(() => {
     if (reduced || n < 2) return;
     const id = window.setInterval(() => {
-      if (!paused.current && isRow()) goTo((on + 1) % n);
+      if (!paused.current && visible.current && isRow()) goTo((on + 1) % n);
     }, AUTO_MS);
     return () => window.clearInterval(id);
   }, [reduced, n, on, goTo]);
