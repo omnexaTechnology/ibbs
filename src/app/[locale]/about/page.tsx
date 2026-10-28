@@ -46,7 +46,7 @@ export default async function AboutPage({ params }: Props) {
         <AboutTabs />
       </section>
       <Stats locale={locale} />
-      <div className="pt-24">
+      <div className="pt-4">
         <Sectors locale={locale} />
       </div>
       <AboutCta locale={locale} />

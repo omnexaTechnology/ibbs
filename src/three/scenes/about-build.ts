@@ -122,7 +122,7 @@ const aboutBuild: SceneFactory = (ctx) => {
   };
   const fit = (w: number, h: number) => {
     camera.aspect = w / h;
-    const R = 5.0;
+    const R = 5.7; // design: 5.0, which crops the corners of the cutaway at this aspect
     const vf = (camera.fov * Math.PI) / 360;
     const hf = Math.atan(Math.tan(vf) * camera.aspect);
     dist = Math.max(R / Math.sin(vf), R / Math.sin(hf));
