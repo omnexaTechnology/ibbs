@@ -8,7 +8,7 @@ import { SHOW_PLACEHOLDER_LOGOS } from "@/content/placeholders";
 import { localize } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
-/** "The organizations that trust us" (design `.cl2`): sector tabs on the start side, one row of client-logo placeholders on the end side. */
+/** "Our clients" (design `.cl2`): sector tabs on the start side, one row of client-logo placeholders on the end side. */
 export function Clients({ locale }: { locale: "en" | "ar" }) {
   const t = useTranslations("home");
   const [tab, setTab] = useState(0);
@@ -36,7 +36,7 @@ export function Clients({ locale }: { locale: "en" | "ar" }) {
                 aria-selected={i === tab}
                 data-testid="client-tab"
                 onClick={() => setTab(i)}
-                className={cn("h-12 rounded-full border px-6 text-[15px] font-semibold transition-[background-color,color,border-color,transform] duration-300 hover:-translate-y-0.5", i === tab ? "border-blue bg-blue text-white" : "border-line bg-surface text-fg hover:border-fg")}
+                className={cn("h-12 rounded-xl border px-6 text-[15px] font-semibold transition-[background-color,color,border-color,transform] duration-300 hover:-translate-y-0.5", i === tab ? "border-blue bg-blue text-white" : "border-line bg-surface text-fg hover:border-fg")}
               >
                 {localize(c.label, locale)}
               </button>
