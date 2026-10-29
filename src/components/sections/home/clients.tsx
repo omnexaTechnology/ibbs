@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { Stripes } from "@/components/ui/section-heading";
 import { clientSectors } from "@/content/clients";
 import { SHOW_PLACEHOLDER_LOGOS } from "@/content/placeholders";
 import { localize } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
-/** "Our clients" (design `.cl2`): sector tabs on the start side, one row of client-logo placeholders on the end side. */
+/** "Who we work with" (design `.cl2`): sector tabs on the start side, one row of client-logo placeholders on the end side. */
 export function Clients({ locale }: { locale: "en" | "ar" }) {
   const t = useTranslations("home");
   const [tab, setTab] = useState(0);
@@ -20,7 +19,6 @@ export function Clients({ locale }: { locale: "en" | "ar" }) {
       <div className="mx-auto grid max-w-[1280px] items-center gap-16 px-8 min-[1025px]:grid-cols-[1fr_1.7fr] max-[1024px]:gap-9 max-sm:px-5">
         <div>
           <div className="inline-flex items-center gap-3 text-[12.5px] font-semibold uppercase tracking-[0.2em] text-link rtl:text-sm rtl:tracking-normal">
-            <Stripes />
             {t("cl2Eye")}
           </div>
           <h2 id="cl2-h" className="mt-[18px] text-[clamp(32px,3.6vw,54px)] leading-[1.12] font-bold tracking-[-0.03em] rtl:leading-[1.35] rtl:tracking-normal">
