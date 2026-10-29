@@ -97,7 +97,7 @@
 .ui-acc-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.55s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .ui-acc-item.open .ui-acc-a { grid-template-rows: 1fr; }
 .ui-acc-a > div { overflow: hidden; }
-.ui-acc-body { padding: 0 24px 24px; color: var(--muted); max-width: 760px; }
+.ui-acc-ans { padding: 0 24px 24px; color: var(--muted); max-width: 760px; }
 
 /* ---- Carousel ----------------------------------------------------------- */
 .ui-car-slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.4s ease; }
@@ -309,10 +309,4 @@ html.wk-lock, html.wk-lock body { overflow: hidden; }
 .ui-cta-pat { position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(circle, rgba(var(--blue-rgb), 0.3) 1.5px, transparent 2.1px); background-size: 26px 26px; mask: radial-gradient(60% 80% at 78% 50%, #000, transparent); -webkit-mask: radial-gradient(60% 80% at 78% 50%, #000, transparent); }
 [dir="rtl"] .ui-cta-pat { mask: radial-gradient(60% 80% at 22% 50%, #000, transparent); -webkit-mask: radial-gradient(60% 80% at 22% 50%, #000, transparent); }
 .dark .ui-cta-pat { background-image: radial-gradient(circle, rgba(var(--cyan-rgb), 0.3) 1.5px, transparent 2.1px); }
-.ui-cta-bands { position: absolute; top: 0; inset-inline-start: 0; width: 180px; height: 120px; overflow: hidden; pointer-events: none; }
-.ui-cta-bands i { position: absolute; top: -20%; height: 140%; width: 16px; transform: skewX(-26deg); }
-[dir="rtl"] .ui-cta-bands i { transform: skewX(26deg); }
-.ui-cta-bands i:nth-child(1) { inset-inline-start: 40px; background: var(--blue); }
-.ui-cta-bands i:nth-child(2) { inset-inline-start: 66px; background: var(--cyan); width: 11px; }
-.ui-cta-bands i:nth-child(3) { inset-inline-start: 86px; background: var(--green); width: 8px; }
 @media (max-width: 900px) { .ui-cta { border-radius: 24px; padding: 56px 20px 20px; grid-template-columns: minmax(0, 1fr); } .ui-cta-3d { height: 400px; } }

@@ -67,7 +67,7 @@ export function Accordion({ items, defaultOpen = 0, headingLevel = 3, className 
             </Heading>
             <div id={pid} role="region" aria-labelledby={qid} className="ui-acc-a">
               <div inert={!isOpen}>
-                <div className="ui-acc-body">{item.answer}</div>
+                <div className="ui-acc-ans">{item.answer}</div>
               </div>
             </div>
           </div>

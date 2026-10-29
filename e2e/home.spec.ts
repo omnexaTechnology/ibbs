@@ -107,6 +107,7 @@ for (const locale of ["en", "ar"] as const) {
     await page.keyboard.press("Enter");
     await expect(items.nth(1)).toHaveAttribute("aria-expanded", "true");
     await expect(items.first()).toHaveAttribute("aria-expanded", "false");
+    await expect(page.getByTestId("home-faq").getByRole("region").nth(1).locator("p")).toBeVisible();
     const cta = page.getByTestId("home-cta");
     await expect(cta.getByRole("link")).toHaveCount(2);
     // the CTA 3D scene stays unloaded until it is near the viewport

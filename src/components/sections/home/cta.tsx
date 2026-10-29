@@ -18,15 +18,9 @@ export function Cta() {
       <div className="mx-auto max-w-[1280px] px-8 max-sm:px-5">
         <div className="ui-cta">
           <div className="ui-cta-pat" aria-hidden="true" />
-          <div className="ui-cta-bands" aria-hidden="true">
-            <i />
-            <i />
-            <i />
-          </div>
           <div className="ui-cta-c">
             <Reveal>
-              <span className="inline-block rounded-full bg-surface px-[22px] py-2 text-base font-medium shadow-[0_8px_24px_-14px_rgba(var(--navy-rgb),0.4)]">{t("ctaPill")}</span>
-              <h2 id="cta-h" className="mt-[22px] text-[clamp(36px,4.2vw,64px)] leading-[1.02] font-bold tracking-[-0.035em] rtl:leading-[1.3] rtl:tracking-normal">
+              <h2 id="cta-h" className="text-[clamp(36px,4.2vw,64px)] leading-[1.02] font-bold tracking-[-0.035em] rtl:leading-[1.3] rtl:tracking-normal">
                 {t("ctaTitle")}
               </h2>
               <p className="mt-[22px] max-w-[580px] text-lg text-muted">{t("ctaSub")}</p>
