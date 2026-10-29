@@ -17,14 +17,14 @@ export function WhatsAppButton({ settings }: { settings: SiteSettings }) {
       rel="noopener noreferrer"
       aria-label={t("waTip")}
       data-testid="whatsapp-button"
-      className="group fixed bottom-7 end-7 z-[60] grid size-[62px] place-items-center rounded-full bg-green text-navy shadow-[0_18px_40px_-12px_rgba(var(--green-rgb),0.7)] transition-transform duration-[400ms] hover:rotate-[-6deg] hover:scale-110 hover:text-navy"
+      className="ui-wa group fixed bottom-7 end-7 z-[60] max-sm:bottom-[18px] max-sm:end-[18px] grid size-[62px] place-items-center rounded-full bg-green text-navy shadow-[0_18px_40px_-12px_rgba(var(--green-rgb),0.7)] transition-transform duration-[400ms] hover:rotate-[-6deg] hover:scale-110 hover:text-navy"
     >
       <span
         className="pointer-events-none absolute end-[74px] translate-x-2 whitespace-nowrap rounded-md bg-navy px-3.5 py-2 text-[13px] text-cream opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 rtl:-translate-x-2 rtl:group-hover:translate-x-0 rtl:group-focus-visible:translate-x-0"
       >
         {t("waTip")}
       </span>
-      <Whatsapp className="size-7" aria-hidden="true" />
+      <Whatsapp className="size-[30px]" aria-hidden="true" />
     </a>
   );
 }
