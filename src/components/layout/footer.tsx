@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { Envelope, GeoAlt, Globe, Telephone } from "react-bootstrap-icons";
@@ -10,11 +11,19 @@ import { CurrentYear } from "./current-year";
 import { NAV_ITEMS } from "./nav-items";
 import { SocialLinks } from "./social-links";
 
-const linkClass =
-  "flex items-center gap-2.5 py-[7px] text-start text-[14.5px] text-cream/70 transition-colors hover:text-cream";
-const headingClass = "mb-[22px] inline-block pb-3 text-[17px] font-semibold text-cream";
+const linkClass = "flex items-center gap-2.5 py-[7px] text-start text-[14.5px] text-muted transition-colors hover:text-navy";
+const chevronClass = "size-3.5 shrink-0 text-blue rtl:rotate-180";
 
-/** Site footer. Contact rows and social icons render only when set in the settings. */
+/** Brand wordmark under the columns; the leading letters float one by one (design v58). */
+const WORDMARK = {
+  en: [["I", "B", "S", "S"], "INNOVATIONS"],
+  ar: [["آي بي إس إس"], "إنوفيشنز"],
+} as const;
+
+/**
+ * Site footer (design footer-2, v59/v60): a light card in both themes, so the navy logo and wordmark always read.
+ * Contact rows and social icons render only when set in the settings.
+ */
 export function Footer({ settings }: { settings: SiteSettings }) {
   const t = useTranslations("footer");
   const tn = useTranslations("nav");
@@ -29,50 +38,57 @@ export function Footer({ settings }: { settings: SiteSettings }) {
   const address = localize(settings.address, locale).trim();
   const mapUrl = settings.mapUrl.trim();
   const hasContact = phones.length > 0 || emails.length > 0 || Boolean(website) || Boolean(address);
+  const [letters, rest] = WORDMARK[locale === "ar" ? "ar" : "en"];
 
   return (
-    <div className="bg-bg px-4 pb-4">
+    <div className="bg-bg px-4 pb-4 max-[720px]:px-2 max-[720px]:pb-2">
       <footer
         data-testid="site-footer"
-        className="relative overflow-hidden rounded-[28px] bg-navy pb-7 pt-20 text-cream/70 dark:border dark:border-cream/10 dark:bg-night-2"
+        className="ui-ft relative overflow-hidden rounded-[28px] border border-line bg-white pb-9 pt-20 text-muted dark:bg-cream max-[720px]:rounded-[20px] max-[720px]:pt-14"
       >
-        <div className="mx-auto max-w-[1280px] px-8">
+        <div className="ui-ft-dots" aria-hidden="true" />
+        <div className="ui-ft-sl" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+        <div className="relative z-[2] mx-auto max-w-[1280px] px-8 max-sm:px-5">
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1.3fr]">
             <div>
-              <Image src="/brand/logo-dark.png" alt={tcommon("brand")} width={143} height={50} className="h-[50px] w-[143px]" />
-              <div className="mt-4 text-[11px] font-semibold tracking-[0.2em] text-cyan rtl:tracking-normal">
+              <Image src="/brand/logo-light.png" alt={tcommon("brand")} width={152} height={50} className="h-[50px] w-[152px]" />
+              <div className="mt-[18px] text-xs font-semibold tracking-[0.3em] text-blue rtl:tracking-normal">
                 {tcommon("fTag")}
               </div>
               <p className="mt-[18px] max-w-[330px] text-[14.5px] leading-[1.8]">{t("footAbout")}</p>
             </div>
 
-            <nav aria-label={t("ftMain")}>
-              <h4 className={headingClass}>{t("ftMain")}</h4>
+            <nav aria-label={t("ftMain")} className="ui-ft-col">
+              <h4 className="ui-ft-h">{t("ftMain")}</h4>
               {NAV_ITEMS.map(({ href, key }) => (
                 <Link key={href} href={href} className={linkClass}>
-                  <ChevronRight className="size-3.5 shrink-0 text-cyan rtl:rotate-180" aria-hidden="true" />
+                  <ChevronRight className={chevronClass} aria-hidden="true" />
                   {tn(key)}
                 </Link>
               ))}
             </nav>
 
-            <nav aria-label={t("ftProjects")}>
-              <h4 className={headingClass}>{t("ftProjects")}</h4>
+            <nav aria-label={t("ftProjects")} className="ui-ft-col">
+              <h4 className="ui-ft-h">{t("ftProjects")}</h4>
               {projectCategories.map((c) => (
                 <Link
                   key={c.key}
                   href={{ pathname: "/projects", query: { category: c.key } }}
                   className={linkClass}
                 >
-                  <ChevronRight className="size-3.5 shrink-0 text-cyan rtl:rotate-180" aria-hidden="true" />
+                  <ChevronRight className={chevronClass} aria-hidden="true" />
                   {localize(c.label, locale)}
                 </Link>
               ))}
             </nav>
 
             {hasContact && (
-              <div data-testid="footer-contact">
-                <h4 className={headingClass}>{tn("navContact")}</h4>
+              <div data-testid="footer-contact" className="ui-ft-col">
+                <h4 className="ui-ft-h">{tn("navContact")}</h4>
                 {phones.length > 0 && (
                   <ContactRow icon={<Telephone className="size-4" aria-hidden="true" />} label={tc("phone")}>
                     {phones.map((p) => (
@@ -105,7 +121,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
                         {address}
                       </a>
                     ) : (
-                      <span className="mt-[3px] block text-[15px] font-semibold text-cream">{address}</span>
+                      <span className="mt-[3px] block text-[15px] font-semibold text-navy">{address}</span>
                     )}
                   </ContactRow>
                 )}
@@ -113,21 +129,30 @@ export function Footer({ settings }: { settings: SiteSettings }) {
             )}
           </div>
 
-          <div className="mt-14 grid items-center gap-4 border-t border-cream/10 pt-7 md:grid-cols-[1fr_auto_1fr]">
-            <p className="text-[14px]">
-              © <CurrentYear /> <b className="font-semibold text-cyan">{tcommon("brand")}</b> · {t("rights")}
+          <div className="ui-ft-name" dir={locale === "ar" ? "rtl" : "ltr"} aria-hidden="true">
+            {letters.map((l, i) => (
+              <span key={i} style={{ "--i": i } as CSSProperties}>
+                {l}
+              </span>
+            ))}{" "}
+            <span style={{ animationDelay: "-2.2s" }}>{rest}</span>
+          </div>
+
+          <div className="mt-[22px] grid items-center gap-x-7 gap-y-[18px] border-t border-line pt-[22px] text-[13.5px] min-[861px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] max-[860px]:justify-items-center max-[860px]:pb-[76px] max-[860px]:text-center">
+            <p>
+              © <CurrentYear /> <b className="font-semibold text-navy">{tcommon("brand")}</b> · {t("rights")}
             </p>
             <SocialLinks
               settings={settings}
-              className="gap-2.5"
-              linkClassName="grid size-11 place-items-center rounded-[10px] border border-cream/15 bg-cream/5 text-cream transition-all hover:-translate-y-[3px] hover:border-blue hover:bg-blue hover:text-white"
+              className="gap-2.5 max-[860px]:order-first max-[860px]:flex-wrap max-[860px]:justify-center"
+              linkClassName="grid size-10 place-items-center rounded-[10px] border border-line bg-white text-navy transition-all hover:-translate-y-0.5 hover:border-blue hover:bg-blue hover:text-white"
             />
-            <nav aria-label={t("legalL")} className="flex items-center gap-3 md:justify-end">
-              <Link href="/terms" className="text-cream/55 transition-colors hover:text-cream">
+            <nav aria-label={t("legalL")} className="flex items-center gap-4 min-[861px]:col-start-3 min-[861px]:justify-self-end">
+              <Link href="/terms" className="inline-flex min-h-8 items-center whitespace-nowrap text-muted transition-colors hover:text-blue">
                 {t("terms")}
               </Link>
-              <span className="h-3.5 w-px bg-cream/25" aria-hidden="true" />
-              <Link href="/privacy" className="text-cream/55 transition-colors hover:text-cream">
+              <span className="h-3.5 w-px bg-line" aria-hidden="true" />
+              <Link href="/privacy" className="inline-flex min-h-8 items-center whitespace-nowrap text-muted transition-colors hover:text-blue">
                 {t("privacy")}
               </Link>
             </nav>
@@ -139,7 +164,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
 }
 
 const contactLinkClass =
-  "mt-[3px] block text-start text-[15px] font-semibold text-cream transition-colors [unicode-bidi:plaintext] hover:text-cyan";
+  "mt-[3px] block text-start text-[15px] font-semibold text-navy transition-colors [unicode-bidi:plaintext] hover:text-blue";
 
 function EntryLink({
   href,
@@ -157,7 +182,7 @@ function EntryLink({
       <a href={href} dir={dir} className={contactLinkClass}>
         {children}
       </a>
-      {label && <span className="block text-[12px] text-cream/55">{label}</span>}
+      {label && <span className="block text-[12px] text-muted">{label}</span>}
     </>
   );
 }
@@ -165,9 +190,9 @@ function EntryLink({
 function ContactRow({ icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
   return (
     <div className="mb-[18px] flex items-start gap-3.5">
-      <span className="grid size-10 flex-none place-items-center rounded-[10px] bg-cream/5 text-cyan">{icon}</span>
+      <span className="grid size-10 flex-none place-items-center rounded-[10px] bg-navy/6 text-blue">{icon}</span>
       <div>
-        <span className="block text-[12.5px] text-cream/55">{label}</span>
+        <span className="block text-[12.5px] text-muted">{label}</span>
         {children}
       </div>
     </div>
