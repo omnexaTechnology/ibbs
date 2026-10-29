@@ -3,7 +3,7 @@
 Things only you can do, or that wait for your review. Work continues without them unless an item says **BLOCKING**.
 Newest items at the top of each section. Tick a box when done; Claude reads this file to pick up your answers.
 
-Last update: 2026-10-27
+Last update: 2026-10-29
 
 ## Blocking something
 
@@ -11,19 +11,9 @@ _(none right now)_
 
 ## To do (accounts and dashboards)
 
-- [ ] **Vercel Firewall rate limit on the enquiry forms** (after the Vercel project exists; about 3 minutes). Project → Firewall → Configure → New rule "Rate limit lead submissions":
-  - If Request Path equals `/api/leads` AND Method equals `POST`
-  - Rate limit: 5 requests per 1 minute, keyed by IP; then Deny with 429
-  - Publish. (FEAT-004 T-003; without it the forms only have the honeypot and timing check against spam.)
-- [ ] **Create the Vercel project** from GitHub repo `omnexaTechnology/ibbs` (you said you'd do this manually).
-  - Also add `NEXT_PUBLIC_SITE_URL` = the real site address (e.g. `https://ibss.example`) once the domain is known. Until then search-engine links use the Vercel address.
-  - Add these env vars in Vercel → Settings → Environment Variables (Production + Preview): `NEXT_PUBLIC_SANITY_PROJECT_ID`, `NEXT_PUBLIC_SANITY_DATASET`, `SANITY_API_READ_TOKEN`, `SANITY_REVALIDATE_SECRET`. Copy the values from your `.env.local`. (Claude generated `SANITY_REVALIDATE_SECRET` there on 2026-10-26 because it was empty. Use the same value in the Sanity webhook.)
-  - **Do not add `SANITY_API_WRITE_TOKEN` to Vercel yet.** Nothing deployed uses it until the forms (FEAT-004) ship. Then add it to Production only. (Corrected 2026-10-27 after review F-07.)
-  - Then check: PR #1 shows a Vercel preview link; `/en` and `/ar` open on it.
 - [ ] **Make the Sanity dataset private**: sanity.io/manage → project `zf4tpgl3` → Datasets → `production` → Private. It is public now (checked 2026-10-26). The code also hides leads on its own, but private is the safe setting.
-- [ ] **Sanity dashboard steps** — exact clicks in `docs/SANITY-SETUP.md` (in the repo on `main`). After the Vercel project exists:
-  - CORS origins, with "Allow credentials" on (needed to log in at `/studio`): add **exact addresses only**: `http://localhost:3000`, plus your production domain or the stable `<project>.vercel.app` address. **Never add a wildcard like `https://*-team.vercel.app`.** Anyone can create a matching vercel.app address and use a logged-in editor's session from it. Use the Studio on production or localhost, not on preview URLs. (Corrected 2026-10-27 after review F-04. The setup doc gets the same fix.)
-  - Publish webhook → `https://<your-domain>/api/revalidate`, signed with the `SANITY_REVALIDATE_SECRET` value. Copy the filter and projection from the doc: the filter now includes `leadRouting`.
+- [ ] **Sanity publish webhook** — exact clicks in `docs/SANITY-SETUP.md`. (CORS for `https://ibbs-ten.vercel.app` done 2026-10-29. Never add a wildcard like `https://*-team.vercel.app`; add the real domain the same way at launch.)
+  - Publish webhook → `https://ibbs-ten.vercel.app/api/revalidate` (switch to the real domain at launch), signed with the `SANITY_REVALIDATE_SECRET` value. Copy the filter and projection from the doc: the filter now includes `leadRouting`.
 - [ ] **Open `/studio` and log in** (http://localhost:3000/studio with `npm run dev`, or the Vercel URL). Check:
   - the 6 seeded projects and 4 hero images are there;
   - the click-on-photo hotspot picker places dots on a project;
@@ -31,12 +21,20 @@ _(none right now)_
   - the Vision tool shows for you (Administrator) but not for an Editor account;
   - on a lead, the "Handled" box saves without a Publish step, and delete works. Ask Claude to create one test lead if there are none yet.
 - [ ] **Fill Site settings in the Studio and publish**: real phones, emails, WhatsApp number, hours, address, map link and social links. It is empty on purpose, so nothing shows on the site until you fill it. The "who receives new enquiries by email" addresses are **not** in Site settings any more (review F-01). They go in the separate **Lead routing (private)** entry in the Studio menu: hidden from the public and from every web page. Fill it in there (empty is fine until the forms ship in FEAT-004).
-- [ ] **Resend account** (for form emails, FEAT-004) under `melamrosy72@gmail.com`; put `RESEND_API_KEY` in `.env.local` and Vercel. Not needed until FEAT-004 ships. The code is ready (2026-10-27): it also reads `LEAD_FALLBACK_EMAIL` (set to `melamrosy72@gmail.com`) and `LEAD_FROM_EMAIL` (sender address). Until you verify a sending domain in Resend, the sender is `onboarding@resend.dev`, which can only deliver to the Resend account owner's inbox.
+
+## Deferred to FEAT-005 (launch) — you chose this on 2026-10-29
+
+Until these are done the live forms save leads to Sanity (once `SANITY_API_WRITE_TOKEN` is in Vercel Production) but send no email, and spam protection is only the honeypot + timing check.
+
+- [ ] **Resend account** under `melamrosy72@gmail.com`; put `RESEND_API_KEY` in `.env.local` and Vercel. The code also reads `LEAD_FALLBACK_EMAIL` (set to `melamrosy72@gmail.com`) and `LEAD_FROM_EMAIL` (sender address). Until you verify a sending domain in Resend, the sender is `onboarding@resend.dev`, which can only deliver to the Resend account owner's inbox.
+- [ ] **Vercel Firewall rate limit** (about 3 minutes). Project → Firewall → Configure → New rule "Rate limit lead submissions":
+  - If Request Path equals `/api/leads` AND Method equals `POST`
+  - Rate limit: 5 requests per 1 minute, keyed by IP; then Deny with 429
+  - Publish.
+- [ ] **`NEXT_PUBLIC_SITE_URL`** in Vercel = the real domain once known. Until then search-engine links use the Vercel address.
 
 ## To review when you have time
 
-- [ ] **PR #3 — FEAT-003 pages**: https://github.com/omnexaTechnology/ibbs/pull/3. Final Opus review passed after the one blocker was fixed. Merge it first.
-- [ ] **PR #4 — FEAT-004 lead forms**: https://github.com/omnexaTechnology/ibbs/pull/4. It is stacked on #3; after #3 is merged, it points at `main`. Before the forms go live: Resend, the Vercel env vars and the Firewall rule (all listed under "To do").
 - [ ] **FEAT-003 checks on the Vercel preview** (after the FEAT-003 PR is open and the Vercel project exists; about 20 minutes):
   - Run Lighthouse (mobile) on `/en`, `/en/projects`, `/en/about`. Target: performance 90+. If `/en/projects` is under 90, tell Claude (fix R3-15 is ready to do).
   - Open home, projects and about on a real phone: swipe the carousels, check the 3D scenes look right and the phone stays smooth.
@@ -91,6 +89,8 @@ _(none right now)_
 
 ## Done
 
+- [x] Vercel project live at https://ibbs-ten.vercel.app; Sanity CORS origin added for it (2026-10-29).
+- [x] PR #3 (FEAT-003) and PR #4 (FEAT-004) merged into `main` (2026-10-28).
 - [x] PR #1 (FEAT-001) and PR #2 (FEAT-002) merged into `main` (2026-10-27). CI now installs npm 11 first, because npm 10 rejected the lock file.
 - [x] Sanity read + write tokens created and put in `.env.local` (2026-10-26).
 - [x] Leads fallback inbox: `melamrosy72@gmail.com` (2026-10-26).
