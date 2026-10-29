@@ -1,7 +1,6 @@
 import { Globe } from "react-bootstrap-icons";
 import { useLocale, useTranslations } from "next-intl";
 import { ButtonLink } from "@/components/ui/button-link";
-import { Stripes } from "@/components/ui/section-heading";
 import { localize, safeHttpUrl } from "@/lib/contact";
 import type { SiteSettings } from "@/types/site-settings";
 
@@ -39,7 +38,6 @@ export function ContactMap({ settings }: { settings: SiteSettings }) {
         </div>
         <div className="absolute bottom-8 start-8 z-[3] flex max-w-[340px] flex-col gap-2 rounded-[20px] bg-surface px-[26px] py-6 shadow-site max-sm:inset-x-4 max-sm:bottom-4 max-sm:max-w-none">
           <span className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.18em] text-link rtl:text-sm rtl:tracking-normal">
-            <Stripes />
             {t("mapTitle")}
           </span>
           <h2 id="ctm-h" className="text-[22px] font-semibold">

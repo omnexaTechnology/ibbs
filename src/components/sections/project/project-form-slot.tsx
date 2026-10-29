@@ -2,7 +2,6 @@ import type { Locale } from "@/i18n/routing";
 import { getTranslations } from "next-intl/server";
 import { ProjectForm } from "@/components/forms/project-form";
 import { whatsappHref } from "@/lib/contact";
-import { Stripes } from "@/components/ui/section-heading";
 import type { SiteSettings } from "@/types/site-settings";
 
 /** "Discuss a project like this" form. The lead's pageUrl (/locale/projects/slug) carries the project reference. */
@@ -15,7 +14,6 @@ export async function ProjectFormSlot({ locale, projectSlug, settings }: { local
       data-testid="project-form-slot"
     >
       <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-link rtl:text-sm rtl:tracking-normal">
-        <Stripes />
         {t("pdFormEye")}
       </div>
       <h2 id="project-form-h" className="mt-2.5 text-[21px] font-bold">

@@ -20,11 +20,6 @@
   from { opacity: 0; transform: scale(0.94); }
   to { opacity: 1; transform: none; }
 }
-@keyframes ui-stripe-beat {
-  0% { transform: skewX(-28deg) scaleY(1); }
-  40% { transform: skewX(-28deg) scaleY(1.7); }
-  100% { transform: skewX(-28deg) scaleY(1); }
-}
 @keyframes ui-hs-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -61,10 +56,8 @@
 .ui-stripes { display: inline-flex; gap: 4px; height: 14px; }
 .ui-stripes i { display: block; width: 9px; height: 100%; transform: skewX(-28deg); transform-origin: bottom; }
 .ui-stripes i:nth-child(1) { background: var(--blue); }
-.ui-stripes i:nth-child(2) { background: var(--cyan); animation-delay: 0.08s; }
-.ui-stripes i:nth-child(3) { background: var(--green); animation-delay: 0.16s; }
-.ui-sec-head:hover .ui-stripes i,
-.ui-eyebrow:hover .ui-stripes i { animation: ui-stripe-beat 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ui-stripes i:nth-child(2) { background: var(--cyan); }
+.ui-stripes i:nth-child(3) { background: var(--green); }
 
 /* ---- Hotspots ----------------------------------------------------------- */
 .ui-hs-layer { position: absolute; inset: 0; z-index: 5; direction: ltr; }

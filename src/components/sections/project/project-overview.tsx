@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server";
 import { HotspotImage } from "@/components/ui/hotspot";
 import { SanityPicture } from "@/components/ui/sanity-image";
 import { Reveal } from "@/components/ui/reveal";
-import { Stripes } from "@/components/ui/section-heading";
 import { scopeItems } from "@/content/taxonomy";
 import { localize } from "@/lib/contact";
 import { getDirection } from "@/i18n/routing";
@@ -22,7 +21,6 @@ export async function ProjectOverview({ project, locale }: { project: Project; l
   return (
     <Reveal className="min-w-0">
       <span className="flex items-center gap-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-link rtl:text-sm rtl:tracking-normal">
-        <Stripes />
         {t("pdOverview")}
       </span>
       <h2 className="mt-3 text-[clamp(28px,2.8vw,42px)] leading-[1.15] font-bold tracking-[-0.03em] rtl:tracking-normal">{t("pdAbout")}</h2>

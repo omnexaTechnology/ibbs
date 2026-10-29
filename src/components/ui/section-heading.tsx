@@ -34,7 +34,6 @@ export function SectionHeading({ eyebrow, title, lead, level = 2, action, invert
       <div>
         {eyebrow ? (
           <Reveal className={cn("ui-eyebrow inline-flex items-center gap-3 text-[12.5px] font-semibold uppercase tracking-[0.2em] rtl:text-sm rtl:tracking-normal", inverted ? "text-cyan" : "text-link")}>
-            <Stripes />
             {eyebrow}
           </Reveal>
         ) : null}
