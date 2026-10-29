@@ -51,7 +51,7 @@ export const heroSlides = defineType({
   fields: slideNames.map((name, i) =>
     defineField({
       name,
-      title: `Slide ${i + 1} — ${HERO_SLIDE_TOPICS[i].en}`,
+      title: `Slide ${i + 1}: ${HERO_SLIDE_TOPICS[i].en}`,
       description:
         i === 0
           ? "The 4 slides of the home page banner. You can only replace the pictures: the headlines stay as they are. " +
