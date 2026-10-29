@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { AboutIntro } from "@/components/sections/home/about-intro";
 import { Hero } from "@/components/sections/home/hero";
-import { Kinetic } from "@/components/sections/home/kinetic";
-import { Partners } from "@/components/sections/home/partners";
 import { Clients } from "@/components/sections/home/clients";
 import { Process } from "@/components/sections/home/process";
 import { Walk } from "@/components/sections/home/walk";
@@ -25,8 +23,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   return (
     <>
       <Hero locale={locale} slides={hero} />
-      <Partners locale={locale} />
-      <Kinetic />
       <AboutIntro locale={locale} />
       <Process locale={locale} />
       <Walk locale={locale} />

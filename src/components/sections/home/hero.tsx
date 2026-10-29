@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Carousel } from "@/components/ui/carousel";
 import { HotspotImage } from "@/components/ui/hotspot";
-import { ModeBox } from "@/components/ui/mode-box";
 import { SanityPicture } from "@/components/ui/sanity-image";
 import { Stripes } from "@/components/ui/section-heading";
 import { heroCopy, SHOW_HERO_PINS } from "@/content/hero-copy";
@@ -99,7 +98,6 @@ export async function Hero({ locale, slides }: { locale: Locale; slides: HeroSli
       data-testid="home-hero"
     >
       <Carousel items={items} label={t("heroEyebrow")} dir={dir} showCount showArrows={false} pill showProgress thumbs={thumbs} className="h-full" />
-      <ModeBox className="max-[900px]:hidden" />
     </section>
   );
 }

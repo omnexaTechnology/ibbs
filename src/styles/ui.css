@@ -129,26 +129,12 @@
   from { transform: scale(1.16); }
   to { transform: scale(1.02); }
 }
-@keyframes ui-mq {
-  to { transform: translateX(-50%); }
-}
-@keyframes ui-mq-r {
-  to { transform: translateX(50%); }
-}
 /* The text of the active hero slide rises in again every time the slide changes. */
 .ui-car-slide.on .hx-kb { animation: ui-kb 8s cubic-bezier(0.2, 0.6, 0.3, 1) both; }
 .ui-car-slide.on .hx-txt > * { animation: ui-up 1s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
 .ui-car-slide.on .hx-txt > :nth-child(2) { animation-delay: 0.14s; }
 .ui-car-slide.on .hx-txt > :nth-child(3) { animation-delay: 0.28s; }
 .ui-car-slide.on .hx-txt > :nth-child(4) { animation-delay: 0.42s; }
-/* Seamless loop: the track holds the list twice and moves by half its width. */
-.ui-mq-track { display: flex; width: max-content; animation: ui-mq var(--mq-s, 60s) linear infinite; }
-[dir="rtl"] .ui-mq-track.ui-mq-flip { animation-name: ui-mq-r; }
-.ui-mq:hover .ui-mq-track { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) {
-  .ui-mq-track { animation: none; flex-wrap: wrap; justify-content: center; width: auto; }
-  .ui-mq-dup { display: none; }
-}
 
 /* ---- Projects list card (design: number + title at rest; details on hover, always shown on touch / <= 1024px) ---- */
 .ui-pjh-more { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows 0.45s cubic-bezier(0.2, 0.7, 0.2, 1), opacity 0.35s; }

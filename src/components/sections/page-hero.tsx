@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { ChevronRight } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
-import { ModeBox } from "@/components/ui/mode-box";
 import { Stripes } from "@/components/ui/section-heading";
 import { Link } from "@/i18n/navigation";
 
@@ -37,7 +36,6 @@ export function PageHero({ crumbs, eyebrow, title, lead, actions, tall }: Props)
         <i className="absolute bottom-[-10%] end-[28%] h-[130%] w-[10px] -skew-x-[26deg] bg-green rtl:skew-x-[26deg]" />
       </div>
 
-      <ModeBox className="hidden min-[1340px]:flex" />
       <div className="relative z-[2] mx-auto w-full max-w-[900px]">
         <nav aria-label={t("breadcrumb")} className="mb-5">
           <ol className="flex flex-wrap items-center justify-center gap-2.5 text-sm text-muted">

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 for (const locale of ["en", "ar"] as const) {
   test.describe(`REQ-001/002: home part 1 (${locale})`, () => {
-    test("hero, partners, kinetic band, about intro and sectors render; placeholder stats are hidden", async ({ page }) => {
+    test("hero, about intro and sectors render; placeholder stats are hidden", async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(`/${locale}`);
       await expect(page.locator("html")).toHaveAttribute("dir", locale === "ar" ? "rtl" : "ltr");
@@ -15,8 +15,9 @@ for (const locale of ["en", "ar"] as const) {
       const box = (await hero.boundingBox())!;
       expect(Math.abs(box.y + box.height - 900)).toBeLessThanOrEqual(2);
       await expect(hero.locator(".ui-car-dot")).toHaveCount(4);
-      await expect(page.getByTestId("home-partners")).toBeVisible();
-      await expect(page.getByTestId("home-kinetic")).toBeAttached();
+      await expect(page.getByTestId("home-partners")).toHaveCount(0);
+      await expect(page.getByTestId("home-kinetic")).toHaveCount(0);
+      await expect(page.getByTestId("mode-box")).toHaveCount(0);
       await expect(page.getByTestId("home-about")).toBeVisible();
       await expect(page.getByTestId("client-tab")).toHaveCount(6);
       // BR-003: all design stats are placeholders until the client confirms them.
@@ -36,17 +37,12 @@ for (const locale of ["en", "ar"] as const) {
       await expect(slides.nth(1)).toHaveAttribute("data-active", "true");
     });
 
-    test("a thumbnail card jumps to its slide; the Mode box sets the theme", async ({ page }) => {
+    test("a thumbnail card jumps to its slide", async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(`/${locale}`);
       const slides = page.getByTestId("home-hero").getByTestId("carousel-slide");
       await page.locator('.ui-fan-c[data-k="2"]').click();
       await expect(slides.nth(2)).toHaveAttribute("data-active", "true");
-      const box = page.getByTestId("mode-box");
-      await box.getByRole("button").nth(1).click();
-      await expect(page.locator("html")).toHaveClass(/dark/);
-      await box.getByRole("button").nth(0).click();
-      await expect(page.locator("html")).not.toHaveClass(/dark/);
     });
 
     test("a client sector tab switches the logo rows", async ({ page }) => {
