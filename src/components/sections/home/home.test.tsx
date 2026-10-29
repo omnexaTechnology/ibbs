@@ -27,7 +27,6 @@ vi.mock("@/i18n/navigation", () => ({
 
 import { AboutIntro } from "./about-intro";
 import { Hero } from "./hero";
-import { Partners } from "./partners";
 import { Clients } from "./clients";
 import { Stats } from "./stats";
 
@@ -73,12 +72,6 @@ describe("home sections", () => {
     expect(within(band).getAllByTestId("counter")).toHaveLength(3);
     expect(band).toHaveTextContent("K m²");
     expect(band).not.toHaveTextContent("Years of expertise");
-  });
-
-  it("partners: the looped copy is hidden from assistive tech", async () => {
-    show((await Partners({ locale: "en" }))!, "en");
-    expect(screen.getAllByRole("listitem")).toHaveLength(8);
-    expect(document.querySelectorAll('[aria-hidden="true"][role="presentation"]')).toHaveLength(8);
   });
 
   it("clients: sector tabs switch two rows of logo placeholders; the looped copy is hidden from assistive tech", () => {

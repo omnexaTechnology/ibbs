@@ -6,16 +6,18 @@ import { Reveal } from "@/components/ui/reveal";
 import { Stats } from "./stats";
 
 const pic = "relative overflow-hidden shadow-[0_30px_60px_-30px_rgba(var(--night-rgb),.45)]";
+/** One frame for all four photos: the rounded rectangle of the top-right one. */
+const frame = "aspect-[.8] w-full rounded-[28px] max-[1100px]:w-[46%]";
 const col = "flex flex-col gap-[26px] max-[1100px]:flex-row max-[1100px]:items-center max-[1100px]:justify-center";
 
-/** About intro (REQ-002): headline, lead, two buttons and four shaped photos around them, then the stats band. */
+/** About intro (REQ-002): headline, lead, two buttons and four photos around them, then the stats band. */
 export async function AboutIntro({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "home" });
   const shapes = [
-    { src: "/images/home/about1.jpg", alt: t("abAlt1"), cls: "aspect-[.82] w-full rounded-[0_190px_10px_10px] rtl:rounded-[190px_0_10px_10px] max-[1100px]:w-[46%]" },
-    { src: "/images/home/about2.jpg", alt: t("abAlt2"), cls: "aspect-square w-[64%] rounded-full ms-[22%] max-[1100px]:ms-0 max-[1100px]:w-[38%]" },
-    { src: "/images/home/about3.jpg", alt: t("abAlt3"), cls: "aspect-[.8] w-full rounded-[28px] max-[1100px]:w-[46%]" },
-    { src: "/images/home/about4.jpg", alt: t("abAlt4"), cls: "aspect-[1.6] w-[82%] rounded-full max-[1100px]:w-[38%]" },
+    { src: "/images/home/about1.jpg", alt: t("abAlt1"), cls: frame },
+    { src: "/images/home/about2.jpg", alt: t("abAlt2"), cls: frame },
+    { src: "/images/home/about3.jpg", alt: t("abAlt3"), cls: frame },
+    { src: "/images/home/about4.jpg", alt: t("abAlt4"), cls: frame },
   ];
   const column = (list: typeof shapes, extra = "") => (
     <div className={`${col} ${extra}`}>
