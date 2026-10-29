@@ -12,6 +12,7 @@ import { PageHero } from "@/components/sections/page-hero";
 import { ButtonLink } from "@/components/ui/button-link";
 import { routing } from "@/i18n/routing";
 import { alternatesFor } from "@/lib/seo";
+import { getClientSectors } from "@/sanity/content";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -26,10 +27,11 @@ export default async function AboutPage({ params }: Props) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const [t, nav, home] = await Promise.all([
+  const [t, nav, home, clients] = await Promise.all([
     getTranslations({ locale, namespace: "about" }),
     getTranslations({ locale, namespace: "nav" }),
     getTranslations({ locale, namespace: "home" }),
+    getClientSectors(),
   ]);
 
   return (
@@ -48,7 +50,7 @@ export default async function AboutPage({ params }: Props) {
       </section>
       <Stats locale={locale} />
       <div className="pt-4">
-        <Clients locale={locale} />
+        <Clients locale={locale} sectors={clients} />
       </div>
       <AboutCta locale={locale} />
     </>

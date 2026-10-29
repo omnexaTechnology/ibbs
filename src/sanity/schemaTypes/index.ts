@@ -1,4 +1,5 @@
 import type { SchemaTypeDefinition } from "sanity";
+import { client } from "./client";
 import { heroSlideImage, heroSlides } from "./heroSlides";
 import { imageHotspot } from "./imageHotspot";
 import { lead } from "./lead";
@@ -11,6 +12,7 @@ import { siteSettings } from "./siteSettings";
 export const schemaTypes: SchemaTypeDefinition[] = [
   // documents
   project,
+  client,
   heroSlides,
   siteSettings,
   lead,

@@ -11,6 +11,9 @@ _(none right now)_
 
 ## To do (accounts and dashboards)
 
+- [ ] **Clients are now editable in the Studio** (branch `feat/studio-clients`). After it merges: Studio → **Clients** → Create → name (EN + AR), sector tab, optional logo, optional order → Publish. Delete a client from its "⋯" menu → Delete. Until the first client is published the site keeps showing the design placeholder cards; once one exists, only real clients show (tabs with no clients disappear).
+  - If the publish webhook already exists: edit its filter to `_type in ["project", "client", "heroSlides", "siteSettings", "leadRouting"]`, or client changes take up to 1 hour to appear.
+
 - [ ] **Remove the long dashes (—) from 4 project texts in the Studio** (about 5 minutes; Claude's automatic patch of live content was blocked as a production write). Open each project, edit the field in English and Arabic, Publish. New wording (already in `scripts/seed/seed-data.json`):
   - Executive HQ → Solution: "…in ceiling coves and shelving to create depth without clutter." / "…في السقف والأرفف لنمنح المساحة عمقاً دون ازدحام."
   - Operations floor → Solution: "…ergonomic mesh chairs, arranged along the daylight with clear circulation aisles." / "…وكراسي شبكية، موزعة على امتداد الضوء الطبيعي…"
@@ -20,7 +23,7 @@ _(none right now)_
 
 - [ ] **Make the Sanity dataset private**: sanity.io/manage → project `zf4tpgl3` → Datasets → `production` → Private. It is public now (checked 2026-10-26). The code also hides leads on its own, but private is the safe setting.
 - [ ] **Sanity publish webhook** — exact clicks in `docs/SANITY-SETUP.md`. (CORS for `https://ibbs-ten.vercel.app` done 2026-10-29. Never add a wildcard like `https://*-team.vercel.app`; add the real domain the same way at launch.)
-  - Publish webhook → `https://ibbs-ten.vercel.app/api/revalidate` (switch to the real domain at launch), signed with the `SANITY_REVALIDATE_SECRET` value. Copy the filter and projection from the doc: the filter now includes `leadRouting`.
+  - Publish webhook → `https://ibbs-ten.vercel.app/api/revalidate` (switch to the real domain at launch), signed with the `SANITY_REVALIDATE_SECRET` value. Copy the filter and projection from the doc: the filter now includes `leadRouting` and `client`.
 - [ ] **Open `/studio` and log in** (http://localhost:3000/studio with `npm run dev`, or the Vercel URL). Check:
   - the 6 seeded projects and 4 hero images are there;
   - the click-on-photo hotspot picker places dots on a project;

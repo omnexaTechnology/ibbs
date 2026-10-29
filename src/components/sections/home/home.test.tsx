@@ -85,4 +85,14 @@ describe("home sections", () => {
     expect(screen.getAllByTestId("client-card")[0]).toHaveTextContent("جامع كبير");
     expect(document.querySelectorAll('[aria-hidden="true"][role="presentation"]')).toHaveLength(16);
   });
+
+  it("clients from the Studio replace the placeholders; a short sector is repeated to fill the marquee", () => {
+    const name = { en: "Acme Bank", ar: "بنك أكمي" };
+    show(<Clients locale="en" sectors={[{ label: { en: "Companies", ar: "الشركات" }, clients: [{ id: "c1", name, logo: null }] }]} />, "en");
+    expect(screen.getAllByTestId("client-tab")).toHaveLength(1);
+    expect(screen.getAllByTestId("client-card")).toHaveLength(1);
+    expect(screen.getByTestId("client-card")).toHaveTextContent("Acme Bank");
+    expect(screen.getByTestId("client-card")).not.toHaveTextContent("Client logo");
+    expect(document.querySelectorAll('[aria-hidden="true"][role="presentation"]')).toHaveLength(15);
+  });
 });
