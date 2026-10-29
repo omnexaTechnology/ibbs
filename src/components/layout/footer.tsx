@@ -1,5 +1,4 @@
 import type { CSSProperties } from "react";
-import Image from "next/image";
 import { ChevronRight } from "lucide-react";
 import { Envelope, GeoAlt, Globe, Telephone } from "react-bootstrap-icons";
 import { useLocale, useTranslations } from "next-intl";
@@ -7,6 +6,7 @@ import { projectCategories } from "@/content/taxonomy";
 import { Link } from "@/i18n/navigation";
 import { localize, toTelHref, usableEntries } from "@/lib/contact";
 import type { SiteSettings } from "@/types/site-settings";
+import { Stripes } from "@/components/ui/section-heading";
 import { CurrentYear } from "./current-year";
 import { NAV_ITEMS } from "./nav-items";
 import { SocialLinks } from "./social-links";
@@ -14,7 +14,7 @@ import { SocialLinks } from "./social-links";
 const linkClass = "flex items-center gap-2.5 py-[7px] text-start text-[14.5px] text-muted transition-colors hover:text-navy";
 const chevronClass = "size-3.5 shrink-0 text-blue rtl:rotate-180";
 
-/** Brand wordmark under the columns; the leading letters float one by one (design v58). */
+/** Brand wordmark under the columns, ending in the brand stripes; the leading letters float one by one (design v58). */
 const WORDMARK = {
   en: [["I", "B", "S", "S"], "INNOVATIONS"],
   ar: [["آي بي إس إس"], "إنوفيشنز"],
@@ -55,8 +55,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
         <div className="relative z-[2] mx-auto max-w-[1280px] px-8 max-sm:px-5">
           <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_0.9fr_1.3fr]">
             <div>
-              <Image src="/brand/logo-light.png" alt={tcommon("brand")} width={152} height={50} className="h-[50px] w-[152px]" />
-              <div className="mt-[18px] text-xs font-semibold tracking-[0.3em] text-blue rtl:tracking-normal">
+              <div className="text-xs font-semibold tracking-[0.3em] text-blue rtl:tracking-normal">
                 {tcommon("fTag")}
               </div>
               <p className="mt-[18px] max-w-[330px] text-[14.5px] leading-[1.8]">{t("footAbout")}</p>
@@ -136,6 +135,7 @@ export function Footer({ settings }: { settings: SiteSettings }) {
               </span>
             ))}{" "}
             <span style={{ animationDelay: "-2.2s" }}>{rest}</span>
+            <Stripes />
           </div>
 
           <div className="mt-[22px] grid items-center gap-x-7 gap-y-[18px] border-t border-line pt-[22px] text-[13.5px] min-[861px]:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] max-[860px]:justify-items-center max-[860px]:pb-[76px] max-[860px]:text-center">
