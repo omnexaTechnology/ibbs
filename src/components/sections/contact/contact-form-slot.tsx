@@ -2,7 +2,6 @@ import { useLocale, useTranslations } from "next-intl";
 import { ContactForm } from "@/components/forms/contact-form";
 import { SocialLinks } from "@/components/layout/social-links";
 import { whatsappHref } from "@/lib/contact";
-import { Stripes } from "@/components/ui/section-heading";
 import type { SiteSettings } from "@/types/site-settings";
 
 /** Navy intro panel + the contact form card (`data-slot="contact-form"`). */
@@ -17,7 +16,6 @@ export function ContactFormSection({ settings }: { settings: SiteSettings }) {
     >
       <section className="relative isolate overflow-hidden rounded-3xl bg-navy px-[clamp(28px,4vw,56px)] pb-[52px] pt-14 text-cream">
         <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-cyan rtl:text-sm rtl:tracking-normal">
-          <Stripes />
           {t("formEyebrow")}
         </div>
         <h2 className="mt-4 text-[clamp(28px,3vw,40px)] leading-[1.15] font-bold rtl:leading-[1.3]">{t("formTitle")}</h2>

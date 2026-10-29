@@ -4,7 +4,6 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { Carousel } from "@/components/ui/carousel";
 import { HotspotImage } from "@/components/ui/hotspot";
 import { SanityPicture } from "@/components/ui/sanity-image";
-import { Stripes } from "@/components/ui/section-heading";
 import { heroCopy, SHOW_HERO_PINS } from "@/content/hero-copy";
 import { localize } from "@/lib/contact";
 import type { Locale } from "@/i18n/routing";
@@ -73,7 +72,6 @@ export async function Hero({ locale, slides }: { locale: Locale; slides: HeroSli
         <div className="pointer-events-none relative z-[5] mx-auto flex h-full max-w-[1280px] items-center px-8 pt-[92px] pb-[72px] max-[900px]:items-start max-[900px]:pt-[140px] max-[900px]:pb-[210px] max-sm:px-5">
           <div className="hx-txt pointer-events-auto max-w-[min(720px,46vw)] max-[900px]:max-w-none">
             <div className="flex items-center gap-3.5 text-[clamp(17px,2.6vh,24px)] font-light max-sm:text-[19px]">
-              <Stripes />
               {localize(c.kick, locale)}
             </div>
             <Heading data-testid={i === 0 ? "page-title" : undefined} className={headingCls}>

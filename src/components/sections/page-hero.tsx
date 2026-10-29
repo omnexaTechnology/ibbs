@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { ChevronRight } from "react-bootstrap-icons";
 import { useTranslations } from "next-intl";
-import { Stripes } from "@/components/ui/section-heading";
 import { Link } from "@/i18n/navigation";
 
 export type Crumb = { label: string; href?: string };
@@ -55,7 +54,6 @@ export function PageHero({ crumbs, eyebrow, title, lead, actions, tall }: Props)
         </nav>
         {eyebrow ? (
           <div className="inline-flex items-center gap-3 text-[12.5px] font-semibold uppercase tracking-[0.2em] text-link rtl:text-sm rtl:tracking-normal">
-            <Stripes />
             {eyebrow}
           </div>
         ) : null}

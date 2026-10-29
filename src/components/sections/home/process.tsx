@@ -51,12 +51,7 @@ export function Process({ locale }: { locale: "en" | "ar" }) {
     <section ref={section} data-p3 data-testid="home-process" data-stage={stage} data-pinned={pinned} aria-label={t("procEyebrow")} className="ui-p3 bg-[color-mix(in_srgb,var(--navy)_5%,var(--cream))] dark:bg-night-2">
       <div className="ui-p3-grid">
         <div className="ui-p3-l">
-          <div className="inline-flex items-center gap-2.5 text-[12.5px] leading-[1.4] font-semibold tracking-[0.2em] text-link uppercase rtl:text-sm rtl:tracking-normal rtl:normal-case">
-            <span className="ui-stripes" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </span>
+          <div className="text-[12.5px] leading-[1.4] font-semibold tracking-[0.2em] text-link uppercase rtl:text-sm rtl:tracking-normal rtl:normal-case">
             {t("procEyebrow")}
           </div>
           <div key={stage} className="ui-p3-txt">
