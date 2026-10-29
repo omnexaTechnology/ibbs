@@ -7,7 +7,7 @@ import { SHOW_PLACEHOLDER_LOGOS } from "@/content/placeholders";
 import { localize } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
-/** "Who we work with" (design `.cl2`): sector tabs on the start side, one row of client-logo placeholders on the end side. */
+/** "Trusted across sectors" (design `.cl2`): sector tabs on the start side, one row of client-logo placeholders on the end side. */
 export function Clients({ locale }: { locale: "en" | "ar" }) {
   const t = useTranslations("home");
   const [tab, setTab] = useState(0);
