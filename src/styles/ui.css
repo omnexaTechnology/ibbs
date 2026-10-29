@@ -330,3 +330,20 @@ html.wk-lock, html.wk-lock body { overflow: hidden; }
   .ui-ft-dots { display: none; }
 }
 @media (prefers-reduced-motion: reduce) { .ui-ft-sl i, .ui-ft-name span { animation: none; } }
+
+/* ---- Inner-page hero bands (design .sk-bands): three brand bands and a navy one in the end corner ---- */
+.ui-sk-bands { position: absolute; inset-inline-end: 0; bottom: 0; z-index: 1; width: min(26vw, 360px); height: min(70%, 620px); overflow: hidden; pointer-events: none; }
+.ui-sk-bands > * { position: absolute; bottom: -10%; width: 22px; height: 130%; transform: skewX(-26deg); transform-origin: bottom; animation: ui-sk-band 1.4s cubic-bezier(0.22, 1, 0.36, 1) both; }
+[dir="rtl"] .ui-sk-bands > * { transform: skewX(26deg); }
+.ui-sk-bands i:nth-child(1) { inset-inline-end: 46%; background: var(--blue); }
+.ui-sk-bands i:nth-child(2) { inset-inline-end: 36%; width: 14px; background: var(--cyan); animation-delay: 0.1s; }
+.ui-sk-bands i:nth-child(3) { inset-inline-end: 28%; width: 10px; background: var(--green); animation-delay: 0.2s; }
+.ui-sk-bands b { inset-inline-end: -20%; width: 48%; background: var(--navy); animation-delay: 0.05s; }
+@keyframes ui-sk-band { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0); } }
+@media (max-width: 720px) { .ui-sk-bands { width: 40vw; height: 40%; } }
+
+/* ---- WhatsApp float: two pulsing rings (design .wa-float::before/::after) ---- */
+.ui-wa::before, .ui-wa::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid var(--green); animation: ui-wa-ring 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) infinite; pointer-events: none; }
+.ui-wa::after { animation-delay: 1.2s; }
+@keyframes ui-wa-ring { from { transform: scale(1); opacity: 0.7; } to { transform: scale(1.7); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .ui-sk-bands > *, .ui-wa::before, .ui-wa::after { animation: none; } }

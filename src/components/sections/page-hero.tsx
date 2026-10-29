@@ -29,10 +29,11 @@ export function PageHero({ crumbs, eyebrow, title, lead, actions, tall }: Props)
         <img src="/images/hero-iso.svg" alt="" className="absolute inset-0 size-full object-cover object-[50%_60%] opacity-50 dark:opacity-15 dark:invert" />
         <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_48%,var(--bg)_0%,color-mix(in_srgb,var(--bg)_70%,transparent)_55%,transparent_100%),linear-gradient(0deg,var(--bg),transparent_18%)]" />
       </div>
-      <div className="pointer-events-none absolute bottom-0 end-0 z-[1] hidden h-[60%] w-[min(26vw,360px)] overflow-hidden sm:block" aria-hidden="true">
-        <i className="absolute bottom-[-10%] end-[46%] h-[130%] w-[22px] -skew-x-[26deg] bg-blue rtl:skew-x-[26deg]" />
-        <i className="absolute bottom-[-10%] end-[36%] h-[130%] w-[14px] -skew-x-[26deg] bg-cyan rtl:skew-x-[26deg]" />
-        <i className="absolute bottom-[-10%] end-[28%] h-[130%] w-[10px] -skew-x-[26deg] bg-green rtl:skew-x-[26deg]" />
+      <div className="ui-sk-bands" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+        <b />
       </div>
 
       <div className="relative z-[2] mx-auto w-full max-w-[900px]">

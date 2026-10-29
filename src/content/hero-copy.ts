@@ -25,7 +25,7 @@ export const heroCopy: HeroCopy[] = [
     l2: ls("Around Your Business.", "لتواكب طموحات أعمالك."),
     sub: null,
     hotspots: [
-      { x: 74, y: 16, tag: ls("Lighting", "الإضاءة"), title: ls("Warm hidden LED lighting", "إضاءة LED دافئة مخفية"), desc: ls("Recessed linear LED in the ceiling cove and shelving — soft, glare-free light.", "إضاءة خطية مدمجة في السقف والأرفف — ضوء ناعم بلا وهج.") },
+      { x: 74, y: 16, tag: ls("Lighting", "الإضاءة"), title: ls("Warm hidden LED lighting", "إضاءة LED دافئة مخفية"), desc: ls("Recessed linear LED in the ceiling cove and shelving gives soft, glare-free light.", "إضاءة خطية مدمجة في السقف والأرفف تمنح ضوءاً ناعماً بلا وهج.") },
       { x: 66, y: 70, tag: ls("Finish", "التشطيب"), title: ls("Natural oak wood finish", "تشطيب خشب البلوط الطبيعي"), desc: ls("Light oak executive desk with off-white modesty panel.", "مكتب تنفيذي من البلوط الفاتح مع لوح أمامي أبيض.") },
       { x: 88, y: 52, tag: ls("Biophilia", "النباتات"), title: ls("Indoor planters", "نباتات داخلية"), desc: ls("Greenery that softens the space and improves wellbeing.", "خضرة تمنح المساحة نعومة وتعزز راحة الموظفين.") },
     ],
