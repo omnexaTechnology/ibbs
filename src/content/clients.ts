@@ -1,9 +1,9 @@
 import type { LocalizedString } from "@/types/site-settings";
 
 /**
- * Placeholder client names for the home "Organizations we work with" section, from the design (`CL2`).
+ * Placeholder client names for the home "The organizations that trust us" section, from the design (`CL2`).
  * They are generic descriptions, not real clients; real names and logos arrive once approved (FEAT-005).
- * `rows[lang]` = two marquee rows of 8 labels each.
+ * `rows[lang]` = two lists of 8 labels each, shown together as one marquee row.
  */
 export type ClientSector = { label: LocalizedString; rows: { en: string[][]; ar: string[][] } };
 

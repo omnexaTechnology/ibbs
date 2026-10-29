@@ -182,9 +182,8 @@
 @keyframes ui-cl { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 8px)); } }
 @keyframes ui-cl-r { from { transform: translateX(0); } to { transform: translateX(calc(50% + 8px)); } }
 .ui-cl-mq { display: grid; gap: 16px; overflow: hidden; padding: 6px 0; mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
-.ui-cl-trk { display: flex; gap: 16px; width: max-content; animation: ui-cl 90s linear infinite; }
+.ui-cl-trk { display: flex; gap: 16px; width: max-content; animation: ui-cl 180s linear infinite; }
 [dir="rtl"] .ui-cl-trk { animation-name: ui-cl-r; }
-.ui-cl-row.r2 .ui-cl-trk { animation-direction: reverse; }
 .ui-cl-mq:hover .ui-cl-trk, .ui-cl-mq:focus-within .ui-cl-trk { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) {
   .ui-cl-mq { mask-image: none; }

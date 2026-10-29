@@ -8,12 +8,13 @@ import { SHOW_PLACEHOLDER_LOGOS } from "@/content/placeholders";
 import { localize } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
-/** "Organizations we work with" (design `.cl2`): sector tabs on the start side, two opposing rows of client-logo placeholders on the end side. */
+/** "The organizations that trust us" (design `.cl2`): sector tabs on the start side, one row of client-logo placeholders on the end side. */
 export function Clients({ locale }: { locale: "en" | "ar" }) {
   const t = useTranslations("home");
   const [tab, setTab] = useState(0);
   if (!SHOW_PLACEHOLDER_LOGOS) return null;
   const sector = clientSectors[tab];
+  const set = sector.rows[locale].flat();
   return (
     <section className="bg-[color-mix(in_srgb,var(--navy)_5%,var(--cream))] py-[clamp(72px,8vw,120px)] dark:bg-night-2" data-testid="home-clients" aria-labelledby="cl2-h">
       <div className="mx-auto grid max-w-[1280px] items-center gap-16 px-8 min-[1025px]:grid-cols-[1fr_1.7fr] max-[1024px]:gap-9 max-sm:px-5">
@@ -43,32 +44,28 @@ export function Clients({ locale }: { locale: "en" | "ar" }) {
           </div>
         </div>
         <div className="ui-cl-mq" role="list" aria-label={localize(sector.label, locale)} key={tab}>
-          {sector.rows[locale].map((set, r) => (
-            <div key={r} className={cn("ui-cl-row", r === 1 && "r2")}>
-              <div className="ui-cl-trk">
-                {[...set, ...set].map((label, i) => {
-                  const dup = i >= set.length;
-                  return (
-                    <div
-                      key={i}
-                      role={dup ? "presentation" : "listitem"}
-                      aria-hidden={dup ? true : undefined}
-                      data-testid={dup ? undefined : "client-card"}
-                      className="flex aspect-[1.05] w-44 flex-none flex-col items-center justify-center gap-2 rounded-[20px] border border-line bg-surface p-3 text-center transition-[transform,box-shadow,border-color] duration-500 hover:-translate-y-1 hover:border-cyan max-sm:w-[140px]"
-                    >
-                      <span className="inline-flex h-3 gap-[3px] text-link" aria-hidden="true">
-                        <i className="block w-[5px] -skew-x-[28deg] bg-blue" />
-                        <i className="block w-[5px] -skew-x-[28deg] bg-cyan" />
-                        <i className="block w-[5px] -skew-x-[28deg] bg-green" />
-                      </span>
-                      <b className="text-[12.5px] font-semibold text-muted">[{t("clientLogo")}]</b>
-                      <small className="text-[13px] leading-snug font-semibold text-fg">{label}</small>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
+          <div className="ui-cl-trk">
+            {[...set, ...set].map((label, i) => {
+              const dup = i >= set.length;
+              return (
+                <div
+                  key={i}
+                  role={dup ? "presentation" : "listitem"}
+                  aria-hidden={dup ? true : undefined}
+                  data-testid={dup ? undefined : "client-card"}
+                  className="flex aspect-[1.05] w-44 flex-none flex-col items-center justify-center gap-2 rounded-[20px] border border-line bg-surface p-3 text-center transition-[transform,box-shadow,border-color] duration-500 hover:-translate-y-1 hover:border-cyan max-sm:w-[140px]"
+                >
+                  <span className="inline-flex h-3 gap-[3px] text-link" aria-hidden="true">
+                    <i className="block w-[5px] -skew-x-[28deg] bg-blue" />
+                    <i className="block w-[5px] -skew-x-[28deg] bg-cyan" />
+                    <i className="block w-[5px] -skew-x-[28deg] bg-green" />
+                  </span>
+                  <b className="text-[12.5px] font-semibold text-muted">[{t("clientLogo")}]</b>
+                  <small className="text-[13px] leading-snug font-semibold text-fg">{label}</small>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
