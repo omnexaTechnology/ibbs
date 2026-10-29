@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default async function HomePage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const { hero, projects } = await getHomeContent();
+  const { hero, projects, clients } = await getHomeContent();
   return (
     <>
       <Hero locale={locale} slides={hero} />
@@ -27,7 +27,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       <Process locale={locale} />
       <Walk locale={locale} />
       <Featured projects={projects} locale={locale} />
-      <Clients locale={locale} />
+      <Clients locale={locale} sectors={clients} />
       <Faq locale={locale} />
       <Cta />
     </>

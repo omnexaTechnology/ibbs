@@ -1,6 +1,8 @@
+import type { ClientSector } from "@/content/clients";
 import {
   HERO_SLIDE_COUNT,
   PROJECT_CATEGORY_KEYS,
+  projectCategories,
   SCOPE_KEYS,
   type ProjectCategoryKey,
   type ScopeKey,
@@ -36,6 +38,8 @@ export type RawProject = {
     description?: Loc;
   }[] | null;
 };
+
+export type RawClient = { _id: string; name?: Loc; sector?: string | null; logo?: RawImage | null };
 
 export type RawHero = { slides?: ({ alt?: Loc; image?: RawImage | null } | null)[] | null } | null | undefined;
 
@@ -154,6 +158,19 @@ export const toProjectSlugs = (raw: ({ slug?: string | null } | null)[] | null |
 
 export const toProjects = (raw: (RawProject | null)[] | null | undefined): Project[] =>
   (raw ?? []).map(toProject).filter((p): p is Project => p !== null);
+
+/** Clients grouped by sector, in the project-category order; sectors with no client are left out. Nameless clients are skipped. */
+export function toClientSectors(raw: (RawClient | null)[] | null | undefined): ClientSector[] {
+  const clients = (raw ?? []).filter((c): c is RawClient => !!c && !isEmptyLoc(loc(c.name)));
+  return projectCategories
+    .map(({ key, label }) => ({
+      label,
+      clients: clients
+        .filter((c) => c.sector === key)
+        .map((c) => ({ id: c._id, name: loc(c.name), logo: toSiteImage(c.logo, loc(c.name)) })),
+    }))
+    .filter((s) => s.clients.length > 0);
+}
 
 /** Always returns exactly HERO_SLIDE_COUNT slots (BR-006: empty slots use the design defaults). */
 export function toHeroSlides(raw: RawHero): HeroSlideContent[] {

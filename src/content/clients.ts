@@ -1,13 +1,17 @@
+import type { SiteImage } from "@/sanity/image";
 import type { LocalizedString } from "@/types/site-settings";
+
+/** One card of the "Trusted across sectors" marquee. */
+export type ClientCard = { id: string; name: LocalizedString; logo: SiteImage | null };
+/** One sector tab: Sanity `client` documents grouped by sector, or the placeholders below. */
+export type ClientSector = { label: LocalizedString; clients: ClientCard[] };
 
 /**
  * Placeholder client names for the home "Trusted across sectors" section, from the design (`CL2`).
- * They are generic descriptions, not real clients; real names and logos arrive once approved (FEAT-005).
+ * They are generic descriptions, not real clients: shown only while the Studio has no `client` documents.
  * `rows[lang]` = two lists of 8 labels each, shown together as one marquee row.
  */
-export type ClientSector = { label: LocalizedString; rows: { en: string[][]; ar: string[][] } };
-
-export const clientSectors: ClientSector[] = [
+const placeholderRows: { label: LocalizedString; rows: { en: string[][]; ar: string[][] } }[] = [
   { label: { en: "Companies", ar: "الشركات" }, rows: {
     en: [["Corporate HQ", "Holding group", "Banking & finance", "Technology", "Retail", "Logistics", "Energy", "Real estate"], ["Telecom", "Consulting", "Manufacturing", "Hospitality", "Construction", "Media", "Insurance", "Investment"]],
     ar: [["مقر شركة", "مجموعة قابضة", "بنوك ومالية", "تقنية", "تجزئة", "لوجستيات", "طاقة", "عقارات"], ["اتصالات", "استشارات", "صناعة", "ضيافة", "مقاولات", "إعلام", "تأمين", "استثمار"]] } },
@@ -27,3 +31,8 @@ export const clientSectors: ClientSector[] = [
     en: [["Grand mosque", "Jama mosque", "Neighbourhood mosque", "Campus mosque", "Hospital prayer room", "Office prayer room", "Women’s prayer hall", "Quran school"], ["Prayer halls", "Libraries", "Imam’s office", "Meeting rooms", "Classrooms", "Ablution areas", "Shoe storage", "Reception"]],
     ar: [["جامع كبير", "جامع", "مسجد حي", "مسجد حرم جامعي", "مصلى مستشفى", "مصلى مكاتب", "مصلى النساء", "مدرسة تحفيظ"], ["قاعات الصلاة", "المكتبات", "مكتب الإمام", "قاعات الاجتماعات", "الفصول", "أماكن الوضوء", "خزائن الأحذية", "الاستقبال"]] } }
 ];
+
+export const placeholderClientSectors: ClientSector[] = placeholderRows.map(({ label, rows }) => {
+  const ar = rows.ar.flat();
+  return { label, clients: rows.en.flat().map((en, i) => ({ id: `${label.en}-${i}`, name: { en, ar: ar[i] }, logo: null })) };
+});

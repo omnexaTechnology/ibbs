@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { SiteSettings } from "@/types/site-settings";
-import { toHeroSlides, toProject, toProjectPage, toProjects, toProjectSlugs, toSiteSettings, type RawProject } from "./view-models";
+import { toClientSectors, toHeroSlides, toProject, toProjectPage, toProjects, toProjectSlugs, toSiteSettings, type RawProject } from "./view-models";
 
 const img = (id = "image-abc123-1600x900-jpg") => ({
   asset: { _ref: id },
@@ -190,3 +190,21 @@ describe("toSiteSettings", () => {
     expect(s.whatsapp.message).toEqual(DEFAULTS.whatsapp.message);
   });
 });
+
+describe("toClientSectors", () => {
+  it("groups by sector in category order, drops empty sectors, unknown sectors and nameless clients", () => {
+    const sectors = toClientSectors([
+      { _id: "a", name: { en: "Mosque A", ar: "م" }, sector: "mosque", logo: null },
+      { _id: "b", name: { en: "Bank", ar: "ب" }, sector: "hq", logo: img() },
+      { _id: "c", name: { en: " ", ar: "" }, sector: "hq" },
+      { _id: "d", name: { en: "X", ar: "x" }, sector: "nope" },
+      null,
+    ]);
+    expect(sectors.map((s) => s.label.en)).toEqual(["Companies", "Mosques"]);
+    expect(sectors[0].clients).toHaveLength(1);
+    expect(sectors[0].clients[0].logo?.src).toContain("abc123");
+    expect(sectors[1].clients[0].logo).toBeNull();
+    expect(toClientSectors(null)).toEqual([]);
+  });
+});
+

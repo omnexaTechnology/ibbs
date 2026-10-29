@@ -81,7 +81,7 @@ describe("content API", () => {
     const { getHomeContent } = await import("./content");
     const home = await getHomeContent();
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0][2].next.tags).toEqual(["heroSlides", "project"]);
+    expect(fetchMock.mock.calls[0][2].next.tags).toEqual(["heroSlides", "project", "client"]);
     expect(home.hero).toHaveLength(4);
     expect(home.projects).toEqual([]);
   });

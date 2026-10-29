@@ -1,7 +1,9 @@
 import "server-only";
 import { isSanityConfigured } from "./env";
 import { sanityFetch } from "./fetch";
+import type { ClientSector } from "@/content/clients";
 import {
+  CLIENTS_QUERY,
   HERO_SLIDES_QUERY,
   HOME_QUERY,
   PROJECT_BY_SLUG_QUERY,
@@ -10,6 +12,7 @@ import {
   SANITY_TAGS,
 } from "./queries";
 import {
+  toClientSectors,
   toHeroSlides,
   toProjectPage,
   toProjects,
@@ -52,9 +55,18 @@ export async function getHeroSlides(): Promise<HeroSlideContent[]> {
   return toHeroSlides(await sanityFetch({ query: HERO_SLIDES_QUERY, tags: [SANITY_TAGS.heroSlides] }));
 }
 
-/** Home page: hero images + the projects in design order (max HOME_PROJECT_LIMIT) in one round trip. */
-export async function getHomeContent(): Promise<{ hero: HeroSlideContent[]; projects: Project[] }> {
-  if (!isSanityConfigured) return { hero: toHeroSlides(null), projects: [] };
-  const raw = await sanityFetch({ query: HOME_QUERY, tags: [SANITY_TAGS.heroSlides, SANITY_TAGS.project] });
-  return { hero: toHeroSlides(raw.hero), projects: toProjects(raw.projects) };
+/** Client sectors for the "Trusted across sectors" section; empty when the Studio has no clients. */
+export async function getClientSectors(): Promise<ClientSector[]> {
+  if (!isSanityConfigured) return [];
+  return toClientSectors(await sanityFetch({ query: CLIENTS_QUERY, tags: [SANITY_TAGS.client] }));
+}
+
+/** Home page: hero images + the projects in design order (max HOME_PROJECT_LIMIT) + clients in one round trip. */
+export async function getHomeContent(): Promise<{ hero: HeroSlideContent[]; projects: Project[]; clients: ClientSector[] }> {
+  if (!isSanityConfigured) return { hero: toHeroSlides(null), projects: [], clients: [] };
+  const raw = await sanityFetch({
+    query: HOME_QUERY,
+    tags: [SANITY_TAGS.heroSlides, SANITY_TAGS.project, SANITY_TAGS.client],
+  });
+  return { hero: toHeroSlides(raw.hero), projects: toProjects(raw.projects), clients: toClientSectors(raw.clients) };
 }

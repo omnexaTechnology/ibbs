@@ -55,7 +55,7 @@ sanity.io/manage -> project -> **API** -> **Webhooks** -> **Create webhook**:
 | URL | `https://<your-domain>/api/revalidate` (for a preview test use that preview's URL) |
 | Dataset | `production` |
 | Trigger on | Create, Update, Delete (Delete also fires when someone unpublishes) |
-| Filter | `_type in ["project", "heroSlides", "siteSettings", "leadRouting"]` |
+| Filter | `_type in ["project", "client", "heroSlides", "siteSettings", "leadRouting"]` |
 | Projection | `{"_type": coalesce(_type, before()._type)}` (type only: never add fields, the webhook must not carry content or recipients) |
 | HTTP method | POST |
 | Drafts / Versions | leave **off** (only publishes should trigger it) |

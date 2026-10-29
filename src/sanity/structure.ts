@@ -1,7 +1,7 @@
 import type { StructureResolver } from "sanity/structure";
 import { LEAD_ROUTING_ID } from "./lead-id";
 
-/** Desk structure (REQ-002): Projects · Hero images · Site settings · Lead routing · Leads. */
+/** Desk structure (REQ-002): Projects · Clients · Hero images · Site settings · Lead routing · Leads. */
 export const structure: StructureResolver = (S) =>
   S.list()
     .title("Content")
@@ -12,6 +12,14 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.documentTypeList("project")
             .title("Projects")
+            .defaultOrdering([{ field: "order", direction: "asc" }]),
+        ),
+      S.listItem()
+        .title("Clients")
+        .id("client")
+        .child(
+          S.documentTypeList("client")
+            .title("Clients")
             .defaultOrdering([{ field: "order", direction: "asc" }]),
         ),
       S.listItem()
