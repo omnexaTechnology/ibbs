@@ -62,37 +62,30 @@ export function Header({ settings }: { settings: SiteSettings }) {
       </a>
 
       {(email || phone || hasSocial) && (
-        <div className="relative z-[51] hidden bg-navy text-[13px] text-cream/70 min-[561px]:block" data-testid="topbar">
-          <div className="mx-auto flex h-[42px] max-w-[1360px] items-center gap-[18px] px-8">
-            <span className="inline-flex items-center gap-1.5">
-              <GeoAlt className="size-[15px] text-cyan" aria-hidden="true" />
+        <div className="relative z-[51] hidden bg-navy text-cream min-[561px]:block" data-testid="topbar">
+          <div className="mx-auto flex h-[52px] max-w-[1360px] items-center">
+            <span className={tbItem}>
+              <GeoAlt className={tbIcon} aria-hidden="true" />
               <TopbarLocation />
             </span>
             {email && (
-              <a
-                className="inline-flex min-h-8 items-center gap-1.5 text-cream transition-colors hover:text-cyan"
-                href={`mailto:${email}`}
-              >
-                <Envelope className="size-[15px] text-cyan" aria-hidden="true" />
+              <a className={cn(tbItem, "transition-colors hover:text-cyan")} href={`mailto:${email}`}>
+                <Envelope className={tbIcon} aria-hidden="true" />
                 <span>{email}</span>
               </a>
             )}
             <span className="grow" />
             {phone && (
-              <a
-                className="inline-flex min-h-8 items-center gap-1.5 text-cream transition-colors hover:text-cyan"
-                href={toTelHref(phone)}
-                dir="ltr"
-              >
-                <Telephone className="size-[15px] text-cyan" aria-hidden="true" />
+              <a className={cn(tbItem, "transition-colors hover:text-cyan")} href={toTelHref(phone)} dir="ltr">
+                <Telephone className={tbIcon} aria-hidden="true" />
                 <span>{phone}</span>
               </a>
             )}
             <SocialLinks
               settings={settings}
-              className="gap-0.5"
-              linkClassName="grid size-[34px] place-items-center rounded-full text-cream/70 transition-colors hover:bg-cyan hover:text-navy"
-              iconClassName="size-4"
+              className="gap-1 px-[22px]"
+              linkClassName="grid size-[34px] place-items-center rounded-full text-cream transition-colors hover:bg-cyan hover:text-navy"
+              iconClassName="size-[17px]"
             />
           </div>
         </div>
@@ -108,11 +101,11 @@ export function Header({ settings }: { settings: SiteSettings }) {
       >
         <div
           className={cn(
-            "mx-auto flex max-w-[1360px] items-center gap-7 px-8 transition-[height] duration-[450ms]",
+            "mx-auto flex max-w-[1360px] items-center gap-7 px-8 transition-[height] duration-[450ms] nav:grid nav:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)]",
             scrolled ? "h-[70px]" : "h-[92px]",
           )}
         >
-          <Link href="/" className="flex min-h-11 items-center" aria-label={t("logoAlt")}>
+          <Link href="/" className="flex min-h-11 items-center justify-self-start" aria-label={t("logoAlt")}>
             <Image
               src="/brand/logo-light.png"
               alt={t("logoAlt")}
@@ -131,7 +124,7 @@ export function Header({ settings }: { settings: SiteSettings }) {
             />
           </Link>
 
-          <nav aria-label={t("mainLabel")} className="ms-auto hidden gap-1.5 nav:flex">
+          <nav aria-label={t("mainLabel")} className="hidden gap-1.5 nav:flex">
             {NAV_ITEMS.map(({ href, key }) => (
               <NavLink key={href} href={href} active={isNavActive(pathname, href)}>
                 {t(key)}
@@ -139,7 +132,7 @@ export function Header({ settings }: { settings: SiteSettings }) {
             ))}
           </nav>
 
-          <div className="ms-auto flex items-center gap-2.5 nav:ms-0">
+          <div className="ms-auto flex items-center gap-2.5 nav:ms-0 nav:justify-self-end">
             <LangSwitch className={controlClass} />
             <ThemeToggle className={cn(controlClass, "w-11 justify-center px-0")} />
             <button
@@ -163,6 +156,10 @@ export function Header({ settings }: { settings: SiteSettings }) {
   );
 }
 
+const tbItem =
+  "inline-flex h-full items-center gap-3 px-[26px] text-[14px] text-cream font-medium whitespace-nowrap max-[1180px]:px-4 max-[1180px]:text-[13px]";
+const tbIcon = "size-5 shrink-0 text-cyan";
+
 const controlClass =
   "inline-flex h-11 items-center gap-2 rounded-full border border-line bg-transparent px-3.5 text-[13px] font-medium text-fg transition-colors hover:border-link";
 
@@ -177,10 +174,8 @@ function NavLink({ href, active, children }: { href: string; active: boolean; ch
       href={href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "relative min-h-11 px-3.5 py-3 text-[15px] font-medium text-fg transition-colors",
-        "after:absolute after:inset-x-3.5 after:bottom-1.5 after:h-0.5 after:origin-left after:scale-x-0 after:bg-gradient-to-r after:from-blue after:via-cyan after:to-blue after:transition-transform after:duration-500 rtl:after:origin-right",
-        "hover:after:scale-x-100",
-        active && "text-link after:scale-x-100",
+        "min-h-11 px-3.5 py-3 text-[15px] font-medium text-fg transition-colors hover:text-link",
+        active && "text-link",
       )}
     >
       {children}
