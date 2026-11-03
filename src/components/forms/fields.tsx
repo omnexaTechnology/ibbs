@@ -42,12 +42,21 @@ function Shell({ id, label, error, required, className, children }: FieldProps &
 
 type TextFieldProps = FieldProps & { className?: string } & Omit<InputHTMLAttributes<HTMLInputElement>, "id" | "className">;
 
-/** Single-line input. Email/phone/number values are always LTR, even inside an Arabic page. */
+/**
+ * Single-line input. Email/phone/number values are always LTR, even inside an Arabic page,
+ * but while the placeholder shows it stays right-aligned on Arabic pages like every other field.
+ */
 export function TextField({ id, label, error, required, className, ...input }: TextFieldProps) {
   const ltr = input.type === "email" || input.type === "tel" || input.inputMode === "numeric";
   return (
     <Shell id={id} label={label} error={error} required={required} className={className}>
-      <input id={id} className={cn(control, ltr && "text-start")} dir={ltr ? "ltr" : undefined} {...aria(id, error, required)} {...input} />
+      <input
+        id={id}
+        className={cn(control, ltr && "text-start rtl:placeholder-shown:text-right")}
+        dir={ltr ? "ltr" : undefined}
+        {...aria(id, error, required)}
+        {...input}
+      />
     </Shell>
   );
 }
