@@ -68,8 +68,13 @@ type Props = {
   autoAdvance?: boolean;
   showArrows?: boolean;
   showDots?: boolean;
-  /** Hero thumbnail fan: the other slides as small cards that jump to their slide (design `.hx4`). */
-  thumbs?: { node: ReactNode; label: string }[];
+  /**
+   * Hero card slider (design `.hx4`): the slides themselves are the cards. The other slides sit as small cards,
+   * a click grows that card to fill the hero. `thumbs` are the captions / click targets that ride on top of the cards.
+   */
+  thumbs?: { label: string }[];
+  /** Per-slide content drawn full-size above the cards (the hero text), so it never resizes with a growing card. */
+  layers?: ReactNode[];
   /** Pill-shaped dots (active one stretched) instead of ring dots. */
   pill?: boolean;
   /** Thin progress bar that fills during each auto-advance interval. */
@@ -86,7 +91,7 @@ type Props = {
  * Keyboard: arrows (visual direction, so reversed in RTL), Home, End. Dots and arrows are real buttons.
  * Auto-advance pauses on hover and focus, and never runs under reduced motion.
  */
-export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = true, showArrows = true, showDots = true, showCount = false, thumbs, pill = false, showProgress = false, defaultIndex, onIndexChange, className }: Props) {
+export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = true, showArrows = true, showDots = true, showCount = false, thumbs, layers, pill = false, showProgress = false, defaultIndex, onIndexChange, className }: Props) {
   const t = useTranslations("ui");
   const [hover, setHover] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -131,6 +136,7 @@ export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = tr
       <div aria-live={c.running ? "off" : "polite"}>
         {items.map((item, i) => {
           const on = i === c.index;
+          const k = (i - c.index + count) % count;
           return (
             <div
               key={i}
@@ -141,11 +147,19 @@ export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = tr
               className={cn("ui-car-slide", on && "on")}
               data-testid="carousel-slide"
               data-active={on}
+              data-k={thumbs ? k : undefined}
+              data-last={thumbs && k === count - 1 ? "" : undefined}
+              style={thumbs ? ({ "--k": k } as CSSProperties) : undefined}
             >
               {item}
             </div>
           );
         })}
+        {layers?.map((layer, i) => (
+          <div key={i} className={cn("ui-car-layer", i === c.index && "on")} inert={i !== c.index} aria-hidden={i !== c.index}>
+            {layer}
+          </div>
+        ))}
       </div>
 
       {showArrows && count > 1 ? (
@@ -163,8 +177,17 @@ export function Carousel({ items, label, dir = "ltr", interval, autoAdvance = tr
         ? thumbs.map((th, j) => {
             const k = (j - c.index + count) % count;
             return (
-              <button key={j} type="button" className="ui-fan-c" data-k={k} style={{ "--k": k } as CSSProperties} aria-label={th.label} tabIndex={k === 0 ? -1 : 0} onClick={() => c.goTo(j)}>
-                {th.node}
+              <button
+                key={j}
+                type="button"
+                className="ui-fan-c"
+                data-k={k}
+                data-last={k === count - 1 ? "" : undefined}
+                style={{ "--k": k } as CSSProperties}
+                aria-label={th.label}
+                tabIndex={k === 0 ? -1 : 0}
+                onClick={() => c.goTo(j)}
+              >
                 <span className="ui-fan-cap" aria-hidden="true">
                   <i />
                   {th.label}
