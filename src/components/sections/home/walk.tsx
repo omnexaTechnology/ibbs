@@ -115,6 +115,7 @@ export function Walk({ locale }: { locale: "en" | "ar" }) {
               camera={{ fov: 40, near: 0.05, far: 120 }}
               exposure={0.95}
               releaseWhenFar
+              stillOnlyOnFail
               onStatusChange={onStatus}
               className="size-full"
               fallback={<Image src="/images/home/walk.jpg" alt={t("wkTitle")} fill sizes="100vw" className="object-cover" />}

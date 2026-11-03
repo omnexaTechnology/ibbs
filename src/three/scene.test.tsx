@@ -174,6 +174,19 @@ describe("<SceneRoot>", () => {
     expect(createRenderer).not.toHaveBeenCalled();
   });
 
+  it("stillOnlyOnFail: no still image while idle or loading, only when WebGL is missing", () => {
+    const { unmount } = renderWithIntl(<SceneRoot load={makeScene().load} label="Scene" fallback={<span>still</span>} stillOnlyOnFail />);
+    expect(screen.queryByText("still")).toBeNull();
+    act(() => io.fire(true));
+    expect(screen.getByTestId("scene-root")).toHaveAttribute("data-scene-status", "loading");
+    expect(screen.queryByText("still")).toBeNull();
+    unmount();
+    hasWebGL.mockReturnValue(false);
+    renderWithIntl(<SceneRoot load={makeScene().load} label="Scene" fallback={<span>still</span>} stillOnlyOnFail />);
+    act(() => io.fire(true));
+    expect(screen.getByText("still")).toBeInTheDocument();
+  });
+
   it("B1-06: releaseWhenFar resets to loading so the next near starts from loading, not a stale ready", async () => {
     renderWithIntl(<SceneRoot load={makeScene().load} label="Scene" fallback={<span>still</span>} releaseWhenFar />);
     const status = () => screen.getByTestId("scene-root").getAttribute("data-scene-status");
