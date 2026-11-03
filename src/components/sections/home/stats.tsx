@@ -12,12 +12,13 @@ export async function Stats({ locale, items = stats }: { locale: Locale; items?:
   if (shown.length === 0) return null;
   const t = await getTranslations({ locale, namespace: "home" });
   return (
-    <div className="mx-auto mt-[72px] max-w-[1280px] px-8 max-sm:px-4" data-testid="home-stats">
-      <dl className="grid overflow-hidden rounded-[28px] bg-navy p-3 text-cream max-sm:!grid-cols-2 dark:border dark:border-cream/10 dark:bg-night-2" style={{ gridTemplateColumns: `repeat(${Math.min(shown.length, 4)}, minmax(0, 1fr))` }}>
+    <div className="mx-auto max-w-[1280px] px-8 pb-24 max-sm:px-5" data-testid="home-stats">
+      <dl className="grid gap-x-14 gap-y-10 max-[900px]:!grid-cols-2 max-sm:gap-x-6" style={{ gridTemplateColumns: `repeat(${Math.min(shown.length, 4)}, minmax(0, 1fr))` }}>
         {shown.map((s) => (
-          <div key={s.key} className="flex flex-col-reverse items-center gap-3 px-4 py-11 text-center">
-            <dt className="max-w-[180px] text-[15px] text-cream/75">{t(s.label)}</dt>
-            <dd className="text-[clamp(44px,6vw,88px)] leading-none font-bold tracking-[-0.04em]">
+          <div key={s.key} className="flex flex-col-reverse gap-5 border-t border-line pt-10">
+            <dt className="max-w-[220px] text-base text-muted">{t(s.label)}</dt>
+            {/* the suffix (Counter's <small>) sits raised at the top of the number, as in the design */}
+            <dd className="text-[clamp(56px,6.6vw,104px)] leading-none font-normal tracking-[-0.04em] [&_small]:align-top [&_small]:font-normal">
               <Counter to={s.value} suffix={s.suffix === "unit" ? t("kSqm") : "+"} />
             </dd>
           </div>

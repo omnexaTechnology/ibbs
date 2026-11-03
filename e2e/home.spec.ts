@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 for (const locale of ["en", "ar"] as const) {
   test.describe(`REQ-001/002: home part 1 (${locale})`, () => {
-    test("hero, about intro and sectors render; placeholder stats are hidden", async ({ page }) => {
+    test("hero, about intro and sectors render; no stats band on home", async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(`/${locale}`);
       await expect(page.locator("html")).toHaveAttribute("dir", locale === "ar" ? "rtl" : "ltr");
@@ -20,7 +20,7 @@ for (const locale of ["en", "ar"] as const) {
       await expect(page.getByTestId("mode-box")).toHaveCount(0);
       await expect(page.getByTestId("home-about")).toBeVisible();
       await expect(page.getByTestId("client-tab")).toHaveCount(6);
-      // BR-003: all design stats are placeholders until the client confirms them.
+      // the stats band lives on About only
       await expect(page.getByTestId("home-stats")).toHaveCount(0);
       // NFR-002: no Three.js on this page.
       await expect(page.locator("canvas")).toHaveCount(0);

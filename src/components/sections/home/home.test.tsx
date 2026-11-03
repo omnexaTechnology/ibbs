@@ -62,11 +62,11 @@ describe("home hero (REQ-001)", () => {
 
 describe("home sections", () => {
   it("BR-003: placeholder stats are not rendered; confirmed ones are, with the unit", async () => {
-    expect(stats.every((s) => !s.confirmed)).toBe(true);
     const { container, unmount } = show(await AboutIntro({ locale: "en" }), "en");
     expect(screen.queryByTestId("home-stats")).toBeNull();
     expect(container.textContent).not.toMatch(/placeholders/i);
     unmount();
+    expect(await Stats({ locale: "en", items: stats.map((s) => ({ ...s, confirmed: false })) })).toBeNull();
     show((await Stats({ locale: "en", items: stats.map((s) => ({ ...s, confirmed: s.key !== "years" })) }))!, "en");
     const band = screen.getByTestId("home-stats");
     expect(within(band).getAllByTestId("counter")).toHaveLength(3);
