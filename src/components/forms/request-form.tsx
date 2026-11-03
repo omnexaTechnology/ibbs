@@ -1,6 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useTranslations } from "next-intl";
+import { Send } from "react-bootstrap-icons";
 import { SPACE_TYPE_KEYS, type FormType } from "@/lib/validation/lead";
 import { Honeypot, SelectField, TextAreaField, TextField } from "./fields";
 import { FormSuccess } from "./form-success";
@@ -12,8 +14,21 @@ export type LeadFormProps = {
   className?: string;
 };
 
-export const submitButtonClass =
-  "inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-3.5 text-[15px] font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60";
+/** The design's pill button (same look as ButtonLink primary) with a send-icon disc on the end side. */
+export function SubmitButton({ disabled, children }: { disabled: boolean; children: ReactNode }) {
+  return (
+    <button
+      type="submit"
+      disabled={disabled}
+      className="group inline-flex min-h-[56px] items-center gap-3.5 rounded-full bg-btn ps-7 pe-1.5 text-[15px] font-semibold text-btn-text transition-colors duration-300 hover:bg-blue hover:text-white disabled:cursor-not-allowed disabled:opacity-60 dark:hover:bg-navy"
+    >
+      {children}
+      <span className="grid size-11 flex-none place-items-center rounded-full bg-btn-text text-btn" aria-hidden="true">
+        <Send className="size-4 rtl:-scale-x-100" />
+      </span>
+    </button>
+  );
+}
 
 /** Error banner (role=alert) with the WhatsApp fallback (AC-004). */
 export function FormAlert({ message, whatsappHref }: { message: string; whatsappHref?: string | null }) {
@@ -54,10 +69,10 @@ export function RequestForm({ formType, whatsappHref, className, heading }: Lead
           <h2 className="mt-1 text-2xl font-semibold">{t("formTitle")}</h2>
         </div>
       )}
-      <div className="grid gap-5 sm:grid-cols-2">
+      <div className="grid gap-x-5 gap-y-6 sm:grid-cols-2">
         <TextField id={`${prefix}-name`} name="name" maxLength={120} label={t("fName")} required autoComplete="name" placeholder={t("phName")} error={err("name")} />
-        <TextField id={`${prefix}-ph`} name="phone" maxLength={40} type="tel" label={t("fPhone")} required autoComplete="tel" placeholder={t("phPhone")} error={err("phone")} />
         <TextField id={`${prefix}-em`} name="email" maxLength={254} type="email" label={t("fEmail")} autoComplete="email" placeholder="example@company.com" error={err("email")} />
+        <TextField id={`${prefix}-ph`} name="phone" maxLength={40} type="tel" label={t("fPhone")} required autoComplete="tel" placeholder={t("phPhone")} error={err("phone")} />
         <TextField id={`${prefix}-co`} name="company" maxLength={160} label={t("fCompany")} autoComplete="organization" placeholder={t("phCo")} error={err("company")} />
         <SelectField
           id={`${prefix}-type`}
@@ -74,9 +89,7 @@ export function RequestForm({ formType, whatsappHref, className, heading }: Lead
       <div className="mt-6 flex flex-col gap-4">
         {status === "error" ? <FormAlert message={t("fFailed")} whatsappHref={whatsappHref} /> : hasErrors && <FormAlert message={t("fInvalid")} />}
         <div>
-          <button type="submit" disabled={!ready || status === "sending"} className={submitButtonClass}>
-            {status === "sending" ? t("sending") : t("send")}
-          </button>
+          <SubmitButton disabled={!ready || status === "sending"}>{status === "sending" ? t("sending") : t("send")}</SubmitButton>
         </div>
       </div>
     </form>

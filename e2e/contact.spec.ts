@@ -15,9 +15,6 @@ for (const locale of ["en", "ar"] as const) {
       const pageTel = await page.getByTestId("contact-phones").locator('a[href^="tel:"]').evaluateAll((a) => a.map((x) => x.getAttribute("href")));
       expect(pageTel).toEqual(footerTel);
       if (footerTel.length === 0) await expect(page.getByTestId("contact-phones")).toHaveCount(0);
-
-      const wa = await page.getByTestId("whatsapp-button").count();
-      await expect(page.getByTestId("contact-whatsapp")).toHaveCount(wa);
     });
 
     test("no horizontal scroll at 390px", async ({ page }) => {

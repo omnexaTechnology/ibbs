@@ -13,7 +13,7 @@ type FieldProps = {
 };
 
 const control =
-  "w-full rounded-md border border-line bg-surface px-3.5 py-3 text-[15px] text-text outline-none transition-colors placeholder:text-muted/60 focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/30 aria-[invalid=true]:border-destructive aria-[invalid=true]:ring-destructive/20";
+  "min-h-12 w-full rounded-[10px] border-[1.5px] border-line bg-surface px-3.5 py-3 text-[14.5px] text-text outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-[#9AA0AA] focus:border-blue focus:ring-4 focus:ring-blue/15 aria-[invalid=true]:border-destructive aria-[invalid=true]:ring-destructive/20 dark:border-cream/16 dark:bg-night";
 
 function aria(id: string, error?: string, required?: boolean) {
   return { "aria-invalid": error ? true : undefined, "aria-describedby": error ? `${id}-err` : undefined, "aria-required": required || undefined } as const;
@@ -21,11 +21,11 @@ function aria(id: string, error?: string, required?: boolean) {
 
 function Shell({ id, label, error, required, className, children }: FieldProps & { className?: string; children: ReactNode }) {
   return (
-    <div className={cn("flex flex-col gap-1.5", className)}>
-      <label htmlFor={id} className="text-[13px] font-medium text-text">
+    <div className={cn("flex flex-col gap-2", className)}>
+      <label htmlFor={id} className="text-[13.5px] font-semibold text-fg">
         {label}
         {required && (
-          <span className="ms-0.5 text-destructive" aria-hidden="true">
+          <span className="ms-[3px] text-link" aria-hidden="true">
             *
           </span>
         )}
@@ -57,7 +57,7 @@ type TextAreaFieldProps = FieldProps & { className?: string } & Omit<TextareaHTM
 export function TextAreaField({ id, label, error, required, className, ...area }: TextAreaFieldProps) {
   return (
     <Shell id={id} label={label} error={error} required={required} className={className}>
-      <textarea id={id} rows={5} className={cn(control, "resize-y")} {...aria(id, error, required)} {...area} />
+      <textarea id={id} rows={5} className={cn(control, "min-h-[140px] resize-y")} {...aria(id, error, required)} {...area} />
     </Shell>
   );
 }
