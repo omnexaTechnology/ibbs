@@ -119,7 +119,8 @@ export function Featured({ projects, locale }: { projects: Project[]; locale: "e
             return (
               <div key={p.id} className={cn("ui-acc-p", i === on && "on")} data-testid="featured-panel" data-active={i === on} style={{ "--clip": CLIPS[i % 6] } as CSSProperties}>
                 <div className="ui-acc-clip">
-                  <SanityPicture image={p.cover} alt="" sizes="(min-width: 1025px) 60vw, 84vw" className="object-cover" />
+                  {/* open panel is ~530px of the 1280px row by 640px tall; the phone card ~84vw by 400-440px: both about 0.82 */}
+                  <SanityPicture image={p.cover} alt="" sizes="(min-width: 1440px) 530px, (min-width: 1025px) 37vw, 84vw" box={0.82} className="object-cover" />
                   <div className="ui-acc-shade" />
                 </div>
                 {/* desktop only (hidden in the row): focusing, hovering or pressing a closed panel opens it */}

@@ -11,6 +11,9 @@ import { localize } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 import type { Project } from "@/sanity/view-models";
 
+/** Pager tile: rounded square on a light surface; the current page adds the blue fill. */
+const PAGE_TILE = "grid size-12 place-items-center rounded-xl bg-surface/70 text-muted transition-colors hover:bg-surface hover:text-fg disabled:pointer-events-none disabled:opacity-50 dark:bg-night-2";
+
 /** Design: 2 rows of 4 per page. */
 export const PAGE_SIZE = 8;
 
@@ -163,7 +166,8 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
             return (
               <li key={p.id}>
                 <Link href={`/projects/${p.slug}`} data-testid="project-card" className="ui-pjh group relative block aspect-[4/5] overflow-hidden rounded-[18px] bg-night text-cream no-underline shadow-[0_24px_50px_-24px_rgba(0,0,0,.7)] transition-shadow duration-500 hover:shadow-[0_0_0_2px_var(--cyan),0_24px_50px_-24px_rgba(0,0,0,.7)] max-sm:aspect-[4/3.3]">
-                  <SanityPicture image={p.cover} alt="" sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 100vw" className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.08]" />
+                  {/* box = the 4/5 card; the phone card is wider (4/3.3), so its 100vw is pre-scaled by 0.8 / 1.21 to 66vw */}
+                  <SanityPicture image={p.cover} alt="" sizes="(min-width: 1280px) 300px, (min-width: 640px) 45vw, 66vw" box={0.8} className="object-cover transition-transform duration-[1200ms] group-hover:scale-[1.08]" />
                   <span className="absolute inset-0 bg-gradient-to-t from-night/90 via-night/10 to-transparent transition-colors duration-500 max-lg:via-night/10 lg:group-hover:from-night/90 lg:group-hover:via-night/25" aria-hidden="true" />
                   <span className="absolute end-3 top-3 grid h-[30px] min-w-10 place-items-center rounded-full bg-white/90 px-2.5 text-xs font-semibold text-navy tabular-nums" aria-hidden="true">
                     {String(cur * PAGE_SIZE + i + 1).padStart(2, "0")}
@@ -194,7 +198,7 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
 
       {(
         <nav aria-label={t("pjPages")} className="mt-12 flex items-center justify-center gap-2" data-testid="pager">
-          <button type="button" className="grid size-11 place-items-center rounded-full border border-line disabled:opacity-40" aria-label={tu("prev")} disabled={cur === 0} onClick={() => goPage(cur - 1)}>
+          <button type="button" className={PAGE_TILE} aria-label={tu("prev")} disabled={cur === 0} onClick={() => goPage(cur - 1)}>
             <ChevronLeft className="size-4 rtl:-scale-x-100" aria-hidden="true" />
           </button>
           {pageSequence(pages, cur).map((n, i) =>
@@ -203,12 +207,12 @@ export function ProjectsExplorer({ projects, locale, category = "all" }: { proje
                 …
               </span>
             ) : (
-              <button key={n} type="button" aria-current={n === cur ? "page" : undefined} aria-label={String(n + 1)} onClick={() => goPage(n)} className={cn("grid size-11 place-items-center rounded-full border text-[15px] font-semibold tabular-nums", n === cur ? "border-transparent bg-btn text-btn-text" : "border-line hover:border-blue")}>
+              <button key={n} type="button" aria-current={n === cur ? "page" : undefined} aria-label={String(n + 1)} onClick={() => goPage(n)} className={cn(PAGE_TILE, "text-base font-semibold tabular-nums", n === cur && "bg-blue text-white hover:bg-blue hover:text-white dark:bg-blue")}>
                 {n + 1}
               </button>
             ),
           )}
-          <button type="button" className="grid size-11 place-items-center rounded-full border border-line disabled:opacity-40" aria-label={tu("next")} disabled={cur === pages - 1} onClick={() => goPage(cur + 1)}>
+          <button type="button" className={PAGE_TILE} aria-label={tu("next")} disabled={cur === pages - 1} onClick={() => goPage(cur + 1)}>
             <ChevronRight className="size-4 rtl:-scale-x-100" aria-hidden="true" />
           </button>
         </nav>

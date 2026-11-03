@@ -7,7 +7,6 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { PageHero } from "@/components/sections/page-hero";
 import { ProjectsExplorer } from "@/components/sections/projects/projects-explorer";
 import { ProjectsExplorerFromUrl } from "@/components/sections/projects/projects-explorer-from-url";
-import { ProjectsFloor } from "@/components/sections/projects/projects-floor";
 import { routing } from "@/i18n/routing";
 import { alternatesFor } from "@/lib/seo";
 import { getProjects } from "@/sanity/content";
@@ -35,7 +34,6 @@ export default async function ProjectsPage({ params }: Props) {
   return (
     <>
       <PageHero crumbs={[{ label: nav("navHome"), href: "/" }, { label: nav("navProjects") }]} eyebrow={home("featEyebrow")} title={`${t("projH1a")} ${t("projH1b")}`} lead={t("projLead")} actions={<ButtonLink href="#pj-browse" external>{home("ctaExplore")}</ButtonLink>} />
-      <ProjectsFloor />
       <section className="mx-auto max-w-[1280px] px-8 pt-10 pb-28 max-sm:px-5" aria-labelledby="pj-browse">
         <div className="mb-11 grid items-start gap-12 min-[1025px]:grid-cols-[1.3fr_1fr] max-[1024px]:gap-6">
           <h2 id="pj-browse" className="text-[clamp(32px,3.6vw,54px)] leading-[1.12] font-bold tracking-[-0.03em] text-fg rtl:leading-[1.35] rtl:tracking-normal">
