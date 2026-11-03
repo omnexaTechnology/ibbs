@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { PageHero } from "@/components/sections/page-hero";
-import { ProjectCta } from "@/components/sections/project/project-cta";
+import { Cta } from "@/components/sections/home/cta";
 import { ProjectFacts } from "@/components/sections/project/project-facts";
 import { ProjectFormSlot } from "@/components/sections/project/project-form-slot";
 import { ProjectGallery } from "@/components/sections/project/project-gallery";
@@ -102,7 +102,7 @@ export default async function ProjectPage({ params }: Props) {
       </section>
 
       <ProjectRelated related={related} locale={locale} />
-      <ProjectCta locale={locale} />
+      <Cta />
     </>
   );
 }

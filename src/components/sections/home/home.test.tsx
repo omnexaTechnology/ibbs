@@ -16,7 +16,7 @@ vi.mock("next/image", () => ({
   // eslint-disable-next-line @next/next/no-img-element
   default: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} />,
 }));
-vi.mock("@/components/ui/sanity-image", () => ({ SanityPicture: () => null }));
+vi.mock("@/components/ui/sanity-image", () => ({ SanityPicture: () => null, coverSizes: (sizes: string) => sizes }));
 vi.mock("@/i18n/navigation", () => ({
   Link: ({ href, children, ...rest }: { href: string; children: React.ReactNode }) => (
     <a href={href} {...rest}>
@@ -74,14 +74,16 @@ describe("home sections", () => {
     expect(band).not.toHaveTextContent("Years of expertise");
   });
 
-  it("clients: sector tabs switch two rows of logo placeholders; the looped copy is hidden from assistive tech", () => {
+  it("clients: an All tab (default) shows every client, sector tabs filter; the looped copy is hidden from assistive tech", () => {
     show(<Clients locale="ar" />, "ar");
     const tabs = screen.getAllByTestId("client-tab");
-    expect(tabs).toHaveLength(6);
+    expect(tabs).toHaveLength(7);
     expect(tabs[0]).toHaveAttribute("aria-selected", "true");
+    expect(tabs[0]).toHaveTextContent("الكل");
+    expect(screen.getAllByTestId("client-card")).toHaveLength(96);
+    fireEvent.click(tabs[6]);
+    expect(tabs[6]).toHaveAttribute("aria-selected", "true");
     expect(screen.getAllByTestId("client-card")).toHaveLength(16);
-    fireEvent.click(tabs[5]);
-    expect(tabs[5]).toHaveAttribute("aria-selected", "true");
     expect(screen.getAllByTestId("client-card")[0]).toHaveTextContent("جامع كبير");
     expect(document.querySelectorAll('[aria-hidden="true"][role="presentation"]')).toHaveLength(16);
   });

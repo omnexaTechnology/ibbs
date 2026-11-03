@@ -3,27 +3,31 @@ import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Reveal } from "@/components/ui/reveal";
+import { coverSizes } from "@/components/ui/sanity-image";
 import { Stats } from "./stats";
 
 const pic = "relative overflow-hidden shadow-[0_30px_60px_-30px_rgba(var(--night-rgb),.45)]";
 /** One frame for all four photos: the rounded rectangle of the top-right one. */
 const frame = "aspect-[.8] w-full rounded-[28px] max-[1100px]:w-[46%]";
+/** Frame aspect (width / height), for `coverSizes`. */
+const FRAME_ASPECT = 0.8;
 const col = "flex flex-col gap-[26px] max-[1100px]:flex-row max-[1100px]:items-center max-[1100px]:justify-center";
 
 /** About intro (REQ-002): headline, lead, two buttons and four photos around them, then the stats band. */
 export async function AboutIntro({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: "home" });
   const shapes = [
-    { src: "/images/home/about1.jpg", alt: t("abAlt1"), cls: frame },
-    { src: "/images/home/about2.jpg", alt: t("abAlt2"), cls: frame },
-    { src: "/images/home/about3.jpg", alt: t("abAlt3"), cls: frame },
-    { src: "/images/home/about4.jpg", alt: t("abAlt4"), cls: frame },
+    { src: "/images/home/about1.jpg", width: 1800, height: 625, alt: t("abAlt1"), cls: frame },
+    { src: "/images/home/about2.jpg", width: 510, height: 473, alt: t("abAlt2"), cls: frame },
+    { src: "/images/home/about3.jpg", width: 1410, height: 751, alt: t("abAlt3"), cls: frame },
+    { src: "/images/home/about4.jpg", width: 1245, height: 878, alt: t("abAlt4"), cls: frame },
   ];
   const column = (list: typeof shapes, extra = "") => (
     <div className={`${col} ${extra}`}>
       {list.map((s, i) => (
         <Reveal key={s.src} variant="image" className={`${pic} ${s.cls} ${i === 1 ? "max-sm:hidden" : "max-sm:!w-4/5"}`}>
-          <Image src={s.src} alt={s.alt} fill sizes="(min-width: 1101px) 22vw, 40vw" className="object-cover" />
+          {/* the landscape photos are cropped into portrait frames, so ask for a width that fills the frame's height */}
+          <Image src={s.src} alt={s.alt} fill sizes={coverSizes("(min-width: 1101px) 22vw, 40vw", s, FRAME_ASPECT)} className="object-cover" />
         </Reveal>
       ))}
     </div>
