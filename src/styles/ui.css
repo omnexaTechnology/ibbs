@@ -266,7 +266,9 @@ html.wk-lock, html.wk-lock body { overflow: hidden; }
 .ui-acc-hit:focus-visible { outline: 2px solid var(--cyan); outline-offset: -4px; }
 .ui-acc-p.on .ui-acc-hit { pointer-events: none; }
 .ui-acc-num { position: absolute; z-index: 3; top: 80px; inset-inline-start: 22px; background: var(--cream); color: var(--navy); border-radius: 999px; padding: 6px 12px; font-size: 12px; font-variant-numeric: tabular-nums; }
-.ui-acc-v { position: absolute; z-index: 3; bottom: 24px; inset-inline: 14px; color: var(--cream); font-size: 16px; font-weight: 600; line-height: 1.2; letter-spacing: -0.01em; hyphens: auto; overflow-wrap: break-word; transition: opacity 0.4s; }
+.ui-acc-v { position: absolute; z-index: 3; bottom: 24px; left: 24px; max-height: calc(100% - 130px); writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--cream); font-size: 22px; font-weight: 600; line-height: 1.12; letter-spacing: -0.02em; transition: opacity 0.4s; }
+/* physical sides: in vertical writing-mode, inset-inline-* maps to top/bottom */
+[dir="rtl"] .ui-acc-v { left: auto; right: 24px; }
 .ui-acc-p.on .ui-acc-v { opacity: 0; }
 .ui-acc-body { position: absolute; inset-inline: 34px; bottom: 32px; z-index: 4; color: var(--cream); opacity: 0; visibility: hidden; transform: translateY(20px); transition: opacity 0.45s, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), visibility 0s 0.45s; }
 .ui-acc-p.on .ui-acc-body { opacity: 1; visibility: visible; transform: none; transition-delay: 0.35s, 0.35s, 0s; }
