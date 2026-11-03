@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import { hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AboutBuild } from "@/components/sections/about/about-build";
-import { AboutCta } from "@/components/sections/about/about-cta";
 import { AboutTabs } from "@/components/sections/about/about-tabs";
 import { AboutWho } from "@/components/sections/about/about-who";
 import { Stats } from "@/components/sections/home/stats";
 import { Clients } from "@/components/sections/home/clients";
+import { Cta } from "@/components/sections/home/cta";
 import { PageHero } from "@/components/sections/page-hero";
 import { ButtonLink } from "@/components/ui/button-link";
 import { routing } from "@/i18n/routing";
@@ -52,7 +52,7 @@ export default async function AboutPage({ params }: Props) {
       <div className="pt-4">
         <Clients locale={locale} sectors={clients} />
       </div>
-      <AboutCta locale={locale} />
+      <Cta />
     </>
   );
 }
