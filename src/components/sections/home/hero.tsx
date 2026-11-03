@@ -87,7 +87,7 @@ export async function Hero({ locale, slides }: { locale: Locale; slides: HeroSli
   // The height is the viewport minus the top bar when it is rendered (it has contact details, >= 561 px); the header is overlaid.
   return (
     <section
-      className="relative -mt-[92px] h-svh max-h-[1000px] min-h-[620px] overflow-hidden bg-night text-cream min-[561px]:[body:has([data-testid=topbar])_&]:h-[calc(100svh-42px)]"
+      className="relative -mt-[92px] h-svh max-h-[1000px] min-h-[620px] overflow-hidden bg-night text-cream min-[561px]:[body:has([data-testid=topbar])_&]:h-[calc(100svh-52px)]"
       data-testid="home-hero"
     >
       <Carousel items={items} label={t("heroEyebrow")} dir={dir} showCount showArrows={false} pill showProgress thumbs={thumbs} layers={layers} className="h-full" />
