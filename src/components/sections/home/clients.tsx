@@ -17,10 +17,14 @@ const MIN_LOOP = 8;
  */
 export function Clients({ locale, sectors = [] }: { locale: "en" | "ar"; sectors?: ClientSector[] }) {
   const t = useTranslations("home");
+  const tp = useTranslations("projects");
   const [tab, setTab] = useState(0);
   const placeholder = sectors.length === 0;
-  const list = placeholder ? placeholderClientSectors : sectors;
+  const bySector = placeholder ? placeholderClientSectors : sectors;
   if (placeholder && !SHOW_PLACEHOLDER_LOGOS) return null;
+  // "All" first (default): every client unfiltered. Skipped when there is only one sector, where it would repeat it.
+  const all: ClientSector = { label: { en: tp("fAll"), ar: tp("fAll") }, clients: bySector.flatMap((s) => s.clients) };
+  const list = bySector.length > 1 ? [all, ...bySector] : bySector;
   const sector = list[Math.min(tab, list.length - 1)];
   const set = sector.clients;
   // An even number of copies keeps the -50% marquee loop seamless; only the first copy is announced.

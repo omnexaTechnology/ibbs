@@ -95,6 +95,7 @@ Until these are done the live forms save leads to Sanity (once `SANITY_API_WRITE
 | FEAT-003 | Home stats (years, projects, …) | Hidden until the client confirms the numbers; then flip `confirmed` in `src/content/stats.ts` |
 | FEAT-003 | Home "materials" picker and testimonials | Not built: the approved demo's home page doesn't show them (the data sits unused in the design file). Say if you want them added |
 | FEAT-004 | "Request a call" form | Built but not shown: the design defines it but places it on no page. Say where you want it (e.g. the home CTA) |
+| UI edits | Home "Our work reflects our approach." photo 2 (`public/images/home/about2.jpg`) | The source is only 510×473 px, so it looks soft on high-DPI screens even after the sizing fix. Send a larger photo (at least 900 px tall) to replace it |
 | FEAT-005 | Domain, analytics, legal text, launch date | Unknown — needed before launch only. The privacy and terms pages hold draft text: **someone must approve it before launch** (FEAT-003 review R2-06) |
 
 ## Done

@@ -18,7 +18,7 @@ export async function Stats({ locale, items = stats }: { locale: Locale; items?:
           <div key={s.key} className="flex flex-col-reverse gap-5 border-t border-line pt-10">
             <dt className="max-w-[220px] text-base text-muted">{t(s.label)}</dt>
             {/* the suffix (Counter's <small>) sits raised at the top of the number, as in the design */}
-            <dd className="text-[clamp(56px,6.6vw,104px)] leading-none font-normal tracking-[-0.04em] [&_small]:align-top [&_small]:font-normal">
+            <dd className="text-[clamp(56px,6.6vw,104px)] leading-none font-normal whitespace-nowrap tracking-[-0.04em] [&_small]:align-top [&_small]:font-normal">
               <Counter to={s.value} suffix={s.suffix === "unit" ? t("kSqm") : "+"} />
             </dd>
           </div>
