@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 for (const locale of ["en", "ar"] as const) {
   test.describe(`REQ-007: about (${locale})`, () => {
-    test("renders the sections, hides placeholder stats and keeps the right direction", async ({ page }) => {
+    test("renders the sections and keeps the right direction", async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 });
       await page.goto(`/${locale}/about`);
       await expect(page.locator("html")).toHaveAttribute("dir", locale === "ar" ? "rtl" : "ltr");
@@ -11,8 +11,8 @@ for (const locale of ["en", "ar"] as const) {
       await expect(page.getByTestId("about-build")).toBeVisible();
       await expect(page.getByTestId("home-cta")).toBeVisible();
       await expect(page.getByTestId("home-clients")).toBeVisible();
-      // BR-003: the design figures are placeholders, so the stats band is not rendered
-      await expect(page.getByTestId("home-stats")).toHaveCount(0);
+      await expect(page.getByTestId("home-stats").getByTestId("counter")).toHaveCount(4);
+      await expect(page.getByTestId("home-faq")).toBeVisible();
     });
 
     test("tabs switch with the keyboard (direction aware)", async ({ page }) => {

@@ -8,6 +8,7 @@ import { AboutWho } from "@/components/sections/about/about-who";
 import { Stats } from "@/components/sections/home/stats";
 import { Clients } from "@/components/sections/home/clients";
 import { Cta } from "@/components/sections/home/cta";
+import { Faq } from "@/components/sections/home/faq";
 import { PageHero } from "@/components/sections/page-hero";
 import { ButtonLink } from "@/components/ui/button-link";
 import { routing } from "@/i18n/routing";
@@ -52,6 +53,7 @@ export default async function AboutPage({ params }: Props) {
       <div className="pt-4">
         <Clients locale={locale} sectors={clients} />
       </div>
+      <Faq locale={locale} />
       <Cta />
     </>
   );

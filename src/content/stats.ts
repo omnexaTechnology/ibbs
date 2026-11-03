@@ -10,8 +10,9 @@ export type Stat = {
 };
 
 export const stats: Stat[] = [
-  { key: "projects", value: 120, suffix: "+", label: "stProjects", confirmed: false },
-  { key: "area", value: 85, suffix: "unit", label: "stAreaLong", confirmed: false },
-  { key: "clients", value: 60, suffix: "+", label: "stClients", confirmed: false },
-  { key: "years", value: 10, suffix: "+", label: "stYears", confirmed: false },
+  // 2026-11-03: shown on the owner's request; still the design's figures, swap in the client's real ones when given.
+  { key: "projects", value: 120, suffix: "+", label: "stProjects", confirmed: true },
+  { key: "area", value: 85, suffix: "unit", label: "stAreaLong", confirmed: true },
+  { key: "clients", value: 60, suffix: "+", label: "stClients", confirmed: true },
+  { key: "years", value: 10, suffix: "+", label: "stYears", confirmed: true },
 ];
