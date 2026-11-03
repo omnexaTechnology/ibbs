@@ -89,6 +89,7 @@ export function Process({ locale }: { locale: "en" | "ar" }) {
               camera={{ fov: 30, far: 120 }}
               exposure={1.05}
               releaseWhenFar
+              stillOnlyOnFail
               onStatusChange={onStatus}
               className="size-full"
               fallback={<Image src="/images/home/process.jpg" alt={localize(cur.title, locale)} fill sizes="(min-width: 1025px) 58vw, 100vw" className="object-cover" />}

@@ -22,6 +22,8 @@ export type SceneRootProps = {
   label: string;
   /** Still image (REQ-013): shown from the first paint, and kept when WebGL is missing or fails. */
   fallback?: ReactNode;
+  /** Show the still image only when WebGL is missing or fails, not while the scene loads (no photo flashing before the model). */
+  stillOnlyOnFail?: boolean;
   className?: string;
   exposure?: number;
   /** Default ACES; the design uses other mappings in some scenes. */
@@ -40,7 +42,7 @@ export type SceneRootProps = {
  * mounts near the viewport only, pauses off-screen and in hidden tabs, disposes everything on unmount, falls back to
  * a still image when WebGL is unavailable, and renders a final still frame under reduced motion.
  */
-export function SceneRoot({ load, label, fallback, className, exposure, toneMapping, alpha, camera, rootMargin = "300px", releaseWhenFar = false, onStatusChange }: SceneRootProps) {
+export function SceneRoot({ load, label, fallback, stillOnlyOnFail = false, className, exposure, toneMapping, alpha, camera, rootMargin = "300px", releaseWhenFar = false, onStatusChange }: SceneRootProps) {
   const t = useTranslations();
   const [ref, near] = useInView<HTMLDivElement>({ rootMargin, once: !releaseWhenFar });
   const [canvasStatus, setCanvasStatus] = useState<SceneStatus>("loading");
@@ -65,9 +67,9 @@ export function SceneRoot({ load, label, fallback, className, exposure, toneMapp
   );
 
   const ready = status === "ready";
-  // Opaque scenes fade in over the still image (no flash of an empty canvas); see-through scenes drop it at once.
-  const showFallback = !ready || !alpha;
   const failed = status === "unsupported" || status === "error" || status === "lost";
+  // Opaque scenes fade in over the still image (no flash of an empty canvas); see-through scenes drop it at once.
+  const showFallback = stillOnlyOnFail ? failed : !ready || !alpha;
 
   return (
     <div ref={ref} className={cn("ui-scene", className)} data-testid="scene-root" data-scene-status={status}>
