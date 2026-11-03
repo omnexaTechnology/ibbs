@@ -52,7 +52,8 @@ describe.each([
     expect(screen.getByLabelText(new RegExp(m.fPhone))).toHaveAccessibleDescription(m.errors.phoneInvalid);
     expect(screen.getByLabelText(m.fEmail)).toHaveAccessibleDescription(m.errors.emailInvalid);
     expect(screen.getByLabelText(new RegExp(m.fName))).not.toHaveAttribute("aria-invalid");
-    await waitFor(() => expect(screen.getByLabelText(new RegExp(m.fPhone))).toHaveFocus());
+    // focus goes to the first invalid field in form order (email sits before phone)
+    await waitFor(() => expect(screen.getByLabelText(m.fEmail)).toHaveFocus());
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });

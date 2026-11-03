@@ -5,7 +5,6 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ContactCards } from "@/components/sections/contact/contact-cards";
 import { ContactFormSection } from "@/components/sections/contact/contact-form-slot";
 import { ContactMap } from "@/components/sections/contact/contact-map";
-import { ContactWhatsApp } from "@/components/sections/contact/contact-whatsapp";
 import { PageHero } from "@/components/sections/page-hero";
 import { ButtonLink } from "@/components/ui/button-link";
 import { routing } from "@/i18n/routing";
@@ -49,7 +48,6 @@ export default async function ContactPage({ params }: Props) {
       />
       <section className="mx-auto max-w-[1280px] px-8 pb-10 pt-12">
         <ContactCards settings={settings} />
-        <ContactWhatsApp settings={settings} />
         <ContactFormSection settings={settings} />
       </section>
       <ContactMap settings={settings} />

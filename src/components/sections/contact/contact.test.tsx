@@ -4,7 +4,6 @@ import { emptySettings, makeSettings, renderWithIntl } from "@/test/render";
 import { ContactCards } from "./contact-cards";
 import { ContactFormSection } from "./contact-form-slot";
 import { ContactMap } from "./contact-map";
-import { ContactWhatsApp } from "./contact-whatsapp";
 import { LegalPage } from "../legal/legal-page";
 import { getLegalDoc } from "@/content/legal";
 
@@ -54,7 +53,6 @@ describe("contact blocks with data from the site settings", () => {
     const { container } = renderWithIntl(
       <>
         <ContactCards settings={empty} />
-        <ContactWhatsApp settings={empty} />
         <ContactMap settings={empty} />
       </>,
     );
@@ -71,11 +69,6 @@ describe("contact blocks with data from the site settings", () => {
   it("map block shows the Google Maps button when a link is set", async () => {
     renderWithIntl(<ContactMap settings={await makeSettings({ mapUrl: "https://maps.google.com/?q=ibss" })} />);
     expect(screen.getByRole("link", { name: /Open in Google Maps/ })).toHaveAttribute("href", "https://maps.google.com/?q=ibss");
-  });
-
-  it("WhatsApp block links to wa.me with the prefilled message", async () => {
-    renderWithIntl(<ContactWhatsApp settings={await makeSettings()} />);
-    expect(screen.getByTestId("contact-whatsapp").getAttribute("href")).toMatch(/^https:\/\/wa\.me\/966500000000\?text=/);
   });
 
   it("the form slot holds the contact form (method=post)", async () => {

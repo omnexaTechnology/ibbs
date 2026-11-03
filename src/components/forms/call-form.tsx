@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Honeypot, TextField } from "./fields";
 import { FormSuccess } from "./form-success";
-import { FormAlert, submitButtonClass, type LeadFormProps } from "./request-form";
+import { FormAlert, SubmitButton, type LeadFormProps } from "./request-form";
 import { useLeadForm } from "./use-lead-form";
 
 /** Quick "request a call" form: a phone number, optionally a name (REQ-002). */
@@ -30,9 +30,7 @@ export function CallForm({ whatsappHref, className }: LeadFormProps) {
       <div className="mt-5 flex flex-col gap-4">
         {status === "error" && <FormAlert message={t("fFailed")} whatsappHref={whatsappHref} />}
         <div>
-          <button type="submit" disabled={!ready || status === "sending"} className={submitButtonClass}>
-            {status === "sending" ? t("sending") : t("sendQuick")}
-          </button>
+          <SubmitButton disabled={!ready || status === "sending"}>{status === "sending" ? t("sending") : t("sendQuick")}</SubmitButton>
         </div>
       </div>
     </form>
