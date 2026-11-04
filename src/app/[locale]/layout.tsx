@@ -28,8 +28,23 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Pick<Props, "params">): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) return {};
-  const t = await getTranslations({ locale, namespace: "common" });
-  return { metadataBase: siteUrl(), title: t("brand") };
+  const [t, tf] = await Promise.all([
+    getTranslations({ locale, namespace: "common" }),
+    getTranslations({ locale, namespace: "footer" }),
+  ]);
+  // Defaults for every page; a page's own description/openGraph replaces these.
+  return {
+    metadataBase: siteUrl(),
+    title: t("brand"),
+    description: tf("footAbout"),
+    openGraph: {
+      type: "website",
+      siteName: t("brand"),
+      locale: locale === "ar" ? "ar_SA" : "en_US",
+      images: [{ url: "/brand/og-default.jpg", width: 1200, height: 630, alt: t("brand") }],
+    },
+    twitter: { card: "summary_large_image" },
+  };
 }
 
 // This layout is the root layout: <html lang dir> depends on the locale.

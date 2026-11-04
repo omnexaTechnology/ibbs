@@ -3,7 +3,7 @@
 Things only you can do, or that wait for your review. Work continues without them unless an item says **BLOCKING**.
 Newest items at the top of each section. Tick a box when done; Claude reads this file to pick up your answers.
 
-Last update: 2026-10-29
+Last update: 2026-11-04
 
 ## Blocking something
 
@@ -36,12 +36,12 @@ _(none right now)_
 
 Until these are done the live forms save leads to Sanity (once `SANITY_API_WRITE_TOKEN` is in Vercel Production) but send no email, and spam protection is only the honeypot + timing check.
 
-- [ ] **Resend account** under `melamrosy72@gmail.com`; put `RESEND_API_KEY` in `.env.local` and Vercel. The code also reads `LEAD_FALLBACK_EMAIL` (set to `melamrosy72@gmail.com`) and `LEAD_FROM_EMAIL` (sender address). Until you verify a sending domain in Resend, the sender is `onboarding@resend.dev`, which can only deliver to the Resend account owner's inbox.
+- [x] **Resend** done 2026-11-04: domain `ibssinnovations.com.sa` verified (eu-west-1), `RESEND_API_KEY`, `LEAD_FROM_EMAIL=noreply@ibssinnovations.com.sa`, `LEAD_FALLBACK_EMAIL=info@ibssinnovations.com` in Vercel; live form tested, email received. (Original note:) Resend account under `melamrosy72@gmail.com`; put `RESEND_API_KEY` in `.env.local` and Vercel. The code also reads `LEAD_FALLBACK_EMAIL` (set to `melamrosy72@gmail.com`) and `LEAD_FROM_EMAIL` (sender address). Until you verify a sending domain in Resend, the sender is `onboarding@resend.dev`, which can only deliver to the Resend account owner's inbox.
 - [ ] **Vercel Firewall rate limit** (about 3 minutes). Project → Firewall → Configure → New rule "Rate limit lead submissions":
   - If Request Path equals `/api/leads` AND Method equals `POST`
   - Rate limit: 5 requests per 1 minute, keyed by IP; then Deny with 429
   - Publish.
-- [ ] **`NEXT_PUBLIC_SITE_URL`** in Vercel = the real domain once known. Until then search-engine links use the Vercel address.
+- [x] **`NEXT_PUBLIC_SITE_URL`** set in Vercel 2026-11-04. (Original note:) in Vercel = the real domain once known. Until then search-engine links use the Vercel address.
 
 ## To review when you have time
 
