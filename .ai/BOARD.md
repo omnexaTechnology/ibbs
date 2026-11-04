@@ -1,14 +1,14 @@
 # Board
 
 Workspace: `ibss-web` (IBSS Innovations Furniture — Next.js + Sanity)
-Last update: 2026-10-29
+Last update: 2026-11-04
 
 ## Inbox
 
 ## Discovery
 | ID | Title | Depends on | Open items | Updated |
 |---|---|---|---|---|
-| FEAT-005 | SEO, performance and launch | FEAT-003, FEAT-004 | Q1 domain, Q2 analytics, Q3 legal text, Q4 launch date. Also takes Resend email + Vercel Firewall (deferred by user 2026-10-29). Starts after the UI edits round | 2026-10-29 |
+| FEAT-005 | SEO, performance and launch | FEAT-003, FEAT-004 | Q1 domain + Resend DONE 2026-11-04. SEO code (sitemap, robots, share previews, JSON-LD) on `feat/FEAT-005-seo`. Open: Q2 analytics (user: not now), Q3 legal text approval, Q4 launch date, Vercel Firewall rule | 2026-11-04 |
 
 ## Ready
 | ID | Title | Depends on | Current step | Open items | Updated |

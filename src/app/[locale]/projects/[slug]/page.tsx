@@ -14,7 +14,7 @@ import { sizedImageUrl } from "@/components/ui/sanity-image";
 import { Reveal } from "@/components/ui/reveal";
 import { projectCategories } from "@/content/taxonomy";
 import { routing } from "@/i18n/routing";
-import { alternatesFor } from "@/lib/seo";
+import { alternatesFor, breadcrumbJsonLd, jsonLdHtml } from "@/lib/seo";
 import { localize } from "@/lib/contact";
 import { getSiteSettings } from "@/lib/site-settings";
 import { getProjectBySlug, getProjectSlugs } from "@/sanity/content";
@@ -68,8 +68,15 @@ export default async function ProjectPage({ params }: Props) {
     .filter(Boolean)
     .join(" · ");
 
+  const crumbsLd = breadcrumbJsonLd(locale, [
+    { name: nav("navHome"), path: "" },
+    { name: nav("navProjects"), path: "/projects" },
+    { name: title, path: `/projects/${slug}` },
+  ]);
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(crumbsLd) }} />
       <PageHero
         crumbs={[{ label: nav("navHome"), href: "/" }, { label: nav("navProjects"), href: "/projects" }, { label: title }]}
         eyebrow={sector ? localize(sector.label, locale) : undefined}
