@@ -105,22 +105,23 @@ export function Header({ settings }: { settings: SiteSettings }) {
             scrolled ? "h-[70px]" : "h-[92px]",
           )}
         >
-          <Link href="/" className="flex min-h-11 items-center justify-self-start" aria-label={t("logoAlt")}>
+          {/* Wide 8:1 wordmark: sized by width so it can shrink on narrow phones instead of pushing the controls. */}
+          <Link href="/" className="flex min-h-11 min-w-0 items-center justify-self-start" aria-label={t("logoAlt")}>
             <Image
-              src="/brand/logo-light.png"
+              src="/brand/logo-main.png"
               alt={t("logoAlt")}
-              width={128}
-              height={42}
+              width={1207}
+              height={151}
               priority
-              className={cn("w-auto transition-[height] duration-[450ms] dark:hidden", scrolled ? "h-[34px]" : "h-[42px]")}
+              className={cn("h-auto max-w-full transition-[width] duration-[450ms] dark:hidden", scrolled ? "w-[230px]" : "w-[280px]")}
             />
             <Image
-              src="/brand/logo-dark.png"
+              src="/brand/logo-main-dark.png"
               alt={t("logoAlt")}
-              width={120}
-              height={42}
+              width={1207}
+              height={151}
               priority
-              className={cn("hidden w-auto transition-[height] duration-[450ms] dark:block", scrolled ? "h-[34px]" : "h-[42px]")}
+              className={cn("hidden h-auto max-w-full transition-[width] duration-[450ms] dark:block", scrolled ? "w-[230px]" : "w-[280px]")}
             />
           </Link>
 
